@@ -1,7 +1,7 @@
-package com.pjms.zyjpopolsku.network;
+package pl.pola_app.network;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.pjms.zyjpopolsku.model.Product;
+import pl.pola_app.model.Product;
 
 public class ProductRequest extends RetrofitSpiceRequest<Product, Api> {
     private String barcode;

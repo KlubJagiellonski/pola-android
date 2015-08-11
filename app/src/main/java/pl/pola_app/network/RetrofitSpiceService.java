@@ -1,4 +1,4 @@
-package com.pjms.zyjpopolsku.network;
+package pl.pola_app.network;
 
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 

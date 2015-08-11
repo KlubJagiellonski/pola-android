@@ -1,4 +1,4 @@
-package com.pjms.zyjpopolsku;
+package pl.pola_app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

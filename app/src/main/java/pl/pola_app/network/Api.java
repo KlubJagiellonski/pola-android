@@ -1,6 +1,6 @@
-package com.pjms.zyjpopolsku.network;
+package pl.pola_app.network;
 
-import com.pjms.zyjpopolsku.model.Product;
+import pl.pola_app.model.Product;
 
 import retrofit.http.GET;
 import retrofit.http.Path;

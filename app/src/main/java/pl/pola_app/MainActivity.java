@@ -1,16 +1,14 @@
-package com.pjms.zyjpopolsku;
+package pl.pola_app;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.zxing.Result;
 import com.octo.android.robospice.SpiceManager;
-import com.pjms.zyjpopolsku.network.RetrofitSpiceService;
+import pl.pola_app.network.RetrofitSpiceService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -31,8 +29,8 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
         scannerView = new ZXingScannerView(this);
         scannerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         cameraContainerFrameLayout.addView(scannerView);

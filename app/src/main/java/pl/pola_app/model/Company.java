@@ -1,4 +1,4 @@
-package com.pjms.zyjpopolsku.model;
+package pl.pola_app.model;
 
 public class Company {
     public String name;
