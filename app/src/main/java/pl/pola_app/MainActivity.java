@@ -5,9 +5,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import pl.pola_app.model.Product;
+import pl.pola_app.network.ProductRequest;
 import pl.pola_app.network.RetrofitSpiceService;
 
 import butterknife.ButterKnife;
@@ -65,5 +72,21 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         Log.v(TAG, result.getText());
         Log.v(TAG, result.getBarcodeFormat().toString());
+        ProductRequest productRequest = new ProductRequest(result.getBarcodeFormat().toString());
+        spiceManager.execute(productRequest, "product", DurationInMillis.ONE_HOUR, new ProductRequestListener());
+    }
+
+    private final class ProductRequestListener implements RequestListener<Product> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRequestSuccess(Product product) {
+            Toast.makeText(MainActivity.this, "Cool", Toast.LENGTH_SHORT).show();
+            Log.v(TAG, product.barcode);
+        }
     }
 }
