@@ -2,17 +2,19 @@ package pl.pola_app.network;
 
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 
-public class RetrofitSpiceService extends RetrofitGsonSpiceService {
-    private final static String BASE_URL = "https://zyjpopolsku.herokuapp.com/api/v1";
+import pl.pola_app.Config;
+import roboguice.util.temp.Ln;
 
+public class RetrofitSpiceService extends RetrofitGsonSpiceService {
     @Override
     public void onCreate() {
         super.onCreate();
         addRetrofitInterface(Api.class);
+        Ln.getConfig().setLoggingLevel(Config.SPICE_LOG_LEVEL);
     }
 
     @Override
     protected String getServerUrl() {
-        return BASE_URL;
+        return Config.POLA_API_URL;
     }
 }

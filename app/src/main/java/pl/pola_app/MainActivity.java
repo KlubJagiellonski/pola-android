@@ -13,6 +13,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
 import pl.pola_app.network.ProductRequest;
 import pl.pola_app.network.RetrofitSpiceService;
@@ -72,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         Log.v(TAG, result.getText());
         Log.v(TAG, result.getBarcodeFormat().toString());
-        ProductRequest productRequest = new ProductRequest(result.getBarcodeFormat().toString());
+        ProductRequest productRequest = new ProductRequest(result.getText(), Utils.getDeviceId(this));
         spiceManager.execute(productRequest, "product", DurationInMillis.ONE_HOUR, new ProductRequestListener());
     }
 
@@ -86,7 +87,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         @Override
         public void onRequestSuccess(Product product) {
             Toast.makeText(MainActivity.this, "Cool", Toast.LENGTH_SHORT).show();
-            Log.v(TAG, product.barcode);
+            Log.v(TAG, product.code);
         }
     }
 }
