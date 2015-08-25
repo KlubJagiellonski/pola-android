@@ -11,7 +11,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name=".PolaApplication">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -24,6 +25,9 @@
         <service
             android:name="pl.pola_app.network.RetrofitSpiceService"
             android:exported="false" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ccb68e959044cbd12b0295078e08f2f9dbb45e9b" />
     </application>
 
 </manifest>

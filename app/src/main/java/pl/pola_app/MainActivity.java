@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.zxing.Result;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import io.fabric.sdk.android.Fabric;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
 import pl.pola_app.network.ProductRequest;
@@ -21,6 +23,7 @@ import pl.pola_app.network.RetrofitSpiceService;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import timber.log.Timber;
 
 
 public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler{
@@ -37,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         scannerView = new ZXingScannerView(this);
@@ -71,8 +75,8 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
 
     @Override
     public void handleResult(Result result) {
-        Log.v(TAG, result.getText());
-        Log.v(TAG, result.getBarcodeFormat().toString());
+        Timber.v(TAG, result.getText());
+        Timber.v(TAG, result.getBarcodeFormat().toString());
         ProductRequest productRequest = new ProductRequest(result.getText(), Utils.getDeviceId(this));
         spiceManager.execute(productRequest, "product", DurationInMillis.ONE_HOUR, new ProductRequestListener());
     }
@@ -87,7 +91,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         @Override
         public void onRequestSuccess(Product product) {
             Toast.makeText(MainActivity.this, "Cool", Toast.LENGTH_SHORT).show();
-            Log.v(TAG, product.code);
+            Timber.v(TAG, product.code);
         }
     }
 }
