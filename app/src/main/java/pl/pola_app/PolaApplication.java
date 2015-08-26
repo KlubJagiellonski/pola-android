@@ -24,8 +24,7 @@ public class PolaApplication extends Application {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-
-            //TODO
+            
             Crashlytics.log(priority, tag, message);
 
             if (t != null) {
