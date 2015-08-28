@@ -5,7 +5,7 @@ import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 import pl.pola_app.Config;
 import roboguice.util.temp.Ln;
 
-public class RetrofitSpiceService extends RetrofitGsonSpiceService {
+public class PolaSpiceService extends RetrofitGsonSpiceService {
     @Override
     public void onCreate() {
         super.onCreate();

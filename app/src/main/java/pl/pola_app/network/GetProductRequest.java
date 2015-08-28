@@ -1,13 +1,16 @@
 package pl.pola_app.network;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
+import javax.inject.Inject;
+
 import pl.pola_app.model.Product;
 
-public class ProductRequest extends RetrofitSpiceRequest<Product, Api> {
+public class GetProductRequest extends RetrofitSpiceRequest<Product, Api> {
     private String barcode;
     private String deviceId;
 
-    public ProductRequest(String barcode, String deviceId) {
+    public GetProductRequest(String barcode, String deviceId) {
         super(Product.class, Api.class);
         this.barcode = barcode;
         this.deviceId = deviceId;
@@ -16,5 +19,9 @@ public class ProductRequest extends RetrofitSpiceRequest<Product, Api> {
     @Override
     public Product loadDataFromNetwork() throws Exception {
         return getService().product(barcode, deviceId);
+    }
+
+    public static String getCacheKey() {
+        return GetProductRequest.class.getSimpleName();
     }
 }

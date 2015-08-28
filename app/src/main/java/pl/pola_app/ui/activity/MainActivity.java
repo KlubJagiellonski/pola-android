@@ -1,51 +1,49 @@
-package pl.pola_app;
+package pl.pola_app.ui.activity;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.zxing.Result;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import io.fabric.sdk.android.Fabric;
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import pl.pola_app.PolaApplication;
+import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
-import pl.pola_app.network.ProductRequest;
-import pl.pola_app.network.RetrofitSpiceService;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import pl.pola_app.network.GetProductRequest;
 import timber.log.Timber;
 
 
-public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler{
+public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    @Inject
+    SpiceManager spiceManager;
 
-    @InjectView(R.id.fl_camera_container)
+    @Inject
+    ZXingScannerView zXingView;
+
+    @Bind(R.id.fl_camera_container)
     FrameLayout cameraContainerFrameLayout;
-
-    private ZXingScannerView scannerView;
-
-    private SpiceManager spiceManager = new SpiceManager(RetrofitSpiceService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
-        scannerView = new ZXingScannerView(this);
-        scannerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        cameraContainerFrameLayout.addView(scannerView);
+        ButterKnife.bind(this);
+
+        zXingView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        cameraContainerFrameLayout.addView(zXingView);
     }
 
     @Override
@@ -57,14 +55,14 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Override
     public void onResume() {
         super.onResume();
-        scannerView.setResultHandler(this);
-        scannerView.startCamera();
+        zXingView.setResultHandler(this);
+        zXingView.startCamera();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        scannerView.stopCamera();
+        zXingView.stopCamera();
     }
 
     @Override
@@ -75,10 +73,10 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
 
     @Override
     public void handleResult(Result result) {
-        Timber.v(TAG, result.getText());
-        Timber.v(TAG, result.getBarcodeFormat().toString());
-        ProductRequest productRequest = new ProductRequest(result.getText(), Utils.getDeviceId(this));
-        spiceManager.execute(productRequest, "product", DurationInMillis.ONE_HOUR, new ProductRequestListener());
+        Timber.d(result.getText());
+        Timber.d(result.getBarcodeFormat().toString());
+        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(this));
+        spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, new ProductRequestListener());
     }
 
     private final class ProductRequestListener implements RequestListener<Product> {
@@ -91,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         @Override
         public void onRequestSuccess(Product product) {
             Toast.makeText(MainActivity.this, "Cool", Toast.LENGTH_SHORT).show();
-            Timber.v(TAG, product.code);
+            Timber.d(product.code);
         }
     }
 }

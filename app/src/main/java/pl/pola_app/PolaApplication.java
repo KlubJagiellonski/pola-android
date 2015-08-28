@@ -1,22 +1,35 @@
 package pl.pola_app;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import pl.pola_app.BuildConfig;
+import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
+import pl.pola_app.internal.di.PolaComponent;
 import timber.log.Timber;
 
 public class PolaApplication extends Application {
+
+    private PolaComponent component;
+
     @Override public void onCreate() {
         super.onCreate();
+
+        Fabric.with(this, new Crashlytics());
+        ButterKnife.setDebug(BuildConfig.DEBUG);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }
+    }
+
+    public static PolaComponent component(Context context) {
+        return ((PolaApplication)context.getApplicationContext()).component;
     }
 
     private static class CrashReportingTree extends Timber.Tree {

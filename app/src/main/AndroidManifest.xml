@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:name=".PolaApplication">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name="pl.pola_app.network.RetrofitSpiceService"
+            android:name=".network.PolaSpiceService"
             android:exported="false" />
         <meta-data
             android:name="io.fabric.ApiKey"
