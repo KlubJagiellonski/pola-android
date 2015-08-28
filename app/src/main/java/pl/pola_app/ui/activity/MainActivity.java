@@ -40,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PolaApplication.component(this).inject(this);
         ButterKnife.bind(this);
 
         zXingView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

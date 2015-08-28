@@ -19,4 +19,6 @@ public interface PolaComponent {
                     .build();
         }
     }
+
+    void inject(MainActivity mainActivity);
 }

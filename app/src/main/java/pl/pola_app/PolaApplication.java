@@ -18,6 +18,8 @@ public class PolaApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
 
+        component = PolaComponent.Initializer.init(this);
+
         Fabric.with(this, new Crashlytics());
         ButterKnife.setDebug(BuildConfig.DEBUG);
 
@@ -29,7 +31,7 @@ public class PolaApplication extends Application {
     }
 
     public static PolaComponent component(Context context) {
-        return ((PolaApplication)context.getApplicationContext()).component;
+        return ((PolaApplication) context.getApplicationContext()).component;
     }
 
     private static class CrashReportingTree extends Timber.Tree {
