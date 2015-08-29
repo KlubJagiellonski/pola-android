@@ -16,18 +16,6 @@ import retrofit.converter.GsonConverter;
 public class NetworkModule {
 
     @Provides
-    @Singleton
-    Converter provideConverter(Gson gson) {
-        return new GsonConverter(gson);
-    }
-
-    @Provides
-    @Singleton
-    Gson provideGson() {
-        return new Gson();
-    }
-
-    @Provides
     SpiceManager provideSpiceManager() {
         return new SpiceManager(PolaSpiceService.class);
     }

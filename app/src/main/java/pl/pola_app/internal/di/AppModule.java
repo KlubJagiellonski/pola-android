@@ -7,20 +7,15 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class SystemServicesModule {
+public class AppModule {
     private final Context context;
 
-    public SystemServicesModule(Context context) {
+    public AppModule(Context context) {
         this.context = context;
     }
 
     @Provides
     Context provideContext() {
         return context;
-    }
-
-    @Provides
-    LayoutInflater provideLayoutInflater() {
-        return LayoutInflater.from(context);
     }
 }
