@@ -7,7 +7,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
 
@@ -21,6 +24,9 @@ public class ProductDetailsFragment extends DialogFragment {
     public static final String TAG = ProductDetailsFragment.class.getName();
 
     private Product product;
+
+    @Bind(R.id.textView)
+    TextView productDetailsTextView;
 
     public static ProductDetailsFragment newInstance(Product product) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -45,7 +51,11 @@ public class ProductDetailsFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_details, container, false);
+        View productDetailsView = inflater.inflate(R.layout.fragment_product_details, container, false);
+        ButterKnife.bind(this, productDetailsView);
+
+        productDetailsTextView.setText(product.company.name + " " + product.company.address);
+
+        return productDetailsView;
     }
 }
