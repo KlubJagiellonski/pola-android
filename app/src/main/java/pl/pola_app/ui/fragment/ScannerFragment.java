@@ -35,13 +35,10 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     SpiceManager spiceManager;
 
     @Inject
-    ZXingScannerView zXingView;
-
-    @Inject
     Bus eventBus;
 
-    @Bind(R.id.fl_camera_container)
-    FrameLayout cameraContainerFrameLayout;
+    @Bind(R.id.scanner_view)
+    ZXingScannerView zXingView;
 
     public static ScannerFragment newInstance() {
         ScannerFragment fragment = new ScannerFragment();
@@ -55,7 +52,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
@@ -66,16 +62,13 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
 
-        zXingView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        cameraContainerFrameLayout.addView(zXingView);
-
         return scannerView;
     }
 
     @Override
     public void onStart() {
-        spiceManager.start(getActivity());
         super.onStart();
+        spiceManager.start(getActivity());
     }
 
     @Override

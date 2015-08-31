@@ -4,4 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pl.pola_app.ui.fragment.ScannerFragment">
+
+    <me.dm7.barcodescanner.zxing.ZXingScannerView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scanner_view" />
 </FrameLayout>

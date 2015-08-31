@@ -8,14 +8,13 @@ import pl.pola_app.ui.activity.MainActivity;
 import pl.pola_app.ui.fragment.ScannerFragment;
 
 @Singleton
-@Component(modules = {NetworkModule.class, AppModule.class, ScannerViewModule.class, OttoModule.class})
+@Component(modules = {NetworkModule.class, AppModule.class, OttoModule.class})
 public interface PolaComponent {
 
     final class Initializer {
         public static PolaComponent init(PolaApplication app) {
             return DaggerPolaComponent.builder()
                     .appModule(new AppModule(app))
-                    .scannerViewModule(new ScannerViewModule(app))
                     .build();
         }
     }
