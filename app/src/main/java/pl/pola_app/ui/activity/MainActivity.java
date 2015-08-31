@@ -38,9 +38,19 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        eventBus.register(this);
-
         showScannerFragment();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        eventBus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        eventBus.unregister(this);
     }
 
     private void showScannerFragment() {

@@ -9,6 +9,7 @@ import com.crashlytics.android.Crashlytics;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import pl.pola_app.internal.di.PolaComponent;
+import roboguice.util.temp.Ln;
 import timber.log.Timber;
 
 public class PolaApplication extends Application {
@@ -25,8 +26,10 @@ public class PolaApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+            Ln.getConfig().setLoggingLevel(Log.DEBUG);
         } else {
             Timber.plant(new CrashReportingTree());
+            Ln.getConfig().setLoggingLevel(Log.ERROR);
         }
     }
 

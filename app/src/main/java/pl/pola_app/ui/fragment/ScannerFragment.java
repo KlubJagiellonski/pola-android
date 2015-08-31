@@ -38,9 +38,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     ZXingScannerView zXingView;
 
     @Inject
-    Context appContext;
-
-    @Inject
     Bus eventBus;
 
     @Bind(R.id.fl_camera_container)
@@ -77,7 +74,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
     @Override
     public void onStart() {
-        spiceManager.start(appContext);
+        spiceManager.start(getActivity());
         super.onStart();
     }
 
@@ -104,13 +101,13 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     public void handleResult(Result result) {
         Timber.d(result.getText());
         Timber.d(result.getBarcodeFormat().toString());
-        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(appContext));
+        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(getActivity()));
         spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, this);
     }
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-        Toast.makeText(appContext, "Failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
