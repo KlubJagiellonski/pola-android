@@ -1,12 +1,11 @@
 package pl.pola_app.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
@@ -40,6 +39,9 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Bind(R.id.scanner_view)
     ZXingScannerView zXingView;
 
+    @Bind(R.id.progress_bar)
+    ProgressBar progressBar;
+
     public static ScannerFragment newInstance() {
         ScannerFragment fragment = new ScannerFragment();
         return fragment;
@@ -61,6 +63,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         View scannerView = inflater.inflate(R.layout.fragment_scanner, container, false);
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
+
+        progressBar.setVisibility(View.GONE);
 
         return scannerView;
     }
@@ -94,8 +98,11 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     public void handleResult(Result result) {
         Timber.d(result.getText());
         Timber.d(result.getBarcodeFormat().toString());
+
+        progressBar.setVisibility(View.VISIBLE);
+        zXingView.setVisibility(View.GONE);
         GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(getActivity()));
-        spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, this);
+        spiceManager.execute(productRequest, result.getText(), DurationInMillis.ONE_HOUR, this);
     }
 
     @Override
