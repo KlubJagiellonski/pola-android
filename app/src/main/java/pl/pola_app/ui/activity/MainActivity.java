@@ -1,33 +1,49 @@
 package pl.pola_app.ui.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.FrameLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
+import com.google.zxing.Result;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
-import pl.pola_app.ui.events.ProductRequestSuccessEvent;
-import pl.pola_app.ui.fragment.ProductDetailsFragment;
-import pl.pola_app.ui.fragment.ScannerFragment;
+import pl.pola_app.network.GetProductRequest;
+import pl.pola_app.ui.adapter.ProductsAdapter;
+import timber.log.Timber;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler, RequestListener<Product> {
+
+    @Inject
+    SpiceManager spiceManager;
 
     @Inject
     Bus eventBus;
 
-    @Bind(R.id.container)
-    FrameLayout container;
+    @Bind(R.id.scanner_view)
+    ZXingScannerView zXingView;
+
+    @Bind(R.id.products_list)
+    RecyclerView productsList;
+
+    private ProductsAdapter productsAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,52 +52,65 @@ public class MainActivity extends ActionBarActivity {
         PolaApplication.component(this).inject(this);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null) {
-            return;
-        }
+        if (savedInstanceState != null) {
 
-        showScannerFragment();
+        }
+        
+        productsList.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        productsList.setLayoutManager(layoutManager);
+
+        productsAdapter = new ProductsAdapter();
+        productsList.setAdapter(productsAdapter);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         eventBus.register(this);
+        spiceManager.start(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        zXingView.setResultHandler(this);
+        zXingView.startCamera();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        zXingView.stopCamera();
     }
 
     @Override
     protected void onStop() {
+        spiceManager.shouldStop();
         super.onStop();
         eventBus.unregister(this);
     }
 
-    @Subscribe
-    public void productRequestSuccess(ProductRequestSuccessEvent event) {
-        showProductDetailsFragment(event.getProduct());
+
+    @Override
+    public void handleResult(Result result) {
+        Timber.d(result.getText());
+        Timber.d(result.getBarcodeFormat().toString());
+
+        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(this));
+        spiceManager.execute(productRequest, result.getText(), DurationInMillis.ONE_HOUR, this);
+        zXingView.startCamera();
     }
 
     @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getFragmentManager();
-        if(fragmentManager.getBackStackEntryCount() != 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+    public void onRequestFailure(SpiceException spiceException) {
+        Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
     }
 
-    private void showScannerFragment() {
-        ScannerFragment scannerFragment = ScannerFragment.newInstance();
-        getFragmentManager().beginTransaction().replace(R.id.container, scannerFragment).commit();
-    }
-
-    private void showProductDetailsFragment(Product product) {
-        FragmentManager fragmentManager = getFragmentManager();
-        ProductDetailsFragment productFragment = ProductDetailsFragment.newInstance(product);
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.replace(R.id.container, productFragment)
-                .addToBackStack(null).commit();
+    @Override
+    public void onRequestSuccess(Product product) {
+        Toast.makeText(this, "good", Toast.LENGTH_SHORT).show();
+        productsAdapter.addProduct(product);
     }
 }
