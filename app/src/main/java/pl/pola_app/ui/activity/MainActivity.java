@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
@@ -12,7 +11,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -30,11 +28,9 @@ import timber.log.Timber;
 
 public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler, RequestListener<Product> {
 
+    private static final String REQUEST_CACHE_KEY = "request_cache_key";
     @Inject
     SpiceManager spiceManager;
-
-    @Inject
-    Bus eventBus;
 
     @Bind(R.id.scanner_view)
     ZXingScannerView zXingView;
@@ -42,8 +38,11 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Bind(R.id.products_list)
     RecyclerView productsList;
 
-    private ProductsAdapter productsAdapter;
+    @Inject
+    ProductsAdapter productsAdapter;
+
     private RecyclerView.LayoutManager layoutManager;
+    private GetProductRequest productRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +51,9 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         PolaApplication.component(this).inject(this);
         ButterKnife.bind(this);
 
-        if (savedInstanceState != null) {
-
-        }
-        
-        productsList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         productsList.setLayoutManager(layoutManager);
 
-        productsAdapter = new ProductsAdapter();
         productsList.setAdapter(productsAdapter);
 
     }
@@ -68,7 +61,6 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Override
     protected void onStart() {
         super.onStart();
-        eventBus.register(this);
         spiceManager.start(this);
     }
 
@@ -87,30 +79,50 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
 
     @Override
     protected void onStop() {
-        spiceManager.shouldStop();
         super.onStop();
-        eventBus.unregister(this);
+        spiceManager.shouldStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        productsAdapter.onSaveInstanceState(outState);
+
+        if(productRequest != null) {
+            outState.putString(REQUEST_CACHE_KEY, productRequest.getCacheKey());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        productsAdapter.onRestoreInstanceSate(savedInstanceState);
+
+        String spiceRequestCacheKey = savedInstanceState.getString(REQUEST_CACHE_KEY);
+        if(spiceRequestCacheKey != null) {
+            spiceManager.addListenerIfPending(Product.class, spiceRequestCacheKey, this);
+        }
+    }
 
     @Override
     public void handleResult(Result result) {
         Timber.d(result.getText());
         Timber.d(result.getBarcodeFormat().toString());
 
-        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(this));
-        spiceManager.execute(productRequest, result.getText(), DurationInMillis.ONE_HOUR, this);
+        productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(this));
+        spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, this);
         zXingView.startCamera();
     }
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-        Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, spiceException.toString(), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onRequestSuccess(Product product) {
-        Toast.makeText(this, "good", Toast.LENGTH_SHORT).show();
-        productsAdapter.addProduct(product);
+        if(product != null) {
+            productsAdapter.addProduct(product);
+        }
     }
 }

@@ -1,17 +1,19 @@
 package pl.pola_app.ui.adapter;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,9 +25,11 @@ import pl.pola_app.model.Product;
  */
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
-    List<Product> products;
+    private final static String PRODUCTS = "Products";
+    private List<Product> products;
 
-    public ProductsAdapter() {
+    @Inject
+    ProductsAdapter() {
         products = new ArrayList<>();
     }
 
@@ -48,10 +52,27 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     public void addProduct(Product product) {
-        if(!this.products.contains(product)) {
-            products.add(0, product);
-            notifyDataSetChanged();
+        if(product.company == null) {
+            return;
         }
+
+        //always one item per company
+        for(Product p : products) {
+            if(p.company.id == product.company.id) {
+                products.remove(p);
+                break;
+            }
+        }
+        products.add(0, product);
+        notifyDataSetChanged();
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(PRODUCTS, Parcels.wrap(products));
+    }
+
+    public void onRestoreInstanceSate(Bundle savedInstanceState) {
+        products = Parcels.unwrap(savedInstanceState.getParcelable(PRODUCTS));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
