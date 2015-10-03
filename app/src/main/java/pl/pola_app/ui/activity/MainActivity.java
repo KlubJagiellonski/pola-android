@@ -1,7 +1,7 @@
 package pl.pola_app.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -30,7 +30,7 @@ import pl.pola_app.ui.adapter.ProductsAdapter;
 import timber.log.Timber;
 
 
-public class MainActivity extends ActionBarActivity implements RequestListener<Product> {
+public class MainActivity extends AppCompatActivity implements RequestListener<Product> {
 
     private static final String REQUEST_CACHE_KEY = "request_cache_key";
     @Inject
