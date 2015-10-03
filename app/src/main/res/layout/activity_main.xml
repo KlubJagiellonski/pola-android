@@ -5,7 +5,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <me.dm7.barcodescanner.zxing.ZXingScannerView
+    <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="2"

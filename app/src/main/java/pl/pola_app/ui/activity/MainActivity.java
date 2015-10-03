@@ -6,17 +6,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -26,14 +30,14 @@ import pl.pola_app.ui.adapter.ProductsAdapter;
 import timber.log.Timber;
 
 
-public class MainActivity extends ActionBarActivity implements ZXingScannerView.ResultHandler, RequestListener<Product> {
+public class MainActivity extends ActionBarActivity implements RequestListener<Product> {
 
     private static final String REQUEST_CACHE_KEY = "request_cache_key";
     @Inject
     SpiceManager spiceManager;
 
     @Bind(R.id.scanner_view)
-    ZXingScannerView zXingView;
+    CompoundBarcodeView scannerView;
 
     @Bind(R.id.products_list)
     RecyclerView productsList;
@@ -51,6 +55,8 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         PolaApplication.component(this).inject(this);
         ButterKnife.bind(this);
 
+        scannerView.decodeContinuous(callback);
+
         layoutManager = new LinearLayoutManager(this);
         productsList.setLayoutManager(layoutManager);
 
@@ -67,14 +73,13 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
     @Override
     protected void onResume() {
         super.onResume();
-        zXingView.setResultHandler(this);
-        zXingView.startCamera();
+        scannerView.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        zXingView.stopCamera();
+        scannerView.pause();
     }
 
     @Override
@@ -104,15 +109,23 @@ public class MainActivity extends ActionBarActivity implements ZXingScannerView.
         }
     }
 
-    @Override
-    public void handleResult(Result result) {
-        Timber.d(result.getText());
-        Timber.d(result.getBarcodeFormat().toString());
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if (result.getText() != null) {
+                Timber.d(result.getText());
+                Timber.d(result.getBarcodeFormat().toString());
 
-        productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(this));
-        spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, this);
-        zXingView.startCamera();
-    }
+                productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(MainActivity.this));
+                spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, MainActivity.this);
+                scannerView.setStatusText(result.getText());
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
