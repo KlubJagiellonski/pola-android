@@ -16,9 +16,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
+
+import pl.pola_app.R;
 
 /**
  * Created by grzegorzkapusta on 02.10.2015.
@@ -92,6 +95,12 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.company_plCapital_notes)
         TextView companyPlCapitalNotes;
 
+        @BindString(R.string.nip)
+        String nipString;
+
+        @BindString(R.string.pl_capital)
+        String plCapitalString;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -100,8 +109,8 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         void bind(Product product) {
             companyName.setText(product.company.name);
             companyAddress.setText(product.company.address);
-            companyNip.setText("NIP: " + product.company.nip);
-            companyPlCapital.setText("Udział polskiego kapitału: " + product.company.plCapital + "%");
+            companyNip.setText(String.format(nipString, product.company.nip));
+            companyPlCapital.setText(String.format(plCapitalString, product.company.plCapital));
             companyPlCapitalNotes.setText(product.company.plCapital_notes);
         }
     }
