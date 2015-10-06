@@ -1,6 +1,8 @@
 package pl.pola_app.ui.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements RequestListener<P
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
+                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
                 Timber.d(result.getText());
                 Timber.d(result.getBarcodeFormat().toString());
 
