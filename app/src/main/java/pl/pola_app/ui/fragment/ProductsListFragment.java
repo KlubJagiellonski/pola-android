@@ -2,11 +2,21 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
@@ -16,7 +26,9 @@ import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.LinearLayoutManager;
 import pl.pola_app.model.Product;
+import pl.pola_app.ui.activity.ProductDetailsActivity;
 import pl.pola_app.ui.adapter.ProductsAdapter;
+import pl.pola_app.ui.event.CardClickedEvent;
 
 public class ProductsListFragment extends Fragment {
 
@@ -25,6 +37,9 @@ public class ProductsListFragment extends Fragment {
 
     @Inject
     ProductsAdapter productsAdapter;
+
+    @Inject
+    Bus eventBus;
 
     public ProductsListFragment() {
         // Required empty public constructor
@@ -36,6 +51,7 @@ public class ProductsListFragment extends Fragment {
         View productsListView = inflater.inflate(R.layout.fragment_products_list, container, false);
         PolaApplication.component(getActivity()).inject(this);
         ButterKnife.bind(this, productsListView);
+        eventBus.register(this);
         return productsListView;
     }
 
@@ -65,5 +81,27 @@ public class ProductsListFragment extends Fragment {
 
     public void addProduct(Product product) {
         productsAdapter.addProduct(product);
+    }
+
+    @Subscribe
+    public void cardClicked(CardClickedEvent event) {
+        // Ordinary Intent for launching a new activity
+        Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
+        intent.putExtra(Product.class.getName(), Parcels.wrap(productsAdapter.getItemAt(event.itemPosition)));
+
+        // Get the transition name from the string
+        String transitionName = getString(R.string.transition_product_details);
+
+        // Define the view that the animation will start from
+        View viewStart = event.productCard;
+
+        ActivityOptionsCompat options =
+
+                ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        viewStart,   // Starting view
+                        transitionName    // The String
+                );
+        //Start the Intent
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 }

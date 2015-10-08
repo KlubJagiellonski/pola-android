@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -29,14 +31,17 @@ import pl.pola_app.model.Product;
 
 import pl.pola_app.R;
 import pl.pola_app.ui.activity.ProductDetailsActivity;
+import pl.pola_app.ui.event.CardClickedEvent;
 
 /**
  * Created by grzegorzkapusta on 02.10.2015.
  */
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
-    private final static String PRODUCTS = "Products";
     private List<Product> products;
+
+    @Inject
+    Bus eventBus;
 
     @Inject
     ProductsAdapter() {
@@ -52,13 +57,24 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         viewHolder.bind(products.get(i));
+
+        viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventBus.post(new CardClickedEvent(viewHolder.productCard, i));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return products.size();
+    }
+
+    public Product getItemAt(int position) {
+        return products.get(position);
     }
 
     public void addProduct(Product product) {
@@ -78,11 +94,11 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(PRODUCTS, Parcels.wrap(products));
+        outState.putParcelable(Product.class.getName(), Parcels.wrap(products));
     }
 
     public void onRestoreInstanceSate(Bundle savedInstanceState) {
-        products = Parcels.unwrap(savedInstanceState.getParcelable(PRODUCTS));
+        products = Parcels.unwrap(savedInstanceState.getParcelable(Product.class.getName()));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

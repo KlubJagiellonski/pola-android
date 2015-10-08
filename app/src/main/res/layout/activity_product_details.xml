@@ -7,7 +7,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:transitionName="@string/transition_product_details"
     tools:context="pl.pola_app.ui.activity.ProductDetailsActivity"
-    android:id="@+id/product_info_card">
+    android:id="@+id/product_info_card"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/company_address"/>
+        android:id="@+id/company_address" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
