@@ -1,11 +1,16 @@
 package pl.pola_app.ui.adapter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.parceler.Parcels;
@@ -18,10 +23,12 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
 
 import pl.pola_app.R;
+import pl.pola_app.ui.activity.ProductDetailsActivity;
 
 /**
  * Created by grzegorzkapusta on 02.10.2015.
@@ -45,7 +52,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
         viewHolder.bind(products.get(i));
     }
 
@@ -83,17 +90,8 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.company_name)
         TextView companyName;
 
-        @Bind(R.id.company_address)
-        TextView companyAddress;
-
-        @Bind(R.id.company_nip)
-        TextView companyNip;
-
-        @Bind(R.id.company_plCapital)
-        TextView companyPlCapital;
-
-        @Bind(R.id.company_plCapital_notes)
-        TextView companyPlCapitalNotes;
+        @Bind(R.id.card_view)
+        CardView productCard;
 
         @BindString(R.string.nip)
         String nipString;
@@ -108,10 +106,6 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
         void bind(Product product) {
             companyName.setText(product.company.name);
-            companyAddress.setText(product.company.address);
-            companyNip.setText(String.format(nipString, product.company.nip));
-            companyPlCapital.setText(String.format(plCapitalString, product.company.plCapital));
-            companyPlCapitalNotes.setText(product.company.plCapital_notes);
         }
     }
 }
