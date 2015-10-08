@@ -61,6 +61,7 @@ public class ScannerFragment extends Fragment implements RequestListener<Product
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
 
+        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         barcodeScanner.decodeContinuous(callback);
 
         return scannerView;
@@ -127,7 +128,7 @@ public class ScannerFragment extends Fragment implements RequestListener<Product
 
                 productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(getActivity()));
                 spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, ScannerFragment.this);
-                barcodeScanner.setStatusText(result.getText());
+                barcodeScanner.setStatusText("");
             }
         }
 

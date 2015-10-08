@@ -3,7 +3,6 @@ package pl.pola_app.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.LinearLayoutManager;
 import pl.pola_app.model.Product;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 
