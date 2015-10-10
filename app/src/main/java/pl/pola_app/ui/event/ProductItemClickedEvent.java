@@ -4,16 +4,18 @@ import android.support.v7.widget.CardView;
 
 import com.squareup.otto.Produce;
 
+import pl.pola_app.model.Product;
+
 /**
  * Created by grzegorzkapusta on 08.10.2015.
  */
-public class CardClickedEvent {
+public class ProductItemClickedEvent {
     public CardView productCard;
-    public int itemPosition;
+    public Product productItem;
 
-    public CardClickedEvent(CardView productCard, int itemPosition) {
+    public ProductItemClickedEvent(CardView productCard, Product item) {
         this.productCard = productCard;
-        this.itemPosition = itemPosition;
+        this.productItem = item;
     }
 
 }
