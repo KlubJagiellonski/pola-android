@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.ui.activity.MainActivity;
+import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 
 @Singleton
@@ -21,4 +22,5 @@ public interface PolaComponent {
 
     void inject(MainActivity mainActivity);
     void inject(ScannerFragment scannerFragment);
+    void inject(ProductsListFragment productsListFragment);
 }

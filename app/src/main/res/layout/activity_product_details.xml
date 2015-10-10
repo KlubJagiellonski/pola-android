@@ -1,15 +1,14 @@
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:scrollbars="vertical"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="pl.pola_app.ui.fragment.ProductDetailsFragment">
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:padding="16dp"
-    android:layout_height="match_parent">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:transitionName="@string/transition_product_details"
+    tools:context="pl.pola_app.ui.activity.ProductDetailsActivity"
+    android:id="@+id/product_info_card"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@ tools:context="pl.pola_app.ui.fragment.ProductDetailsFragment">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/company_address"/>
+        android:id="@+id/company_address" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,5 +37,6 @@ tools:context="pl.pola_app.ui.fragment.ProductDetailsFragment">
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/company_plCapital_notes"/>
+
+
 </LinearLayout>
-</ScrollView>

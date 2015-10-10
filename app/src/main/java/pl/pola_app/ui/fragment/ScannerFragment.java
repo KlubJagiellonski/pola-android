@@ -1,34 +1,41 @@
 package pl.pola_app.ui.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Bus;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
 import pl.pola_app.network.GetProductRequest;
-import pl.pola_app.ui.events.ProductRequestSuccessEvent;
+import pl.pola_app.ui.event.ProductRequestSuccessEvent;
 import timber.log.Timber;
 
-public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler, RequestListener<Product> {
+public class ScannerFragment extends Fragment implements RequestListener<Product> {
+
+    private static final String REQUEST_CACHE_KEY = "request_cache_key";
 
     @Inject
     SpiceManager spiceManager;
@@ -37,24 +44,14 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     Bus eventBus;
 
     @Bind(R.id.scanner_view)
-    ZXingScannerView zXingView;
+    CompoundBarcodeView barcodeScanner;
 
-    @Bind(R.id.progress_bar)
-    ProgressBar progressBar;
-
-    public static ScannerFragment newInstance() {
-        ScannerFragment fragment = new ScannerFragment();
-        return fragment;
-    }
+    private GetProductRequest productRequest;
 
     public ScannerFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,9 +61,37 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
 
-        progressBar.setVisibility(View.GONE);
+        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        barcodeScanner.decodeContinuous(callback);
 
         return scannerView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(productRequest != null) {
+            outState.putString(REQUEST_CACHE_KEY, productRequest.getCacheKey());
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            String spiceRequestCacheKey = savedInstanceState.getString(REQUEST_CACHE_KEY);
+            if (spiceRequestCacheKey != null) {
+                spiceManager.addListenerIfPending(Product.class, spiceRequestCacheKey, this);
+            }
+        }
     }
 
     @Override
@@ -78,36 +103,43 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Override
     public void onResume() {
         super.onResume();
-        zXingView.setResultHandler(this);
-        zXingView.startCamera();
+        barcodeScanner.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        zXingView.stopCamera();
+        barcodeScanner.pause();
     }
 
     @Override
     public void onStop() {
-        spiceManager.shouldStop();
         super.onStop();
+        spiceManager.shouldStop();
     }
 
-    @Override
-    public void handleResult(Result result) {
-        Timber.d(result.getText());
-        Timber.d(result.getBarcodeFormat().toString());
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if (result.getText() != null) {
+                ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                Timber.d(result.getText());
+                Timber.d(result.getBarcodeFormat().toString());
 
-        progressBar.setVisibility(View.VISIBLE);
-        zXingView.setVisibility(View.GONE);
-        GetProductRequest productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(getActivity()));
-        spiceManager.execute(productRequest, result.getText(), DurationInMillis.ONE_HOUR, this);
-    }
+                productRequest = new GetProductRequest(result.getText(), Utils.getDeviceId(getActivity()));
+                spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ONE_HOUR, ScannerFragment.this);
+                barcodeScanner.setStatusText("");
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-        Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), spiceException.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

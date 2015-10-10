@@ -3,6 +3,7 @@
 app/app.iml
 /build
 /local.properties
+app/fabric.properties
 .DS_Store
 *.iml
 

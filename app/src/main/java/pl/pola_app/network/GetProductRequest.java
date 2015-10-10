@@ -21,7 +21,7 @@ public class GetProductRequest extends RetrofitSpiceRequest<Product, Api> {
         return getService().product(barcode, deviceId);
     }
 
-    public static String getCacheKey() {
-        return GetProductRequest.class.getSimpleName();
+    public String getCacheKey() {
+        return barcode;
     }
 }
