@@ -3,5 +3,10 @@
 
     <string name="app_name">Pola</string>
     <string name="action_settings">Settings</string>
+    <string name="nip">"NIP: %s"</string>
+    <string name="pl_capital">"Udział polskiego kapitału: %s%%"</string>
+
+    <string name="scanner_status_text">Ustaw prostokąt na kodzie paskowym produktu by dowiedzieć się więcej o jego producencie.</string>
+    <string name="transition_product_details">product_details</string>
 
 </resources>

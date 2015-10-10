@@ -1,4 +1,4 @@
-package pl.pola_app.ui.events;
+package pl.pola_app.ui.event;
 
 import pl.pola_app.model.Product;
 

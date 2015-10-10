@@ -1,87 +1,68 @@
 package pl.pola_app.ui.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.widget.FrameLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.parceler.Parcels;
+
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
-import pl.pola_app.ui.events.ProductRequestSuccessEvent;
-import pl.pola_app.ui.fragment.ProductDetailsFragment;
-import pl.pola_app.ui.fragment.ScannerFragment;
+import pl.pola_app.ui.event.ProductItemClickedEvent;
+import pl.pola_app.ui.event.ProductRequestSuccessEvent;
+import pl.pola_app.ui.fragment.ProductsListFragment;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Inject
     Bus eventBus;
 
-    @Bind(R.id.container)
-    FrameLayout container;
+    private ProductsListFragment productsListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
-        ButterKnife.bind(this);
-
-        if(savedInstanceState != null) {
-            return;
-        }
-
-        showScannerFragment();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         eventBus.register(this);
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        eventBus.unregister(this);
+        productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
     }
 
     @Subscribe
     public void productRequestSuccess(ProductRequestSuccessEvent event) {
-        showProductDetailsFragment(event.getProduct());
+        productsListFragment.addProduct(event.getProduct());
     }
 
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getFragmentManager();
-        if(fragmentManager.getBackStackEntryCount() != 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
+    @Subscribe
+    public void productItemClickedEvent(ProductItemClickedEvent event) {
+        Intent intent = new Intent(this, ProductDetailsActivity.class);
+        intent.putExtra(Product.class.getName(), Parcels.wrap(event.productItem));
 
-    private void showScannerFragment() {
-        ScannerFragment scannerFragment = ScannerFragment.newInstance();
-        getFragmentManager().beginTransaction().replace(R.id.container, scannerFragment).commit();
-    }
+        // Get the transition name from the string
+        String transitionName = getString(R.string.transition_product_details);
 
-    private void showProductDetailsFragment(Product product) {
-        FragmentManager fragmentManager = getFragmentManager();
-        ProductDetailsFragment productFragment = ProductDetailsFragment.newInstance(product);
+        // Define the view that the animation will start from
+        View viewStart = event.productCard;
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.replace(R.id.container, productFragment)
-                .addToBackStack(null).commit();
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        viewStart,
+                        transitionName
+                );
+        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 }
