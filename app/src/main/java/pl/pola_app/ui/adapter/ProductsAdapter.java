@@ -1,16 +1,11 @@
 package pl.pola_app.ui.adapter;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -25,17 +20,11 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
 
-import pl.pola_app.R;
-import pl.pola_app.ui.activity.ProductDetailsActivity;
-import pl.pola_app.ui.event.CardClickedEvent;
+import pl.pola_app.ui.event.ProductItemClickedEvent;
 
-/**
- * Created by grzegorzkapusta on 02.10.2015.
- */
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
     private List<Product> products;
@@ -63,7 +52,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventBus.post(new CardClickedEvent(viewHolder.productCard, i));
+                eventBus.post(new ProductItemClickedEvent(viewHolder.productCard, products.get(i)));
             }
         });
     }
