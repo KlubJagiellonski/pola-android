@@ -4,10 +4,15 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Company {
-    public int id;
+    public Integer plWorkers;
+    public String plBrand_notes;
+    public String plWorkers_notes;
     public String name;
-    public int plCapital;
+    public Integer plTaxes;
+    public String plTaxes_notes;
+    public Integer plCapital;
+    public Integer plBrand;
+    public Integer plRnD;
     public String plCapital_notes;
-    public String nip;
-    public String address;
+    public String plRnD_notes;
 }

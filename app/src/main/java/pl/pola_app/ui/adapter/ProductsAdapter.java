@@ -1,5 +1,6 @@
 package pl.pola_app.ui.adapter;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
+import pl.pola_app.model.Company;
 import pl.pola_app.model.Product;
 
 import pl.pola_app.ui.event.ProductItemClickedEvent;
@@ -47,14 +49,17 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        viewHolder.bind(products.get(i));
+        final Product p = products.get(i);
+        viewHolder.bind(p);
 
-        viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                eventBus.post(new ProductItemClickedEvent(viewHolder.productCard, products.get(i)));
-            }
-        });
+        if(p.company != null && p.company.name != null) {
+            viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    eventBus.post(new ProductItemClickedEvent(viewHolder.productCard, p));
+                }
+            });
+        }
     }
 
     @Override
@@ -67,13 +72,9 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     public void addProduct(Product product) {
-        if(product.company == null) {
-            return;
-        }
-
         //always one item per company
         for(Product p : products) {
-            if(p.company.id == product.company.id) {
+            if(p.company != null && p.company.name != null && p.company.name.equals(product.company.name)) {
                 products.remove(p);
                 break;
             }
@@ -95,14 +96,12 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.company_name)
         TextView companyName;
 
-        @Bind(R.id.card_view)
+        @Bind(R.id.pl_score)
+        TextView plScore;
+
+        @Bind(R.id.view_product_item)
         CardView productCard;
 
-        @BindString(R.string.nip)
-        String nipString;
-
-        @BindString(R.string.pl_capital)
-        String plCapitalString;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -110,7 +109,21 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         void bind(Product product) {
-            companyName.setText(product.company.name);
+            if(product.company != null && product.company.name != null) {
+                companyName.setText(product.company.name);
+            } else {
+                companyName.setText("??");
+            }
+
+            if(product.plScore != null) {
+                plScore.setText(product.plScore.toString());
+            } else {
+                plScore.setText("?");
+            }
+
+            if(product.verified == false) {
+                productCard.setCardBackgroundColor(Color.GRAY);
+            }
         }
     }
 }
