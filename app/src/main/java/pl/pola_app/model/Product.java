@@ -4,7 +4,7 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Product {
-    public int id;
-    public String code;
     public Company company;
+    public boolean verified;
+    public Integer plScore;
 }

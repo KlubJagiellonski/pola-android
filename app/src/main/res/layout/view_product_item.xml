@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_product_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="2dp"
+    android:transitionName="@string/transition_product_details"
+    card_view:cardBackgroundColor="#FF0000"
+    card_view:contentPaddingBottom="10dp"
+    card_view:contentPaddingLeft="10dp"
+    card_view:contentPaddingRight="10dp"
+    card_view:contentPaddingTop="10dp"
+    card_view:cardCornerRadius="10dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        card_view:cardBackgroundColor="#FF0000"
-        card_view:contentPaddingLeft="10dp"
-        card_view:contentPaddingRight="10dp"
-        card_view:contentPaddingTop="10dp"
-        card_view:contentPaddingBottom="10dp"
-        card_view:cardCornerRadius="4dp"
-        android:transitionName="@string/transition_product_details">
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/company_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:layout_weight="4"
             android:ellipsize="end"
-            android:textSize="16sp"
+            android:singleLine="true"
             android:textColor="#000000"
-            android:id="@+id/company_name"/>
+            android:textSize="16sp" />
 
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        <TextView
+            android:id="@+id/pl_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
