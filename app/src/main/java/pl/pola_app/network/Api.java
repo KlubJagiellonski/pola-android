@@ -8,7 +8,7 @@ import retrofit.http.Query;
 
 public interface Api {
 
-    @GET("/cms/product/get_by_code/{barcode}")
+    @GET("/get_by_code/{barcode}")
     Product product(@Path("barcode") String barcode, @Query("device_id") String deviceId);
 
 }
