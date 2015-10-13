@@ -1,20 +1,32 @@
-package pl.pola_app.ui.activity;
+package pl.pola_app.ui.fragment;
 
-import android.app.Activity;
+
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import org.parceler.Parcels;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
+import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
-public class ProductDetailsActivity extends Activity {
+public class ProductDetailsFragment extends DialogFragment {
 
     @Bind(R.id.product_info_card)
     CardView productInfoCard;
@@ -52,16 +64,44 @@ public class ProductDetailsActivity extends Activity {
     @BindString(R.string.pl_brand)
     String plBrand;
 
+    @Inject
+    Bus eventBus;
+
+    private Product product;
+
+    public static ProductDetailsFragment newInstance(Product product) {
+        ProductDetailsFragment fragment = new ProductDetailsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Product.class.getName(), Parcels.wrap(product));
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public ProductDetailsFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_details);
+        if (getArguments() != null) {
+            product = Parcels.unwrap(getArguments().getParcelable(Product.class.getName()));
+        }
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
+        PolaApplication.component(getActivity()).inject(this);
+        ButterKnife.bind(this, view);
+        return view;
+    }
 
-        Bundle extras = getIntent().getExtras();
-        Product product = Parcels.unwrap(extras.getParcelable(Product.class.getName()));
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if(product.verified == false) {
             productInfoCard.setCardBackgroundColor(Color.GRAY);
@@ -88,5 +128,13 @@ public class ProductDetailsActivity extends Activity {
         if(product.company.plBrand != null) {
             tv_plBrand.setText(String.format(plBrand, product.company.plBrand));
         }
+
+        productInfoCard.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                eventBus.post(new ProductDetailsFragmentDismissedEvent());
+            }
+        });
     }
 }
