@@ -1,5 +1,7 @@
 package pl.pola_app.ui.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -18,8 +20,10 @@ import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
+import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.pola_app.ui.event.ProductRequestSuccessEvent;
+import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 
 
@@ -42,27 +46,33 @@ public class MainActivity extends AppCompatActivity {
         productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Subscribe
     public void productRequestSuccess(ProductRequestSuccessEvent event) {
         productsListFragment.addProduct(event.getProduct());
     }
 
     @Subscribe
-    public void productItemClickedEvent(ProductItemClickedEvent event) {
-        Intent intent = new Intent(this, ProductDetailsActivity.class);
-        intent.putExtra(Product.class.getName(), Parcels.wrap(event.productItem));
+    public void productItemClicked(ProductItemClickedEvent event) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
+        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
+        ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
+        ft.hide(productsListFragment);
+        ft.addToBackStack(ProductDetailsFragment.class.getName());
+        ft.commit();
+    }
 
-        // Get the transition name from the string
-        String transitionName = getString(R.string.transition_product_details);
-
-        // Define the view that the animation will start from
-        View viewStart = event.productCard;
-
-        ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                        viewStart,
-                        transitionName
-                );
-        ActivityCompat.startActivity(this, intent, options.toBundle());
+    @Subscribe
+    public void productDetailsFragmentDismissed(ProductDetailsFragmentDismissedEvent event) {
+        getFragmentManager().popBackStack(ProductDetailsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

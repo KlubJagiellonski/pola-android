@@ -56,7 +56,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
             viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    eventBus.post(new ProductItemClickedEvent(viewHolder.productCard, p));
+                    eventBus.post(new ProductItemClickedEvent(p));
                 }
             });
         }
