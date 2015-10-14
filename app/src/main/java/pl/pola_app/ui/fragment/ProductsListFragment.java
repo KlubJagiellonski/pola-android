@@ -26,6 +26,9 @@ public class ProductsListFragment extends Fragment {
     @Inject
     ProductsAdapter productsAdapter;
 
+    @Inject
+    LinearLayoutManager linearLayoutManager;
+
     public ProductsListFragment() {
         // Required empty public constructor
     }
@@ -43,7 +46,7 @@ public class ProductsListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        productsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        productsList.setLayoutManager(linearLayoutManager);
         productsList.setAdapter(productsAdapter);
 
         if(savedInstanceState != null) {
