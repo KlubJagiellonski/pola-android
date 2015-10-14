@@ -46,7 +46,7 @@ import timber.log.Timber;
  * If animations are not used at all then a normal measuring procedure will run and child views will be measured during
  * the measure pass.
  */
-public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutManager {
+public class ProductsListLinearLayoutManager extends android.support.v7.widget.LinearLayoutManager {
 
     private static boolean canMakeInsetsDirty = true;
     private static Field insetsDirtyField = null;
@@ -64,26 +64,26 @@ public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutM
     private final Rect tmpRect = new Rect();
 
     @SuppressWarnings("UnusedDeclaration")
-    public LinearLayoutManager(Context context) {
+    public ProductsListLinearLayoutManager(Context context) {
         super(context);
         this.view = null;
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public LinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    public ProductsListLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         this.view = null;
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public LinearLayoutManager(RecyclerView view) {
+    public ProductsListLinearLayoutManager(RecyclerView view) {
         super(view.getContext());
         this.view = view;
         this.overScrollMode = ViewCompat.getOverScrollMode(view);
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public LinearLayoutManager(RecyclerView view, int orientation, boolean reverseLayout) {
+    public ProductsListLinearLayoutManager(RecyclerView view, int orientation, boolean reverseLayout) {
         super(view.getContext(), orientation, reverseLayout);
         this.view = view;
         this.overScrollMode = ViewCompat.getOverScrollMode(view);
@@ -193,7 +193,8 @@ public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutM
         } else {
             height += getPaddingTop() + getPaddingBottom();
             if (hasHeightSize) {
-                height = Math.min(height, heightSize);
+                //limit to half of the screen
+                height = Math.min(height, heightSize/2);
             }
         }
 
@@ -258,7 +259,7 @@ public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutM
             child = recycler.getViewForPosition(position);
         } catch (IndexOutOfBoundsException e) {
             if (BuildConfig.DEBUG) {
-                Log.w("LinearLayoutManager", "LinearLayoutManager doesn't work well with animations. Consider switching them off", e);
+                Log.w("ProductsListLinearLayoutManager", "ProductsListLinearLayoutManager doesn't work well with animations. Consider switching them off", e);
             }
             return;
         }
