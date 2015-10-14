@@ -6,5 +6,7 @@ app/app.iml
 app/fabric.properties
 .DS_Store
 *.iml
+pola-android-release-key.keystore
+keystore.properties
 
 
