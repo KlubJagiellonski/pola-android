@@ -9,6 +9,4 @@
     <string name="pl_brand">Polska marka: %s</string>
 
     <string name="scanner_status_text">Ustaw prostokąt na kodzie paskowym produktu by dowiedzieć się więcej o jego producencie.</string>
-    <string name="transition_product_details">product_details</string>
-
 </resources>
