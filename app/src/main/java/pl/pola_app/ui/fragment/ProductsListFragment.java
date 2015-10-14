@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.helpers.LinearLayoutManager;
+import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.model.Product;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 
@@ -27,7 +27,7 @@ public class ProductsListFragment extends Fragment {
     ProductsAdapter productsAdapter;
 
     @Inject
-    LinearLayoutManager linearLayoutManager;
+    ProductsListLinearLayoutManager productsListLinearLayoutManager;
 
     public ProductsListFragment() {
         // Required empty public constructor
@@ -46,7 +46,7 @@ public class ProductsListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        productsList.setLayoutManager(linearLayoutManager);
+        productsList.setLayoutManager(productsListLinearLayoutManager);
         productsList.setAdapter(productsAdapter);
 
         if(savedInstanceState != null) {
