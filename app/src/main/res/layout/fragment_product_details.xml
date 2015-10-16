@@ -52,13 +52,13 @@
             android:layout_marginTop="20dp" />
 
         <TextView
-            android:id="@+id/company_plTaxes"
+            android:id="@+id/company_plRegisteres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
 
         <TextView
-            android:id="@+id/company_plBrand"
+            android:id="@+id/company_plNotGlobEnt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />

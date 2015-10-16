@@ -72,9 +72,9 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     public void addProduct(Product product) {
-        //always one item per company
+        //always one item per company/code
         for(Product p : products) {
-            if(p.company != null && p.company.name != null && p.company.name.equals(product.company.name)) {
+            if(p.code.equals(product.code) || (p.company != null && p.company.name != null && p.company.name.equals(product.company.name))) {
                 products.remove(p);
                 break;
             }
@@ -112,13 +112,13 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
             if(product.company != null && product.company.name != null) {
                 companyName.setText(product.company.name);
             } else {
-                companyName.setText("??");
+                companyName.setText(R.string.unknown_company);
             }
 
             if(product.plScore != null) {
                 plScore.setText(product.plScore.toString());
             } else {
-                plScore.setText("?");
+                plScore.setText(R.string.unknown_score);
             }
 
             if(product.verified == false) {

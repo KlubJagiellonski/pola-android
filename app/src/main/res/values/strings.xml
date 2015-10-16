@@ -2,11 +2,13 @@
 <resources>
 
     <string name="app_name">Pola</string>
-    <string name="pl_rnd_workers">Wykwalifikowani pracownicy w Polsce: %s</string>
-    <string name="pl_workers">Niewykwalifikowani pracownicy w Polsce: %s</string>
-    <string name="pl_capital">Właściele w Polsce: %s</string>
-    <string name="pl_taxes">Firma zarejestrowana w Polsce: %s</string>
-    <string name="pl_brand">Polska marka: %s</string>
+    <string name="pl_rnd_workers">Tworzy wysokopłatne miejsca pracy w Polsce: %s</string>
+    <string name="pl_workers">Produkuje w Polsce: %s</string>
+    <string name="pl_capital">Polski właściciel: %s%</string>
+    <string name="pl_registered">Zarejestrowana za granicą/Zarejestrowana w Polsce: %s</string>
+    <string name="pl_notGlobEnt">Jest częścią globalnego koncernu/Nie jest częścią globalnego koncernu: %s</string>
 
     <string name="scanner_status_text">Ustaw prostokąt na kodzie paskowym produktu by dowiedzieć się więcej o jego producencie.</string>
+    <string name="unknown_company">Nieznany producent</string>
+    <string name="unknown_score">\?</string>
 </resources>
