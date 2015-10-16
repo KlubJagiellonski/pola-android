@@ -2,10 +2,8 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,11 +41,11 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.company_plCapital)
     TextView tv_plCapital;
 
-    @Bind(R.id.company_plTaxes)
-    TextView tv_plTaxes;
+    @Bind(R.id.company_plRegisteres)
+    TextView tv_plRegistered;
 
-    @Bind(R.id.company_plBrand)
-    TextView tv_plBrand;
+    @Bind(R.id.company_plNotGlobEnt)
+    TextView tv_plNotGlobalEnt;
 
     @BindString(R.string.pl_rnd_workers)
     String plRnDWorkers;
@@ -58,10 +56,10 @@ public class ProductDetailsFragment extends DialogFragment {
     @BindString(R.string.pl_capital)
     String plCapital;
 
-    @BindString(R.string.pl_taxes)
+    @BindString(R.string.pl_registered)
     String plTaxes;
 
-    @BindString(R.string.pl_brand)
+    @BindString(R.string.pl_notGlobEnt)
     String plBrand;
 
     @Inject
@@ -121,12 +119,12 @@ public class ProductDetailsFragment extends DialogFragment {
             tv_plCapital.setText(String.format(plCapital, product.company.plCapital));
         }
 
-        if(product.company.plTaxes != null) {
-            tv_plTaxes.setText(String.format(plTaxes, product.company.plTaxes));
+        if(product.company.plRegistered != null) {
+            tv_plRegistered.setText(String.format(plTaxes, product.company.plRegistered));
         }
 
-        if(product.company.plBrand != null) {
-            tv_plBrand.setText(String.format(plBrand, product.company.plBrand));
+        if(product.company.plNotGlobEnt != null) {
+            tv_plNotGlobalEnt.setText(String.format(plBrand, product.company.plNotGlobEnt));
         }
 
         productInfoCard.setOnClickListener(new View.OnClickListener() {

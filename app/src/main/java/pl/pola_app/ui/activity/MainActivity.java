@@ -2,24 +2,17 @@ package pl.pola_app.ui.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.model.Product;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.pola_app.ui.event.ProductRequestSuccessEvent;
