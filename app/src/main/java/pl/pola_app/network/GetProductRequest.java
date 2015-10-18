@@ -2,8 +2,6 @@ package pl.pola_app.network;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import javax.inject.Inject;
-
 import pl.pola_app.model.Product;
 
 public class GetProductRequest extends RetrofitSpiceRequest<Product, Api> {

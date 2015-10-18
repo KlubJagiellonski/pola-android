@@ -4,7 +4,7 @@
     <string name="app_name">Pola</string>
     <string name="pl_rnd_workers">Tworzy wysokopłatne miejsca pracy w Polsce: %s</string>
     <string name="pl_workers">Produkuje w Polsce: %s</string>
-    <string name="pl_capital">Polski właściciel: %s%</string>
+    <string name="pl_capital">Polski właściciel: %s</string>
     <string name="pl_registered">Zarejestrowana za granicą/Zarejestrowana w Polsce: %s</string>
     <string name="pl_notGlobEnt">Jest częścią globalnego koncernu/Nie jest częścią globalnego koncernu: %s</string>
 

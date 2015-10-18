@@ -1,7 +1,5 @@
 package pl.pola_app.internal.di;
 
-import android.content.Context;
-
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;

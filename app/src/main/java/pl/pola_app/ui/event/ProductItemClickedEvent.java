@@ -1,9 +1,5 @@
 package pl.pola_app.ui.event;
 
-import android.support.v7.widget.CardView;
-
-import com.squareup.otto.Produce;
-
 import pl.pola_app.model.Product;
 
 /**
