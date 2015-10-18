@@ -8,6 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.otto.Bus;
+
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
@@ -17,17 +24,21 @@ import pl.pola_app.R;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.model.Product;
 import pl.pola_app.ui.adapter.ProductsAdapter;
+import pl.pola_app.ui.event.ProductItemClickedEvent;
 
-public class ProductsListFragment extends Fragment {
+public class ProductsListFragment extends Fragment implements ProductsAdapter.ProductClickListener {
 
     @Bind(R.id.products_list)
     RecyclerView productsList;
 
     @Inject
-    ProductsAdapter productsAdapter;
+    ProductsListLinearLayoutManager productsListLinearLayoutManager;
 
     @Inject
-    ProductsListLinearLayoutManager productsListLinearLayoutManager;
+    Bus eventBus;
+
+    private ProductsAdapter productsAdapter;
+    private List<Product> products;
 
     public ProductsListFragment() {
         // Required empty public constructor
@@ -39,6 +50,8 @@ public class ProductsListFragment extends Fragment {
         View productsListView = inflater.inflate(R.layout.fragment_products_list, container, false);
         PolaApplication.component(getActivity()).inject(this);
         ButterKnife.bind(this, productsListView);
+
+        products = new ArrayList<>();
         return productsListView;
     }
 
@@ -46,12 +59,15 @@ public class ProductsListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if(savedInstanceState != null) {
+            products = Parcels.unwrap(savedInstanceState.getParcelable(Product.class.getName()));
+        }
+
+        productsAdapter = new ProductsAdapter(products);
+        productsAdapter.setOnProductClickListener(this);
+
         productsList.setLayoutManager(productsListLinearLayoutManager);
         productsList.setAdapter(productsAdapter);
-
-        if(savedInstanceState != null) {
-            productsAdapter.onRestoreInstanceSate(savedInstanceState);
-        }
     }
 
     @Override
@@ -63,10 +79,45 @@ public class ProductsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        productsAdapter.onSaveInstanceState(outState);
+        outState.putParcelable(Product.class.getName(), Parcels.wrap(products));
     }
 
     public void addProduct(Product product) {
-        productsAdapter.addProduct(product);
+        if (products.size() > 0 && products.get(0) == null) {
+            products.set(0, product);
+        } else {
+            products.add(0, product);
+        }
+        productsAdapter.notifyDataSetChanged();
+    }
+
+    public void createProductPlaceholder() {
+        products.add(0, null);
+        productsAdapter.notifyDataSetChanged();
+    }
+
+    public void removeProductPlaceholder() {
+        if(products.size() > 0 && products.get(0) == null) {
+            products.remove(0);
+            productsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void itemClicked(Product product) {
+        eventBus.post(new ProductItemClickedEvent(product));
+    }
+
+    public boolean itemExists(String code) {
+        for(Product p : products) {
+            if(p.code.equals(code)) {
+                products.remove(p);
+                products.add(0, p);
+                productsAdapter.notifyDataSetChanged();
+                return true;
+            }
+        }
+
+        return false;
     }
 }
