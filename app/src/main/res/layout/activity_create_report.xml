@@ -52,9 +52,7 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/editText"
-        android:layout_below="@+id/description_textView"
-        android:layout_alignRight="@+id/send_button"
-        android:layout_alignEnd="@+id/send_button" />
+        android:layout_below="@+id/description_textView" />
 
     <Button
         android:layout_width="wrap_content"
