@@ -45,7 +45,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         final Product p = products.get(i);
         viewHolder.bind(p);
 
-        if(p != null && p.company != null && p.company.name != null) {
+        if (p != null) {
             viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -81,28 +81,29 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         void bind(Product product) {
-            if(product == null) {
+            if (product == null) {
+                progress.setVisibility(View.VISIBLE);
+                companyName.setText("");
                 return;
             }
 
             progress.setVisibility(View.GONE);
 
-            if(product.company != null && product.company.name != null) {
-                companyName.setText(product.company.name);
-            } else {
-                companyName.setText(R.string.unknown_company);
+            if (product.verified == false) {
+                productCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
+                progress.setBackgroundColor(Color.parseColor("#666666"));
             }
 
-            if(product.plScore != null) {
+            if (product.plScore != null) {
                 plScore.setProgress(product.plScore);
             } else {
                 plScore.setProgress(0);
             }
 
-            if(product.verified == false) {
-                productCard.setCardBackgroundColor(Color.GRAY);
+            if (product.company != null && product.company.name != null) {
+                companyName.setText(product.company.name);
             } else {
-                productCard.setCardBackgroundColor(Color.GRAY);
+                companyName.setText(R.string.unknown_company);
             }
         }
     }

@@ -2,6 +2,7 @@ package pl.pola_app.ui.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import pl.pola_app.model.Product;
 import pl.pola_app.network.GetProductRequest;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
+import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
@@ -82,13 +84,31 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
 
     @Subscribe
     public void productItemClicked(ProductItemClickedEvent event) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
-        ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
-        ft.hide(productsListFragment);
-        ft.addToBackStack(ProductDetailsFragment.class.getName());
-        ft.commit();
+        if(event.product.company == null && event.product.report.equals(R.string.ask_for_company_property_name)) {
+            launchReportActivity();
+        } else {
+            if(event.product.company == null) {
+                return;
+            }
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
+            ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
+            ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
+            ft.hide(productsListFragment);
+            ft.addToBackStack(ProductDetailsFragment.class.getName());
+            ft.commit();
+        }
+    }
+
+    @Subscribe
+    public void reportButtonClicked(ReportButtonClickedEvent event) {
+        launchReportActivity();
+    }
+
+    private void launchReportActivity() {
+        Intent intent = new Intent(this, CreateReportActivity.class);
+        startActivity(intent);
     }
 
     @Subscribe

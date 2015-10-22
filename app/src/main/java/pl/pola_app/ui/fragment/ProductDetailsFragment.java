@@ -2,12 +2,13 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -17,12 +18,13 @@ import org.parceler.Parcels;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.BindString;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
+import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
 public class ProductDetailsFragment extends DialogFragment {
 
@@ -32,35 +34,29 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.company_name)
     TextView tv_companyName;
 
-    @Bind(R.id.company_plRnD)
-    TextView tv_plRnD;
+    @Bind(R.id.plscore_details_progressbar)
+    ProgressBar plScoreBar;
 
-    @Bind(R.id.company_plWorkers)
-    TextView tv_plWorkers;
+    @Bind(R.id.plscore_details_text)
+    TextView plScoreText;
 
-    @Bind(R.id.company_plCapital)
-    TextView tv_plCapital;
+    @Bind(R.id.plcapital_details_progressbar)
+    ProgressBar plCapitalBar;
 
-    @Bind(R.id.company_plRegisteres)
-    TextView tv_plRegistered;
+    @Bind(R.id.plcapital_details_text)
+    TextView plCapitalText;
 
-    @Bind(R.id.company_plNotGlobEnt)
-    TextView tv_plNotGlobalEnt;
+    @Bind(R.id.pl_workers_radiobutton)
+    RadioButton plWorkersRadio;
 
-    @BindString(R.string.pl_rnd_workers)
-    String plRnDWorkers;
+    @Bind(R.id.pl_rnd_radiobutton)
+    RadioButton plRnDRadio;
 
-    @BindString(R.string.pl_workers)
-    String plWorkers;
+    @Bind(R.id.pl_registered_radiobutton)
+    RadioButton plRegisteredRadio;
 
-    @BindString(R.string.pl_capital)
-    String plCapital;
-
-    @BindString(R.string.pl_registered)
-    String plTaxes;
-
-    @BindString(R.string.pl_notGlobEnt)
-    String plBrand;
+    @Bind(R.id.pl_globent_radiobutton)
+    RadioButton plGlobEntRadio;
 
     @Inject
     Bus eventBus;
@@ -102,29 +98,41 @@ public class ProductDetailsFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
 
         if(product.verified == false) {
-            productInfoCard.setCardBackgroundColor(Color.GRAY);
+            productInfoCard.setCardBackgroundColor(getResources().getColor(R.color.Not_Verified_Gray));
         }
 
-        tv_companyName.setText(product.company.name);
-
-        if(product.company.plRnD != null) {
-            tv_plRnD.setText(String.format(plRnDWorkers, product.company.plRnD));
+        if(product.company.name != null) {
+            tv_companyName.setText(product.company.name);
         }
 
-        if(product.company.plWorkers != null) {
-            tv_plWorkers.setText(String.format(plWorkers, product.company.plWorkers));
+        if(product.plScore != null) {
+            plScoreBar.setProgress(product.plScore);
+            plScoreText.setText(product.plScore + "%");
+        } else {
+            plScoreBar.setProgress(0);
         }
 
         if(product.company.plCapital != null) {
-            tv_plCapital.setText(String.format(plCapital, product.company.plCapital));
+            plCapitalBar.setProgress(product.company.plCapital);
+            plCapitalText.setText(product.company.plCapital + "%");
+        } else {
+            plCapitalBar.setProgress(0);
         }
 
-        if(product.company.plRegistered != null) {
-            tv_plRegistered.setText(String.format(plTaxes, product.company.plRegistered));
+        if (product.company.plWorkers != null && product.company.plWorkers != 0) {
+            plWorkersRadio.toggle();
         }
 
-        if(product.company.plNotGlobEnt != null) {
-            tv_plNotGlobalEnt.setText(String.format(plBrand, product.company.plNotGlobEnt));
+        if (product.company.plRnD != null && product.company.plRnD != 0) {
+            plRnDRadio.toggle();
+        }
+
+        if (product.company.plRegistered != null && product.company.plRegistered != 0) {
+            plRegisteredRadio.toggle();
+        }
+
+        if (product.company.plNotGlobEnt != null && product.company.plNotGlobEnt != 0) {
+            plGlobEntRadio.toggle();
         }
 
         productInfoCard.setOnClickListener(new View.OnClickListener() {
@@ -134,5 +142,10 @@ public class ProductDetailsFragment extends DialogFragment {
                 eventBus.post(new ProductDetailsFragmentDismissedEvent());
             }
         });
+    }
+
+    @OnClick(R.id.report_button)
+    public void report() {
+        eventBus.post(new ReportButtonClickedEvent());
     }
 }
