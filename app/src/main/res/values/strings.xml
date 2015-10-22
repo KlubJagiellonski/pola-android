@@ -2,13 +2,21 @@
 <resources>
 
     <string name="app_name">Pola</string>
-    <string name="pl_rnd_workers">Tworzy wysokopłatne miejsca pracy w Polsce: %s</string>
-    <string name="pl_workers">Produkuje w Polsce: %s</string>
-    <string name="pl_capital">Polski właściciel: %s</string>
-    <string name="pl_registered">Zarejestrowana za granicą/Zarejestrowana w Polsce: %s</string>
-    <string name="pl_notGlobEnt">Jest częścią globalnego koncernu/Nie jest częścią globalnego koncernu: %s</string>
 
     <string name="scanner_status_text">Ustaw prostokąt na kodzie paskowym produktu by dowiedzieć się więcej o jego producencie.</string>
-    <string name="unknown_company">Nieznany producent</string>
+    <string name="unknown_company">Pomóż Poli zdobyć dane</string>
     <string name="unknown_score">\?</string>
+    <string name="ask_for_company_property_name">ask_for_company</string>
+    <string name="title_activity_create_report">CreateReportActivity</string>
+    <string name="send">Wyślij</string>
+    <string name="report_text">Zgłoś</string>
+    <string name="photos_report">zdjęcia:</string>
+    <string name="description_report">opis (opcjonalny):</string>
+    <string name="pl_capital_percent">odsetek polskich właścicieli</string>
+    <string name="pl_workers_text">produkuje w PL</string>
+    <string name="pl_rnd_text">tworzy wysokopłatne miejsca pracy w PL</string>
+    <string name="pl_registered_text">jest zarejestrowana w PL</string>
+    <string name="pl_globent_text">nie jest częścią globalnego koncernu</string>
+    <string name="report_message">Jeśli uważasz, że w danych są błędy, zgłoś ten fakt. Pola powstaje przy dużej pomocy jej użytkowników.</string>
+    <string name="report_button_text">Zgłoś</string>
 </resources>

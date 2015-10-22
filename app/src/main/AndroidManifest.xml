@@ -35,6 +35,10 @@
 
         <activity android:name=".ui.activity.ProductDetailsActivity" >
         </activity>
+        <activity
+            android:name=".ui.activity.CreateReportActivity"
+            android:label="@string/title_activity_create_report" >
+        </activity>
     </application>
 
 </manifest>
