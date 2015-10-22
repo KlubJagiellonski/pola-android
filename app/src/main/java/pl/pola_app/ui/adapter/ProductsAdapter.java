@@ -84,6 +84,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
             if (product == null) {
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
+                plScore.setProgress(0);
                 return;
             }
 
