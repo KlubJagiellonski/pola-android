@@ -19,6 +19,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_gravity="center"
+        android:background="@android:color/transparent"
         android:id="@+id/progressBar" />
 
     <LinearLayout

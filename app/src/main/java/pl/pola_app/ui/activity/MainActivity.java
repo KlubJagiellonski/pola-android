@@ -28,6 +28,7 @@ import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity implements ScannerFragment.BarcodeScannedListener, RequestListener<Product> {
@@ -84,13 +85,9 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
 
     @Subscribe
     public void productItemClicked(ProductItemClickedEvent event) {
-        if(event.product.company == null && event.product.report.equals(R.string.ask_for_company_property_name)) {
+        if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
             launchReportActivity();
         } else {
-            if(event.product.company == null) {
-                return;
-            }
-
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
             ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
