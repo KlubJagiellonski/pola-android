@@ -48,6 +48,8 @@ import timber.log.Timber;
  */
 public class ProductsListLinearLayoutManager extends android.support.v7.widget.LinearLayoutManager {
 
+    private static double HEIGHT_LIMIT = 0.4; //40% of the screen
+
     private static boolean canMakeInsetsDirty = true;
     private static Field insetsDirtyField = null;
 
@@ -193,8 +195,7 @@ public class ProductsListLinearLayoutManager extends android.support.v7.widget.L
         } else {
             height += getPaddingTop() + getPaddingBottom();
             if (hasHeightSize) {
-                //limit to half of the screen
-                height = Math.min(height, heightSize/2);
+                height = Math.min(height, (int) (heightSize*HEIGHT_LIMIT));
             }
         }
 
