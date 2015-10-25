@@ -28,6 +28,7 @@ import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
+import pl.tajchert.nammu.Nammu;
 import timber.log.Timber;
 
 
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
         ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
         eventBus.register(this);
+
+        Nammu.init(this);
 
         productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
@@ -135,5 +138,10 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     public void onRequestSuccess(Product product) {
         productsListFragment.addProduct(product);
         scannerFragment.resumeScanning();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

@@ -7,6 +7,7 @@ import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -22,6 +23,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
 public class ScannerFragment extends Fragment {
@@ -55,7 +58,7 @@ public class ScannerFragment extends Fragment {
         PolaApplication.component(getActivity()).inject(this);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
-        barcodeScanner.decodeContinuous(callback);
+        Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
 
         return scannerView;
     }
@@ -98,6 +101,18 @@ public class ScannerFragment extends Fragment {
 
         @Override
         public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
+
+    final PermissionCallback permissionCameraCallback = new PermissionCallback() {
+        @Override
+        public void permissionGranted() {
+            resumeScanning();
+        }
+
+        @Override
+        public void permissionRefused() {
+            Toast.makeText(getActivity(), "Brak dostępu do kamery",  Toast.LENGTH_SHORT).show();
         }
     };
 }

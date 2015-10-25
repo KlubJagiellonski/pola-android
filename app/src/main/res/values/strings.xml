@@ -19,4 +19,6 @@
     <string name="pl_globent_text">nie jest częścią globalnego koncernu</string>
     <string name="report_message">Jeśli uważasz, że w danych są błędy, zgłoś ten fakt. Pola powstaje przy dużej pomocy jej użytkowników.</string>
     <string name="report_button_text">Zgłoś</string>
+    <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
+    <string name="send_report">Wyślij</string>
 </resources>
