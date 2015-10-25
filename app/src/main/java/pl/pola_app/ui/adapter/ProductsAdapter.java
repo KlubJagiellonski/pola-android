@@ -74,13 +74,15 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.progressBar)
         ProgressBar progress;
 
-
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
         void bind(Product product) {
+            productCard.setCardBackgroundColor(Color.WHITE);
+            plScore.setBackgroundColor(Color.parseColor("#CCCCCC"));
+
             if (product == null) {
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
@@ -92,7 +94,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
             if (product.verified == false) {
                 productCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
-                progress.setBackgroundColor(Color.parseColor("#666666"));
+                plScore.setBackgroundColor(Color.parseColor("#666666"));
             }
 
             if (product.plScore != null) {

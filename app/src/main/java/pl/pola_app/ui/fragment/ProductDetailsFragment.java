@@ -2,11 +2,14 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -58,6 +61,12 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.pl_globent_radiobutton)
     RadioButton plGlobEntRadio;
 
+    @Bind(R.id.message)
+    TextView reportMessage;
+
+    @Bind(R.id.report_button)
+    Button reportButton;
+
     @Inject
     Bus eventBus;
 
@@ -98,7 +107,17 @@ public class ProductDetailsFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
 
         if(product.verified == false) {
-            productInfoCard.setCardBackgroundColor(getResources().getColor(R.color.Not_Verified_Gray));
+            productInfoCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
+            reportMessage.setText(R.string.not_verified_report_message);
+            reportButton.setText(R.string.send_report);
+            reportButton.setBackgroundColor(Color.parseColor("#D8002F"));
+            reportButton.setTextColor(Color.WHITE);
+        } else {
+            productInfoCard.setCardBackgroundColor(Color.WHITE);
+            reportMessage.setText(R.string.report_message);
+            reportButton.setText(R.string.report_button_text);
+            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
+            reportButton.setTextColor(Color.parseColor("#D8002F"));
         }
 
         if(product.company.name != null) {
@@ -110,6 +129,7 @@ public class ProductDetailsFragment extends DialogFragment {
             plScoreText.setText(product.plScore + "%");
         } else {
             plScoreBar.setProgress(0);
+            plScoreText.setText("?");
         }
 
         if(product.company.plCapital != null) {
@@ -117,6 +137,7 @@ public class ProductDetailsFragment extends DialogFragment {
             plCapitalText.setText(product.company.plCapital + "%");
         } else {
             plCapitalBar.setProgress(0);
+            plCapitalText.setText("?");
         }
 
         if (product.company.plWorkers != null && product.company.plWorkers != 0) {
