@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Bus;
 
 import org.parceler.Parcels;
@@ -19,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
@@ -84,8 +87,16 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
 
     public void addProduct(Product product) {
         if (products.size() > 0 && products.get(0) == null) {
+            if(BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("addProduct")
+                        .putCustomAttribute("good", "true"));
+            }
             products.set(0, product);
         } else {
+            if(BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("addProduct")
+                    .putCustomAttribute("good", "false"));
+            }
             products.add(0, product);
         }
         productsAdapter.notifyDataSetChanged();
