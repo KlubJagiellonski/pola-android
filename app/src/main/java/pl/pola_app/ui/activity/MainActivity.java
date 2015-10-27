@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -17,6 +19,7 @@ import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -29,7 +32,6 @@ import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
-import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity implements ScannerFragment.BarcodeScannedListener, RequestListener<Product> {
@@ -119,8 +121,16 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     @Override
     public void barcodeScanned(String result) {
         if(productsListFragment.itemExists(result)) {
+            if(BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("Scanned")
+                        .putCustomAttribute("existing", "true"));
+            }
             scannerFragment.resumeScanning();
         } else {
+            if(BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("Scanned")
+                        .putCustomAttribute("existing", "false"));
+            }
             productsListFragment.createProductPlaceholder();
             GetProductRequest productRequest = new GetProductRequest(result, Utils.getDeviceId(this));
             spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ALWAYS_EXPIRED, MainActivity.this);
@@ -129,6 +139,9 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
+        if(BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed"));
+        }
         Toast.makeText(this, spiceException.toString(), Toast.LENGTH_SHORT).show();
         productsListFragment.removeProductPlaceholder();
         scannerFragment.resumeScanning();
