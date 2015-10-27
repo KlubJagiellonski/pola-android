@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("Scanned failed"));
+            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed"));
         }
         Toast.makeText(this, spiceException.toString(), Toast.LENGTH_SHORT).show();
         productsListFragment.removeProductPlaceholder();
