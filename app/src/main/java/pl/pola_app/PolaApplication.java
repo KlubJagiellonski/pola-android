@@ -20,8 +20,9 @@ public class PolaApplication extends Application {
         super.onCreate();
 
         component = PolaComponent.Initializer.init(this);
-
-        Fabric.with(this, new Crashlytics());
+        if(BuildConfig.USE_CRASHLYTICS) {
+            Fabric.with(this, new Crashlytics());
+        }
         ButterKnife.setDebug(BuildConfig.DEBUG);
 
         if (BuildConfig.DEBUG) {
@@ -42,8 +43,9 @@ public class PolaApplication extends Application {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-            
-            Crashlytics.log(priority, tag, message);
+            if(BuildConfig.USE_CRASHLYTICS) {
+                Crashlytics.log(priority, tag, message);
+            }
 
             if (t != null) {
                 if (priority == Log.ERROR) {
