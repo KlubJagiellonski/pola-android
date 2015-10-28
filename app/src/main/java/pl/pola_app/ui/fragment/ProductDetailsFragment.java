@@ -167,6 +167,6 @@ public class ProductDetailsFragment extends DialogFragment {
 
     @OnClick(R.id.report_button)
     public void report() {
-        eventBus.post(new ReportButtonClickedEvent());
+        eventBus.post(new ReportButtonClickedEvent(product));
     }
 }

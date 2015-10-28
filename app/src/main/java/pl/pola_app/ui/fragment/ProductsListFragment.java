@@ -121,11 +121,13 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
 
     public boolean itemExists(String code) {
         for(Product p : products) {
-            if(p.code.equals(code)) {
-                products.remove(p);
-                products.add(0, p);
-                productsAdapter.notifyDataSetChanged();
-                return true;
+            if(p != null) {
+                if (p.code.equals(code)) {
+                    products.remove(p);
+                    products.add(0, p);
+                    productsAdapter.notifyDataSetChanged();
+                    return true;
+                }
             }
         }
 
