@@ -25,8 +25,8 @@ android {
         applicationId "pl.pola_app"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "dev"
+        versionCode 6
+        versionName "0.0.4"
     }
 
     signingConfigs {
