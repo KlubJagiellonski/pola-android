@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -41,6 +42,18 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     private ProductsListFragment productsListFragment;
     private ScannerFragment scannerFragment;
+    private int milisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
+    private Handler handlerScanner;
+    private Runnable runnableResumeScan = new Runnable() {
+        @Override
+        public void run() {
+            if (BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("Scanned")
+                        .putCustomAttribute("existing", "true"));
+            }
+            scannerFragment.resumeScanning();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
         ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
+        handlerScanner = new Handler();
+
         Nammu.init(this);
 
         productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
@@ -118,11 +133,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     @Override
     public void barcodeScanned(String result) {
         if(productsListFragment.itemExists(result)) {
-            if(BuildConfig.USE_CRASHLYTICS) {
-                Answers.getInstance().logCustom(new CustomEvent("Scanned")
-                        .putCustomAttribute("existing", "true"));
-            }
-            scannerFragment.resumeScanning();
+            handlerScanner.removeCallbacks(runnableResumeScan);
+            handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
         } else {
             if(BuildConfig.USE_CRASHLYTICS) {
                 Answers.getInstance().logCustom(new CustomEvent("Scanned")
