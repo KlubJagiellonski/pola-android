@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
 
         ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
-        eventBus.register(this);
-
         Nammu.init(this);
 
         productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
@@ -63,12 +61,14 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     @Override
     protected void onStart() {
         super.onStart();
+        eventBus.register(this);
         spiceManager.start(this);
     }
 
     @Override
     protected void onStop() {
         spiceManager.shouldStop();
+        eventBus.unregister(this);
         super.onStop();
     }
 
