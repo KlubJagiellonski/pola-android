@@ -9,10 +9,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -24,7 +20,7 @@ import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Product;
-import pl.pola_app.network.GetProductRequest;
+import pl.pola_app.network.Api;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
@@ -32,11 +28,13 @@ import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements ScannerFragment.BarcodeScannedListener, RequestListener<Product> {
-    @Inject
-    SpiceManager spiceManager;
+public class MainActivity extends AppCompatActivity implements Callback<Product>, ScannerFragment.BarcodeScannedListener {
 
     @Inject
     Bus eventBus;
@@ -63,20 +61,11 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(this);
     }
 
     @Override
     protected void onStop() {
-        spiceManager.shouldStop();
         super.onStop();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        spiceManager.addListenerIfPending(Product.class, null, this);
     }
 
     @Override
@@ -91,7 +80,11 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
     @Subscribe
     public void productItemClicked(ProductItemClickedEvent event) {
         if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
-            launchReportActivity();
+            if(event.product != null) {
+                launchReportActivity(event.product.code);
+            } else {
+                launchReportActivity(null);
+            }
         } else {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
@@ -105,11 +98,15 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
 
     @Subscribe
     public void reportButtonClicked(ReportButtonClickedEvent event) {
-        launchReportActivity();
+        if(event.product != null) {
+            launchReportActivity(event.product.code);
+        }
     }
 
-    private void launchReportActivity() {
+    private void launchReportActivity(String productId) {
         Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.setAction("product_report");
+        intent.putExtra("productId", productId);
         startActivity(intent);
     }
 
@@ -132,29 +129,31 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.B
                         .putCustomAttribute("existing", "false"));
             }
             productsListFragment.createProductPlaceholder();
-            GetProductRequest productRequest = new GetProductRequest(result, Utils.getDeviceId(this));
-            spiceManager.execute(productRequest, productRequest.getCacheKey(), DurationInMillis.ALWAYS_EXPIRED, MainActivity.this);
-        }
-    }
 
-    @Override
-    public void onRequestFailure(SpiceException spiceException) {
-        if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed"));
+            Api api = PolaApplication.retrofit.create(Api.class);
+            Call<Product> reportResultCall = api.product(result, Utils.getDeviceId(this));
+            reportResultCall.enqueue(this);
         }
-        Toast.makeText(this, spiceException.toString(), Toast.LENGTH_SHORT).show();
-        productsListFragment.removeProductPlaceholder();
-        scannerFragment.resumeScanning();
-    }
-
-    @Override
-    public void onRequestSuccess(Product product) {
-        productsListFragment.addProduct(product);
-        scannerFragment.resumeScanning();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onResponse(Response<Product> response, Retrofit retrofit) {
+        productsListFragment.addProduct(response.body());
+        scannerFragment.resumeScanning();
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        if(BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed"));
+        }
+        Toast.makeText(this, t.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+        productsListFragment.removeProductPlaceholder();
+        scannerFragment.resumeScanning();
     }
 }

@@ -12,6 +12,7 @@
     <string name="report_text">Zgłoś</string>
     <string name="photos_report">zdjęcia:</string>
     <string name="description_report">opis (opcjonalny):</string>
+    <string name="description_empty">Opis jest wymagany</string>
     <string name="pl_capital_percent">odsetek polskich właścicieli</string>
     <string name="pl_workers_text">produkuje w PL</string>
     <string name="pl_rnd_text">tworzy wysokopłatne miejsca pracy w PL</string>
