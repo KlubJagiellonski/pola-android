@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
         ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
-        eventBus.register(this);
-
         Nammu.init(this);
 
         productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
@@ -61,10 +59,12 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     @Override
     protected void onStart() {
         super.onStart();
+        eventBus.register(this);
     }
 
     @Override
     protected void onStop() {
+        eventBus.unregister(this);
         super.onStop();
     }
 
