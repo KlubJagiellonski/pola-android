@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LevelEndEvent;
+import com.crashlytics.android.answers.LevelStartEvent;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -39,6 +44,18 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             //This shouldn't happen at all
             this.finish();
         }
+
+        if(BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logLevelStart(new LevelStartEvent()
+                                .putLevelName("Report")
+                                .putCustomAttribute("Code", productId)
+                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @OnClick(R.id.send_button)
@@ -58,6 +75,17 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Api api = PolaApplication.retrofit.create(Api.class);
         Call<ReportResult> reportResultCall = api.createReport(Utils.getDeviceId(this), productId, report);
         reportResultCall.enqueue(this);
+        if(BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logLevelEnd(new LevelEndEvent()
+                                .putLevelName("Report")
+                                .putCustomAttribute("Code", productId + "")
+                                .putCustomAttribute("DeviceId", Utils.getDeviceId(CreateReportActivity.this))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

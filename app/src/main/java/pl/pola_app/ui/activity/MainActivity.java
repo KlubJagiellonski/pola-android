@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.SearchEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -94,6 +96,20 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     @Subscribe
     public void productItemClicked(ProductItemClickedEvent event) {
+        if(BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName(event.product.company.name + "") //As it might be null
+                                .putContentType("Open Card")
+                                .putContentId(Integer.toString(event.product.id))
+                                .putCustomAttribute("Code", event.product.code)
+                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+                                .putCustomAttribute("Verified", Boolean.toString(event.product.verified))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
             if(event.product != null) {
                 launchReportActivity(event.product.code);
@@ -132,6 +148,13 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     @Override
     public void barcodeScanned(String result) {
+
+        if(BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logSearch(new SearchEvent()
+                            .putQuery(result)
+                            .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+            );
+        }
         if(productsListFragment.itemExists(result)) {
             handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
@@ -155,6 +178,20 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     @Override
     public void onResponse(Response<Product> response, Retrofit retrofit) {
+        if (BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName(response.body().company.name + "")//To avoid null as it might be empty
+                                .putContentType("Card Preview")
+                                .putContentId(Integer.toString(response.body().id))
+                                .putCustomAttribute("Code", response.code())
+                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+                                .putCustomAttribute("Verified", Boolean.toString(response.body().verified))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         productsListFragment.addProduct(response.body());
         scannerFragment.resumeScanning();
     }
