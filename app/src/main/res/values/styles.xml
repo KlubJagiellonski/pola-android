@@ -5,4 +5,8 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+
+    <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+    </style>
 </resources>

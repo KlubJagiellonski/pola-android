@@ -10,7 +10,7 @@ import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 
 @Singleton
-@Component(modules = {NetworkModule.class, OttoModule.class, WidgetModule.class})
+@Component(modules = {OttoModule.class, WidgetModule.class})
 public interface PolaComponent {
 
     final class Initializer {

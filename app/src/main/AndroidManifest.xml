@@ -25,10 +25,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".network.PolaSpiceService"
-            android:exported="false" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="6a4f6710db1c4c62907f73a43eb5e68675cd2c7a" />
@@ -37,7 +33,8 @@
         </activity>
         <activity
             android:name=".ui.activity.CreateReportActivity"
-            android:label="@string/title_activity_create_report" >
+            android:label="@string/title_activity_create_report"
+            android:theme="@style/AppThemeLight">
         </activity>
     </application>
 
