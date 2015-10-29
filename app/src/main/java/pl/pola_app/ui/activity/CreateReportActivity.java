@@ -1,13 +1,21 @@
 package pl.pola_app.ui.activity;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LevelEndEvent;
 import com.crashlytics.android.answers.LevelStartEvent;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +38,9 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     @Bind(R.id.descripton_editText)
     EditText descriptionEditText;
+    @Bind(R.id.linearImageViews)
+    LinearLayout linearImageViews;
+    ArrayList<Bitmap> bitmaps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,14 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             //This shouldn't happen at all
             this.finish();
         }
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.pola_ic_app_512));
+        setImageView(bitmaps);
 
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
@@ -56,6 +75,39 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setImageView(ArrayList<Bitmap> bitmapsToSet) {
+        int margin = Utils.dpToPx(4);
+        if(bitmapsToSet != null && bitmapsToSet.size() > 0) {
+            for (Bitmap bitmap : bitmapsToSet) {
+                ImageView imageView = new ImageView(this);
+                imageView.setPadding(0, 0, margin, 0);
+                int width = bitmap.getWidth() * Utils.dpToPx(80)/bitmap.getHeight();
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, Utils.dpToPx(80));
+                imageView.setLayoutParams(layoutParams);
+                imageView.setImageBitmap(bitmap);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                linearImageViews.addView(imageView);
+            }
+        }
+        //Add add button
+        ImageView imageView = new ImageView(this);
+        imageView.setPadding(0,0,margin,0);
+        //imageView.setMaxHeight(Utils.dpToPx(80));
+        //imageView.setMinimumHeight(Utils.dpToPx(80));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Utils.dpToPx(80), Utils.dpToPx(80));
+        imageView.setLayoutParams(layoutParams);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: ");
+            }
+        });
+        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_black_24dp));
+        imageView.setBackgroundColor(Color.GRAY);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        linearImageViews.addView(imageView);
     }
 
     @OnClick(R.id.send_button)
