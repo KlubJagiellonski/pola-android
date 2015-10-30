@@ -199,10 +199,16 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     @Override
     public void onFailure(Throwable t) {
         if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed"));
+            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed")
+            .putCustomAttribute("message", t.getLocalizedMessage()));
         }
-        Toast.makeText(this, t.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+        if("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
+            Toast.makeText(this, getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, t.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+        }
         productsListFragment.removeProductPlaceholder();
-        scannerFragment.resumeScanning();
+        handlerScanner.removeCallbacks(runnableResumeScan);
+        handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
     }
 }
