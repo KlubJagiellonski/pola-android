@@ -22,4 +22,5 @@
     <string name="report_button_text">Zgłoś</string>
     <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
     <string name="send_report">Wyślij</string>
+    <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
 </resources>
