@@ -21,6 +21,9 @@ public interface Api {
     Call<Product>  product(@Path("barcode") String barcode, @Query("device_id") String deviceId);
 
     @POST("/a/create_report")
+    Call<ReportResult> createReport(@Query("device_id") String deviceId, @Body Report report);
+
+    @POST("/a/create_report")
     Call<ReportResult> createReport(@Query("device_id") String deviceId, @Query("product_id") String productId, @Body Report report);
 
     @Multipart

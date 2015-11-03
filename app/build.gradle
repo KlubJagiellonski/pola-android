@@ -21,14 +21,14 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "pl.pola_app"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 6
-        versionName "0.0.4"
+        versionCode 7
+        versionName "0.0.5"
     }
 
     signingConfigs {

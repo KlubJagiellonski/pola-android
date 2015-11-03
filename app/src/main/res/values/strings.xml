@@ -3,7 +3,7 @@
 
     <string name="app_name">Pola</string>
 
-    <string name="scanner_status_text">Ustaw prostokąt na kodzie paskowym produktu by dowiedzieć się więcej o jego producencie.</string>
+    <string name="scanner_status_text">Umieść kod kreskowy produktu w prostokącie powyżej aby dowiedzieć się więcej o firmie, która go wyprodukowała.</string>
     <string name="unknown_company">Pomóż Poli zdobyć dane</string>
     <string name="unknown_score">\?</string>
     <string name="ask_for_company_property_name">ask_for_company</string>
@@ -15,6 +15,9 @@
     <string name="description_report">opis (opcjonalny):</string>
     <string name="description_hint">Dodatkowe informacje</string>
     <string name="description_empty">Opis jest wymagany</string>
+    <string name="sending_image_dialog">Wysyłanie…</string>
+    <string name="toast_send_raport">Raport przesłany, dziękujemy</string>
+    <string name="toast_send_raport_error">Problem z wysyłanie, spróbuj później.</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="dialog_delete_photo">Usunąć zdjęcie?</string>
@@ -29,6 +32,16 @@
     <string name="send_report">Wyślij</string>
     <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
     <string name="toast_no_camera_access">Brak dostępu do kamery</string>
-    <string name="action_about">O aplikacji</string>
+    <string name="action_about">O aplikacji Pola</string>
     <string name="title_activity_activity_about">O aplikacji</string>
+    <string name="action_bug">Zgłoś błąd w danych</string>
+    <string name="action_metodology">Metodologia</string>
+    <string name="action_club">O Klubie Jagiellońskim</string>
+    <string name="action_team">Zespół</string>
+    <string name="action_partners">Partnerzy</string>
+    <string name="action_mail">Napisz do nas</string>
+    <string name="action_rate">Oceń Polę</string>
+    <string name="action_fb">Pola na Facebooku</string>
+    <string name="action_twitter">Pola na Twitterze</string>
+    <string name="send_email_picker">Wyślij email…</string>
 </resources>

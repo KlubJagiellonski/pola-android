@@ -13,4 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent" />
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/appIcon"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        android:src="@drawable/pola_ic_app_512"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:scaleType="centerCrop" />
 </RelativeLayout>

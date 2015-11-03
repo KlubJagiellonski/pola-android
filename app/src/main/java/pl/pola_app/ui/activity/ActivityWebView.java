@@ -8,12 +8,11 @@ import android.webkit.WebView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
+import pl.pola_app.helpers.Utils;
 
-public class ActivityAbout extends Activity {
+public class ActivityWebView extends Activity {
     @Bind(R.id.web_view)
     WebView webView;
-
-    private static final String URL_POLA_ABOUT = "https://www.pola-app.pl/m/about";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +21,11 @@ public class ActivityAbout extends Activity {
         ButterKnife.bind(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.loadUrl(URL_POLA_ABOUT);
+        if(getIntent().getExtras().containsKey("url")) {
+            webView.loadUrl(getIntent().getExtras().getString("url"));
+        } else {
+            webView.loadUrl(Utils.URL_POLA_ABOUT);
+        }
         webView.setWebChromeClient(new WebChromeClient());
     }
 }

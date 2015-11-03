@@ -10,6 +10,15 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class Utils {
+    public static final String URL_POLA_ABOUT = "https://www.pola-app.pl/m/about";
+    public static final String URL_POLA_METHOD = "https://www.pola-app.pl/m/method";
+    public static final String URL_POLA_KJ = "https://www.pola-app.pl/m/kj";
+    public static final String URL_POLA_TEAM= "https://www.pola-app.pl/m/team";
+    public static final String URL_POLA_PARTNERS = "https://www.pola-app.pl/m/partners";
+    public static final String POLA_MAIL = "kontakt@pola-app.pl";
+    public static final String URL_POLA_GOOGLEPLAY= "https://play.google.com/store/apps/details?id=pl.pola_app";
+    public static final String URL_POLA_FB = "https://www.facebook.com/app.pola";
+    public static final String URL_POLA_TWITTER= "https://twitter.com/pola_app";
     public static String getDeviceId(Context context) {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }

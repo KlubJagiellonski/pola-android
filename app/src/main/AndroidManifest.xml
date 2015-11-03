@@ -35,7 +35,7 @@
             android:label="@string/title_activity_create_report"
             android:theme="@style/AppThemeLight"/>
         <activity
-            android:name=".ui.activity.ActivityAbout"
+            android:name=".ui.activity.ActivityWebView"
             android:label="@string/title_activity_activity_about"
             android:parentActivityName=".ui.activity.MainActivity"/>
     </application>

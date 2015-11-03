@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.pola_app.ui.activity.ActivityAbout">
+    tools:context=".ui.activity.ActivityWebView">
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
