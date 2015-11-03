@@ -23,4 +23,6 @@
     <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
     <string name="send_report">Wyślij</string>
     <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
+    <string name="action_about">O aplikacji</string>
+    <string name="title_activity_activity_about">O aplikacji</string>
 </resources>

@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
@@ -14,6 +15,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 
@@ -77,6 +79,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.okhttp:logging-interceptor:2.6.0-SNAPSHOT'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.journeyapps:zxing-android-embedded:3.0.3@aar'
     compile 'com.google.zxing:core:3.2.0'
