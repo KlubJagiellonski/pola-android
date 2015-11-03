@@ -2,6 +2,7 @@ package pl.pola_app.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,12 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LevelEndEvent;
@@ -24,8 +25,8 @@ import com.google.gson.JsonObject;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private static final int REQUEST_PHOTO_CODE = 133;
     private String photoPath;
     private int photoMarginDp = 4;
+    private ProgressDialog progressDialog;
+    private int numberOfImages;
 
     @Bind(R.id.descripton_editText)
     EditText descriptionEditText;
@@ -68,18 +71,13 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         if("product_report".equals(getIntent().getAction())) {
             productId = getIntent().getStringExtra("productId");
         }
-        if(productId == null) {
-            //productId = "‘8005510001549’";//TODO TEST ONLY
-            //This shouldn't happen at all
-            this.finish();
-        }
         setImageView(bitmaps);
 
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logLevelStart(new LevelStartEvent()
                                 .putLevelName("Report")
-                                .putCustomAttribute("Code", productId)
+                                .putCustomAttribute("Code", productId+"") //because can be null, ugly
                                 .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
                 );
             } catch (Exception e) {
@@ -170,26 +168,30 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @OnClick(R.id.send_button)
     public void clickSendButton() {
         String description = descriptionEditText.getText().toString();
-        if (productId != null) {
-            if(description.length() <= 0) {
-                descriptionEditText.setError(getString(R.string.description_empty));
-                return;
-            }
-            sendReport(description);
-        }
+        sendReport(description);
     }
 
     private void sendReport(String description) {
+        if(description == null) {
+            description = "";
+        }
         Report report = new Report(description);
         Api api = PolaApplication.retrofit.create(Api.class);
-        Call<ReportResult> reportResultCall = api.createReport("test", productId, report);
+        Call<ReportResult> reportResultCall;
+        if(productId != null && productId.length() > 0) {
+            reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), productId, report);
+        } else {
+            reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
+        }
         reportResultCall.enqueue(this);
+        numberOfImages = bitmapsPaths.size();
+        progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logLevelEnd(new LevelEndEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "")
-                                .putCustomAttribute("DeviceId", "test")
+                                .putCustomAttribute("DeviceId", Utils.getDeviceId(CreateReportActivity.this))
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,9 +204,10 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Log.d(TAG, "onResponse: ");
         if(response.isSuccess()) {
             if(response.body() != null) {
-                if(bitmaps != null && bitmaps.size() > 0) {
-                    for(Bitmap bitmap : bitmaps) {
-                        sendImage(bitmap, bitmapsPaths.get(bitmaps.indexOf(bitmap)), Integer.toString(response.body().id));
+                if(bitmapsPaths != null && bitmapsPaths.size() > 0) {
+                    numberOfImages = 0;
+                    for(String path : bitmapsPaths) {
+                        sendImage(path, Integer.toString(response.body().id));
                     }
                 }
             }
@@ -214,29 +217,44 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @Override
     public void onFailure(Throwable t) {
         Log.d(TAG, "onFailure: ");
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.cancel();
+        }
+        Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
     }
 
-    private void sendImage(Bitmap photo, String imagePath, String reportId) {
+    private void sendImage(final String imagePath, String reportId) {
+        numberOfImages++;
         Api api = PolaApplication.retrofit.create(Api.class);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        String imageString = Utils.fileToSend(imagePath);
-        if(imageString == null) {
-            return;
-        }
-        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), imageString);//TODO compress image and resize before sending
-        Call<JsonObject> reportResultCall = api.sendReportImage("test", reportId, photoBody);
+        File imageFile = new File(imagePath);
+        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+        Call<JsonObject> reportResultCall = api.sendReportImage(Utils.getDeviceId(CreateReportActivity.this), reportId, photoBody);
         reportResultCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
                 Log.d(TAG, "onResponse image");
+                File photoFile = new File(imagePath);
+                photoFile.delete();
+                numberOfImages--;
+                if (numberOfImages == 0) {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                    Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport), Toast.LENGTH_LONG).show();
+                    CreateReportActivity.this.finish();
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.d(TAG, "onFailure image");
+                numberOfImages--;
+                if (numberOfImages == 0) {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                    Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -245,6 +263,9 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     protected void onResume() {
         super.onResume();
         setImageView(bitmaps);
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.cancel();
+        }
     }
 
     @Override
@@ -254,27 +275,38 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             if(photoPath == null) {
                 return;
             }
-            Bitmap decoded = BitmapFactory.decodeFile(photoPath);
+            Bitmap bitmapPhoto = BitmapFactory.decodeFile(photoPath);
             if(bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
                 bitmapsPaths.add(photoPath);
             }
-            //ByteArrayOutputStream out = new ByteArrayOutputStream();
-            //original.compress(Bitmap.CompressFormat.PNG, 60, out);//Change quality of bitmap
-            //Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-            //TODO lower quality, but that solution consumes too much time.
-            if(decoded.getHeight() > 2048 || decoded.getWidth() > 2048) {
-                float aspectRatio = decoded.getWidth() / (float) decoded.getHeight();
-                int width = 100;
+            if(bitmapPhoto.getHeight() > 1000 || bitmapPhoto.getWidth() > 1000) {
+                float aspectRatio = bitmapPhoto.getWidth() / (float) bitmapPhoto.getHeight();
+                int width = 1000;
                 int height = Math.round(width / aspectRatio);
-                decoded = Bitmap.createScaledBitmap(decoded, width, height, false);
+                overrideImageLowRes(bitmapPhoto, width, height);
+                width = 200;
+                height = Math.round(width / aspectRatio);
+                bitmapPhoto = Bitmap.createScaledBitmap(bitmapPhoto, width, height, false);//TO use for upload
             }
-
-            if (bitmaps != null) {
-                bitmaps.add(decoded);
+            if (bitmaps != null && bitmapPhoto != null) {
+                bitmaps.add(bitmapPhoto);
                 setImageView(bitmaps);
             }
         }
         photoPath = null;
+    }
+
+    private void overrideImageLowRes(Bitmap decoded, int width, int height) {
+        Bitmap bitmapToSave = Bitmap.createScaledBitmap(decoded, width, height, false);//To use as a thumbnail
+        File dest = new File(photoPath);
+        try {
+            FileOutputStream out = new FileOutputStream(dest);
+            bitmapToSave.compress(Bitmap.CompressFormat.JPEG, 70, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteFiles(ArrayList<String> paths) {
