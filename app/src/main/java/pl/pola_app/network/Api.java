@@ -25,6 +25,6 @@ public interface Api {
 
     @Multipart
     @POST("/a/attach_file")
-    Call<JsonObject> sendReportImage(@Query("device_id") String deviceId, @Query("report_id") String reportId, @Part("file\"; filename=\"test.jpg\"") RequestBody file);
+    Call<JsonObject> sendReportImage(@Query("device_id") String deviceId, @Query("report_id") String reportId, @Part("file\"; filename=\"image.jpg\"") RequestBody file);
 
 }

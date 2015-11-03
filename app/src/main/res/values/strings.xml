@@ -11,8 +11,13 @@
     <string name="send">Wyślij</string>
     <string name="report_text">Zgłoś</string>
     <string name="photos_report">zdjęcia:</string>
+    <string name="report_description">Zrób zdjęcie kodu kreskowego i etykiety z danymi producenta.</string>
     <string name="description_report">opis (opcjonalny):</string>
+    <string name="description_hint">Dodatkowe informacje</string>
     <string name="description_empty">Opis jest wymagany</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="dialog_delete_photo">Usunąć zdjęcie?</string>
     <string name="pl_capital_percent">odsetek polskich właścicieli</string>
     <string name="pl_workers_text">produkuje w PL</string>
     <string name="pl_rnd_text">tworzy wysokopłatne miejsca pracy w PL</string>
@@ -23,6 +28,7 @@
     <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
     <string name="send_report">Wyślij</string>
     <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
+    <string name="toast_no_camera_access">Brak dostępu do kamery</string>
     <string name="action_about">O aplikacji</string>
     <string name="title_activity_activity_about">O aplikacji</string>
 </resources>

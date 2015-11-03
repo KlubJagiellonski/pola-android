@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#e7e7e7"
     tools:context="pl.pola_app.ui.activity.CreateReportActivity">
 
     <TextView
@@ -20,27 +21,44 @@
         android:text="@string/report_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+
+    <TextView
+        android:id="@+id/report_description_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-light"
+        android:layout_below="@+id/report_textView"
+        android:text="@string/report_description"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <TextView
         android:id="@+id/photos_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/report_textView"
-        android:layout_marginTop="59dp"
+        android:layout_below="@+id/report_description_textView"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="2dp"
         android:fontFamily="sans-serif-light"
         android:textColor="#000"
         android:text="@string/photos_report"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
     <HorizontalScrollView
         android:id="@+id/horizontal_scroll"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:background="#fff"
         android:layout_below="@+id/photos_textView" >
 
         <LinearLayout
@@ -62,14 +80,18 @@
         android:text="@string/description_report"
         android:textColor="#000"
         android:layout_marginTop="24dp"
+        android:layout_marginLeft="2dp"
         android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/descripton_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/description_textView"
+        android:layout_marginTop="8dp"
+        android:hint="@string/description_hint"
         android:ems="10"
         android:inputType="textMultiLine" />
 

@@ -1,10 +1,11 @@
 package pl.pola_app.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -49,6 +50,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private String productId;
     private static final int REQUEST_PHOTO_CODE = 133;
     private String photoPath;
+    private int photoMarginDp = 4;
 
     @Bind(R.id.descripton_editText)
     EditText descriptionEditText;
@@ -86,16 +88,22 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         }
     }
 
-    private void setImageView(ArrayList<Bitmap> bitmapsToSet) {
-        int margin = Utils.dpToPx(4);
+    private void setImageView(final ArrayList<Bitmap> bitmapsToSet) {
+        int margin = Utils.dpToPx(photoMarginDp);
         linearImageViews.removeAllViews();
         if(bitmapsToSet != null && bitmapsToSet.size() > 0) {
-            for (Bitmap bitmap : bitmapsToSet) {
+            for (final Bitmap bitmap : bitmapsToSet) {
                 ImageView imageView = new ImageView(this);
-                imageView.setPadding(0, 0, margin, 0);
+                imageView.setPadding(margin, margin, margin, margin);
                 int width = bitmap.getWidth() * Utils.dpToPx(80)/bitmap.getHeight();
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, Utils.dpToPx(80));
                 imageView.setLayoutParams(layoutParams);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialogDeletePhoto(bitmapsToSet.indexOf(bitmap));
+                    }
+                });
                 imageView.setImageBitmap(bitmap);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 linearImageViews.addView(imageView);
@@ -103,9 +111,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         }
         //Add add button
         ImageView imageView = new ImageView(this);
-        imageView.setPadding(0,0,margin,0);
-        //imageView.setMaxHeight(Utils.dpToPx(80));
-        //imageView.setMinimumHeight(Utils.dpToPx(80));
+        imageView.setPadding(margin, margin, margin, margin);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Utils.dpToPx(80), Utils.dpToPx(80));
         imageView.setLayoutParams(layoutParams);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -116,9 +122,32 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             }
         });
         imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_black_24dp));
-        imageView.setBackgroundColor(Color.GRAY);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         linearImageViews.addView(imageView);
+    }
+
+    private void showDialogDeletePhoto(final int position) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if(bitmaps != null && bitmaps.size() >= position) {
+                            bitmaps.remove(position);
+                            setImageView(bitmaps);
+                        }
+                        if(bitmapsPaths!= null && bitmapsPaths.size() >= position) {
+                            bitmapsPaths.remove(position);
+                        }
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateReportActivity.this);
+        builder.setMessage(getString(R.string.dialog_delete_photo))
+                .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener)
+                .show();
     }
 
     private void launchCamera() {
@@ -175,7 +204,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             if(response.body() != null) {
                 if(bitmaps != null && bitmaps.size() > 0) {
                     for(Bitmap bitmap : bitmaps) {
-                        sendImage(bitmap, Integer.toString(response.body().id));
+                        sendImage(bitmap, bitmapsPaths.get(bitmaps.indexOf(bitmap)), Integer.toString(response.body().id));
                     }
                 }
             }
@@ -187,18 +216,17 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Log.d(TAG, "onFailure: ");
     }
 
-    private void sendImage(Bitmap photo, String reportId) {
-
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.56.1:8888/a")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();*/
+    private void sendImage(Bitmap photo, String imagePath, String reportId) {
         Api api = PolaApplication.retrofit.create(Api.class);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), encodedImage);
+        String imageString = Utils.fileToSend(imagePath);
+        if(imageString == null) {
+            return;
+        }
+        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), imageString);//TODO compress image and resize before sending
         Call<JsonObject> reportResultCall = api.sendReportImage("test", reportId, photoBody);
         reportResultCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -211,6 +239,12 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Log.d(TAG, "onFailure image");
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setImageView(bitmaps);
     }
 
     @Override
@@ -250,13 +284,19 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 photoFile.delete();
             }
         }
+        if(bitmaps != null) {
+            bitmaps.clear();
+        }
+        if(bitmapsPaths != null) {
+            bitmapsPaths.clear();
+        }
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         if(bitmapsPaths != null && bitmapsPaths.size() > 0) {
             deleteFiles(bitmapsPaths);
         }
-        super.onStop();
+        super.onDestroy();
     }
 }
