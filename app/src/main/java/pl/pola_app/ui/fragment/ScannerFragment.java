@@ -70,7 +70,7 @@ public class ScannerFragment extends Fragment {
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("POLA");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
         setHasOptionsMenu(true);
@@ -127,7 +127,7 @@ public class ScannerFragment extends Fragment {
 
         @Override
         public void permissionRefused() {
-            Toast.makeText(getActivity(), "Brak dostępu do kamery",  Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_no_camera_access),  Toast.LENGTH_SHORT).show();
         }
     };
 
