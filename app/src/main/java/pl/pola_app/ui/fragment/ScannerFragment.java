@@ -2,9 +2,15 @@ package pl.pola_app.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,6 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.ui.activity.ActivityAbout;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
@@ -40,6 +47,8 @@ public class ScannerFragment extends Fragment {
 
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     public ScannerFragment() {
         // Required empty public constructor
@@ -59,6 +68,12 @@ public class ScannerFragment extends Fragment {
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("POLA");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+        setHasOptionsMenu(true);
 
         return scannerView;
     }
@@ -115,4 +130,23 @@ public class ScannerFragment extends Fragment {
             Toast.makeText(getActivity(), "Brak dostępu do kamery",  Toast.LENGTH_SHORT).show();
         }
     };
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                Intent intent = new Intent(getActivity(), ActivityAbout.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

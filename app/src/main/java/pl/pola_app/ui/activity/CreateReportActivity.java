@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -18,7 +19,11 @@ import android.widget.LinearLayout;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LevelEndEvent;
 import com.crashlytics.android.answers.LevelStartEvent;
+import com.google.gson.JsonObject;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,6 +67,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             productId = getIntent().getStringExtra("productId");
         }
         if(productId == null) {
+            //productId = "‘8005510001549’";//TODO TEST ONLY
             //This shouldn't happen at all
             this.finish();
         }
@@ -147,14 +153,14 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private void sendReport(String description) {
         Report report = new Report(description);
         Api api = PolaApplication.retrofit.create(Api.class);
-        Call<ReportResult> reportResultCall = api.createReport(Utils.getDeviceId(this), productId, report);
+        Call<ReportResult> reportResultCall = api.createReport("test", productId, report);
         reportResultCall.enqueue(this);
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logLevelEnd(new LevelEndEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "")
-                                .putCustomAttribute("DeviceId", Utils.getDeviceId(CreateReportActivity.this))
+                                .putCustomAttribute("DeviceId", "test")
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -165,6 +171,15 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @Override
     public void onResponse(Response<ReportResult> response, Retrofit retrofit) {
         Log.d(TAG, "onResponse: ");
+        if(response.isSuccess()) {
+            if(response.body() != null) {
+                if(bitmaps != null && bitmaps.size() > 0) {
+                    for(Bitmap bitmap : bitmaps) {
+                        sendImage(bitmap, Integer.toString(response.body().id));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -172,10 +187,36 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Log.d(TAG, "onFailure: ");
     }
 
+    private void sendImage(Bitmap photo, String reportId) {
+
+        /*Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.56.1:8888/a")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();*/
+        Api api = PolaApplication.retrofit.create(Api.class);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), encodedImage);
+        Call<JsonObject> reportResultCall = api.sendReportImage("test", reportId, photoBody);
+        reportResultCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
+                Log.d(TAG, "onResponse image");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d(TAG, "onFailure image");
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_PHOTO_CODE && (resultCode == Activity.RESULT_OK || resultCode == 0 )) {//TODO 0 is RESULT_OK on emulator
             if(photoPath == null) {
                 return;
             }
@@ -189,7 +230,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             //TODO lower quality, but that solution consumes too much time.
             if(decoded.getHeight() > 2048 || decoded.getWidth() > 2048) {
                 float aspectRatio = decoded.getWidth() / (float) decoded.getHeight();
-                int width = 2048;
+                int width = 100;
                 int height = Math.round(width / aspectRatio);
                 decoded = Bitmap.createScaledBitmap(decoded, width, height, false);
             }

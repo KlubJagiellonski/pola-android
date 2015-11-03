@@ -32,6 +32,7 @@ public class PolaApplication extends Application {
         } else {
             Timber.plant(new CrashReportingTree());
         }
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(this.getResources().getString(R.string.pola_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
