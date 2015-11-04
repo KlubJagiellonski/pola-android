@@ -1,5 +1,6 @@
 package pl.pola_app.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -7,10 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,13 +25,12 @@ import com.squareup.okhttp.RequestBody;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
@@ -41,6 +38,8 @@ import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Report;
 import pl.pola_app.model.ReportResult;
 import pl.pola_app.network.Api;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -49,8 +48,6 @@ import retrofit.Retrofit;
 public class CreateReportActivity extends Activity implements Callback<ReportResult> {
     private static final String TAG = CreateReportActivity.class.getSimpleName();
     private String productId;
-    private static final int REQUEST_PHOTO_CODE = 133;
-    private String photoPath;
     private int photoMarginDp = 4;
     private ProgressDialog progressDialog;
     private int numberOfImages;
@@ -72,6 +69,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             productId = getIntent().getStringExtra("productId");
         }
         setImageView(bitmaps);
+        Nammu.init(this);
 
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
@@ -149,20 +147,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void launchCamera() {
-        final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/PolaPictures/";
-        File newdir = new File(dir);
-        newdir.mkdirs();
-        String file = dir+System.currentTimeMillis()+".jpg";
-        File photoFile = new File(file);
-        try {
-            photoFile.createNewFile();
-        } catch (IOException e) {}
-
-        Uri outputFileUri = Uri.fromFile(photoFile);
-        photoPath = photoFile.getAbsolutePath();
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        startActivityForResult(cameraIntent, REQUEST_PHOTO_CODE);
+        Nammu.askForPermission(CreateReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionWriteCallback);;
     }
 
     @OnClick(R.id.send_button)
@@ -270,33 +255,41 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        InputStream stream = null;
-        if (requestCode == REQUEST_PHOTO_CODE && (resultCode == Activity.RESULT_OK || resultCode == 0 )) {//TODO 0 is RESULT_OK on emulator
-            if(photoPath == null) {
-                return;
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
+                Toast.makeText(CreateReportActivity.this, "Brak zdjęcia",Toast.LENGTH_SHORT).show();
             }
-            Bitmap bitmapPhoto = BitmapFactory.decodeFile(photoPath);
-            if(bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
-                bitmapsPaths.add(photoPath);
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
+                onPhotoReturned(imageFile);
             }
-            if(bitmapPhoto.getHeight() > 1000 || bitmapPhoto.getWidth() > 1000) {
-                float aspectRatio = bitmapPhoto.getWidth() / (float) bitmapPhoto.getHeight();
-                int width = 1000;
-                int height = Math.round(width / aspectRatio);
-                overrideImageLowRes(bitmapPhoto, width, height);
-                width = 200;
-                height = Math.round(width / aspectRatio);
-                bitmapPhoto = Bitmap.createScaledBitmap(bitmapPhoto, width, height, false);//TO use for upload
-            }
-            if (bitmaps != null && bitmapPhoto != null) {
-                bitmaps.add(bitmapPhoto);
-                setImageView(bitmaps);
-            }
-        }
-        photoPath = null;
+        });
     }
 
-    private void overrideImageLowRes(Bitmap decoded, int width, int height) {
+    private void onPhotoReturned(File file) {
+        Bitmap bitmapPhoto = BitmapFactory.decodeFile(file.getAbsolutePath());
+        String photoPath = file.getAbsolutePath();
+        if(bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
+            bitmapsPaths.add(photoPath);
+        }
+        if(bitmapPhoto.getHeight() > 1000 || bitmapPhoto.getWidth() > 1000) {
+            float aspectRatio = bitmapPhoto.getWidth() / (float) bitmapPhoto.getHeight();
+            int width = 1000;
+            int height = Math.round(width / aspectRatio);
+            overrideImageLowRes(bitmapPhoto, width, height, photoPath);
+            width = 200;
+            height = Math.round(width / aspectRatio);
+            bitmapPhoto = Bitmap.createScaledBitmap(bitmapPhoto, width, height, false);//TO use for upload
+        }
+        if (bitmaps != null && bitmapPhoto != null) {
+            bitmaps.add(bitmapPhoto);
+            setImageView(bitmaps);
+        }
+    }
+
+    private void overrideImageLowRes(Bitmap decoded, int width, int height, String photoPath) {
         Bitmap bitmapToSave = Bitmap.createScaledBitmap(decoded, width, height, false);//To use as a thumbnail
         File dest = new File(photoPath);
         try {
@@ -330,5 +323,22 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             deleteFiles(bitmapsPaths);
         }
         super.onDestroy();
+    }
+
+    final PermissionCallback permissionWriteCallback = new PermissionCallback() {
+        @Override
+        public void permissionGranted() {
+            EasyImage.openCamera(CreateReportActivity.this);
+        }
+
+        @Override
+        public void permissionRefused() {
+            Toast.makeText(CreateReportActivity.this, getString(R.string.toast_no_camera_access),  Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
