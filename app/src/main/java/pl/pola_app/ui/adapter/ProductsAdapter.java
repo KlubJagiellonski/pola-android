@@ -44,15 +44,6 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         final Product p = products.get(i);
         viewHolder.bind(p);
-
-        if (p != null) {
-            viewHolder.productCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    productClickListener.itemClicked(p);
-                }
-            });
-        }
     }
 
     @Override
@@ -60,7 +51,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         return products == null ? 0 : products.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @Bind(R.id.company_name)
         TextView companyName;
@@ -74,9 +65,16 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.progressBar)
         ProgressBar progress;
 
+        View.OnClickListener onClickListener;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        void bindClickListener(View.OnClickListener onClickListener) {
+            this.onClickListener = onClickListener;
         }
 
         void bind(Product product) {
@@ -107,6 +105,18 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
                 companyName.setText(product.company.name);
             } else {
                 companyName.setText(R.string.unknown_company);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(productClickListener != null) {
+                if(products != null && products.size() >= getAdapterPosition()) {
+                    Product product = products.get(getAdapterPosition());
+                    if(product != null) {
+                        productClickListener.itemClicked(product);
+                    }
+                }
             }
         }
     }

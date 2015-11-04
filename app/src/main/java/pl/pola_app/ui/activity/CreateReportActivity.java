@@ -65,7 +65,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         setContentView(R.layout.activity_create_report);
         ButterKnife.bind(this);
 
-        if("product_report".equals(getIntent().getAction())) {
+        if(getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
         }
         setImageView(bitmaps);
@@ -153,21 +153,22 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @OnClick(R.id.send_button)
     public void clickSendButton() {
         String description = descriptionEditText.getText().toString();
-        sendReport(description);
+        sendReport(description, productId);
     }
 
-    private void sendReport(String description) {
+    private void sendReport(String description, String productId) {
         if(description == null) {
             description = "";
         }
-        Report report = new Report(description);
+        Report report;
+        if(productId != null) {
+            report = new Report(description, productId);
+        } else {
+            report = new Report(description);
+        }
         Api api = PolaApplication.retrofit.create(Api.class);
         Call<ReportResult> reportResultCall;
-        if(productId != null && productId.length() > 0) {
-            reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), productId, report);
-        } else {
-            reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
-        }
+        reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
         reportResultCall.enqueue(this);
         numberOfImages = bitmapsPaths.size();
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
@@ -194,7 +195,19 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                     for(String path : bitmapsPaths) {
                         sendImage(path, Integer.toString(response.body().id));
                     }
+                } else {
+                    if(progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
                 }
+            } else {
+                if(progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.cancel();
+                }
+            }
+        } else {
+            if(progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.cancel();
             }
         }
     }

@@ -9,6 +9,7 @@ import pl.pola_app.model.ReportResult;
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
@@ -20,11 +21,9 @@ public interface Api {
     @GET("/a/get_by_code/{barcode}")
     Call<Product>  product(@Path("barcode") String barcode, @Query("device_id") String deviceId);
 
+    @Headers("Content-Encoding: gzip")
     @POST("/a/create_report")
     Call<ReportResult> createReport(@Query("device_id") String deviceId, @Body Report report);
-
-    @POST("/a/create_report")
-    Call<ReportResult> createReport(@Query("device_id") String deviceId, @Query("product_id") String productId, @Body Report report);
 
     @Multipart
     @POST("/a/attach_file")
