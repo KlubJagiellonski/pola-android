@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     @Subscribe
     public void reportButtonClicked(ReportButtonClickedEvent event) {
         if(event.product != null) {
-            launchReportActivity(event.product.code);
+            launchReportActivity(Integer.toString(event.product.id));
         }
     }
 

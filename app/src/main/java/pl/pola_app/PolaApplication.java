@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.squareup.okhttp.OkHttpClient;
 
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -33,9 +34,11 @@ public class PolaApplication extends Application {
             Timber.plant(new CrashReportingTree());
         }
 
+        OkHttpClient client = new OkHttpClient();
         retrofit = new Retrofit.Builder()
                 .baseUrl(this.getResources().getString(R.string.pola_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
     }
 
