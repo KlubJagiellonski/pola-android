@@ -1,7 +1,7 @@
 package pl.pola_app.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 
-public class ActivityWebView extends Activity {
+public class ActivityWebView extends AppCompatActivity {
     @Bind(R.id.web_view)
     WebView webView;
 

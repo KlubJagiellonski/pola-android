@@ -1,6 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
+    <style name="AppThemeWeb" parent="@style/Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/theme_web_primary</item>
+        <item name="colorPrimaryDark">@color/theme_web_primarydark</item>
+        <item name="colorAccent">@color/theme_web_accent</item>
+
+    </style>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBar">false</item>
     </style>

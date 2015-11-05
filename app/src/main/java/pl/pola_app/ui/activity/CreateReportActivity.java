@@ -157,7 +157,10 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void sendReport(String description, String productId) {
-        if(description == null) {
+        if(productId == null && (bitmapsPaths == null || bitmapsPaths.size() == 0 )) {
+            Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_pic), Toast.LENGTH_LONG).show();
+            return;
+        }else if(description == null) {
             description = "";
         }
         Report report;
@@ -196,19 +199,27 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                         sendImage(path, Integer.toString(response.body().id));
                     }
                 } else {
-                    if(progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.cancel();
-                    }
+                    showEndResult(true);
                 }
             } else {
-                if(progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.cancel();
-                }
+                showEndResult(false);
             }
         } else {
-            if(progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.cancel();
-            }
+            showEndResult(false);
+        }
+    }
+
+    private void showEndResult(boolean isSuccess) {
+        String toastMessage = getString(R.string.toast_send_raport);
+        if(!isSuccess) {
+            toastMessage = getString(R.string.toast_send_raport_error);
+        }
+        Toast.makeText(CreateReportActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.cancel();
+        }
+        if(isSuccess) {
+            CreateReportActivity.this.finish();
         }
     }
 
@@ -235,11 +246,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 photoFile.delete();
                 numberOfImages--;
                 if (numberOfImages == 0) {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.cancel();
-                    }
-                    Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport), Toast.LENGTH_LONG).show();
-                    CreateReportActivity.this.finish();
+                    showEndResult(true);
                 }
             }
 
@@ -248,10 +255,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Log.d(TAG, "onFailure image");
                 numberOfImages--;
                 if (numberOfImages == 0) {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.cancel();
-                    }
-                    Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
+                    showEndResult(false);
                 }
             }
         });

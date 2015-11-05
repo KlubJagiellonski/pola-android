@@ -126,7 +126,7 @@ public class ProductDetailsFragment extends DialogFragment {
 
         if(product.plScore != null) {
             plScoreBar.setProgress(product.plScore);
-            plScoreText.setText(product.plScore + "%");
+            plScoreText.setText(product.plScore + "pkt");
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
