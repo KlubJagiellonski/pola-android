@@ -27,7 +27,7 @@
     <string name="pl_rnd_text">prowadzi badania i rozwój w Polsce</string>
     <string name="pl_registered_text">zarejestrowana w Polsce</string>
     <string name="pl_globent_text">nie jest częścią zagranicznego koncernu</string>
-    <string name="report_message">Jeśli uważasz, że w danych są błędy, zgłoś ten fakt. Pola powstaje przy dużej pomocy jej użytkowników.</string>
+    <string name="report_message">Zgłoś jeśli posiadasz bardziej aktualne dane na temat tego producenta.</string>
     <string name="report_button_text">Zgłoś</string>
     <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
     <string name="send_report">Wyślij</string>
