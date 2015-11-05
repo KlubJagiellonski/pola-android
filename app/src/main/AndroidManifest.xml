@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name=".ui.activity.ActivityWebView"
-            android:label="@string/title_activity_activity_about"
+            android:theme="@style/AppThemeWeb"
             android:parentActivityName=".ui.activity.MainActivity"/>
     </application>
 
