@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -49,17 +49,17 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.plcapital_details_text)
     TextView plCapitalText;
 
-    @Bind(R.id.pl_workers_radiobutton)
-    RadioButton plWorkersRadio;
+    @Bind(R.id.buttonWorkers)
+    ImageButton buttonWorkers;
 
-    @Bind(R.id.pl_rnd_radiobutton)
-    RadioButton plRnDRadio;
+    @Bind(R.id.buttonGlobent)
+    ImageButton buttonGlobent;
 
-    @Bind(R.id.pl_registered_radiobutton)
-    RadioButton plRegisteredRadio;
+    @Bind(R.id.buttonRegistered)
+    ImageButton buttonRegistered;
 
-    @Bind(R.id.pl_globent_radiobutton)
-    RadioButton plGlobEntRadio;
+    @Bind(R.id.buttonRnd)
+    ImageButton buttonRnd;
 
     @Bind(R.id.message)
     TextView reportMessage;
@@ -126,7 +126,7 @@ public class ProductDetailsFragment extends DialogFragment {
 
         if(product.plScore != null) {
             plScoreBar.setProgress(product.plScore);
-            plScoreText.setText(product.plScore + "pkt");
+            plScoreText.setText(product.plScore + " pkt");
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
@@ -141,19 +141,27 @@ public class ProductDetailsFragment extends DialogFragment {
         }
 
         if (product.company.plWorkers != null && product.company.plWorkers != 0) {
-            plWorkersRadio.toggle();
+            buttonWorkers.setSelected(true);
+        } else if (product.company.plWorkers == null) {
+            buttonWorkers.setEnabled(false);
         }
 
         if (product.company.plRnD != null && product.company.plRnD != 0) {
-            plRnDRadio.toggle();
+            buttonRnd.setSelected(true);
+        } else if (product.company.plRnD == null) {
+            buttonRnd.setEnabled(false);
         }
 
         if (product.company.plRegistered != null && product.company.plRegistered != 0) {
-            plRegisteredRadio.toggle();
+            buttonRegistered.setSelected(true);
+        } else if (product.company.plRegistered == null) {
+            buttonRegistered.setEnabled(false);
         }
 
         if (product.company.plNotGlobEnt != null && product.company.plNotGlobEnt != 0) {
-            plGlobEntRadio.toggle();
+            buttonGlobent.setSelected(true);
+        } else if (product.company.plNotGlobEnt == null) {
+            buttonGlobent.setEnabled(false);
         }
 
         productInfoCard.setOnClickListener(new View.OnClickListener() {
