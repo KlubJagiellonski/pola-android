@@ -64,11 +64,12 @@
                     <TextView
                         android:id="@+id/plscore_details_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="26dp"
                         android:layout_alignBottom="@+id/plscore_details_progressbar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
+                        android:gravity="center_vertical"
                         android:text="0 pkt"
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
@@ -102,11 +103,12 @@
                     <TextView
                         android:id="@+id/plcapital_details_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:layout_alignBottom="@+id/plcapital_details_progressbar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
+                        android:gravity="center_vertical"
                         android:text="0%"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />

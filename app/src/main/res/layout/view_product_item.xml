@@ -35,6 +35,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:gravity="center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@android:color/black"
@@ -43,7 +44,7 @@
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="4dp"
             android:progressDrawable="@drawable/score_bar"
             android:id="@+id/score_bar" />
 
