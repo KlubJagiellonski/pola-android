@@ -209,6 +209,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         }
         productsListFragment.removeProductPlaceholder();
         handlerScanner.removeCallbacks(runnableResumeScan);
-        handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
+        scannerFragment.resumeScanning();
     }
 }
