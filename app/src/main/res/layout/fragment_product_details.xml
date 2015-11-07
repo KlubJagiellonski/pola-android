@@ -15,10 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="90"
         card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="4dp"
@@ -69,7 +69,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
-                        android:text="0ptk"
+                        android:text="0 pkt"
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
                 </RelativeLayout>
@@ -112,50 +112,102 @@
                         android:textSize="12sp" />
                 </RelativeLayout>
 
-                <RadioButton
-                    android:id="@+id/pl_workers_radiobutton"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="16dp"
-                    android:buttonTint="@android:color/black"
-                    android:clickable="false"
-                    android:text="@string/pl_workers_text"
-                    android:textColor="@android:color/black" />
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/pl_rnd_radiobutton"
+                    <ImageButton
+                        android:id="@+id/buttonWorkers"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/button_three_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="4dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/pl_workers_text"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:buttonTint="@android:color/black"
-                    android:clickable="false"
-                    android:text="@string/pl_rnd_text"
-                    android:textColor="@android:color/black" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/pl_registered_radiobutton"
+                    <ImageButton
+                        android:id="@+id/buttonRnd"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/button_three_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="4dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/pl_rnd_text"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:buttonTint="@android:color/black"
-                    android:clickable="false"
-                    android:text="@string/pl_registered_text"
-                    android:textColor="@android:color/black" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/pl_globent_radiobutton"
+                    <ImageButton
+                        android:id="@+id/buttonRegistered"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/button_three_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="4dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/pl_registered_text"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:buttonTint="@android:color/black"
-                    android:clickable="false"
-                    android:text="@string/pl_globent_text"
-                    android:textColor="@android:color/black" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/buttonGlobent"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/button_three_selector" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="4dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/pl_globent_text"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
 
             </LinearLayout>
 
