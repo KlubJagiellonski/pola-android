@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
             Toast.makeText(this, getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, t.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
         productsListFragment.removeProductPlaceholder();
         handlerScanner.removeCallbacks(runnableResumeScan);
