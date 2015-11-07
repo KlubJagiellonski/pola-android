@@ -1,14 +1,19 @@
 package pl.pola_app.ui.fragment;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,13 +22,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.zxing.ResultPoint;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.squareup.otto.Bus;
 
-import java.util.List;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -31,6 +38,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.CameraSourcePreview;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.activity.CreateReportActivity;
@@ -39,6 +47,7 @@ import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
 public class ScannerFragment extends Fragment {
+    private static final String TAG = ScannerFragment.class.getSimpleName();
 
     public interface BarcodeScannedListener {
         void barcodeScanned(String result);
@@ -49,10 +58,14 @@ public class ScannerFragment extends Fragment {
     @Inject
     Bus eventBus;
 
-    @Bind(R.id.scanner_view)
-    CompoundBarcodeView barcodeScanner;
+    @Bind(R.id.preview)
+    CameraSourcePreview mPreview;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private CameraSource mCameraSource;
+    private boolean isDecoding = true;
+    private static final int RC_HANDLE_GMS = 9001;
 
     public ScannerFragment() {
         // Required empty public constructor
@@ -70,7 +83,7 @@ public class ScannerFragment extends Fragment {
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
 
-        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        //barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
@@ -83,50 +96,140 @@ public class ScannerFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        barcodeScanner.resume();
+        startCameraSource();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        barcodeScanner.pause();
+        if (mPreview != null) {
+            mPreview.stop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPreview != null) {
+            mPreview.release();
+        }
+        ButterKnife.unbind(this);
+    }
+
+    private void scannedBarcode(Barcode barcode) {
+        final String result = barcode.displayValue;
+        if (result != null) {
+            ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (barcodeScannedListener != null) {
+                        barcodeScannedListener.barcodeScanned(result);
+                    }
+                }
+            });
+
+            Timber.d(result);
+        }
+    }
+
+    private void createCameraSource() {
+        Context context = getActivity().getApplicationContext();
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+                Log.d(TAG, "release: ");
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                if (detections != null && detections.getDetectedItems() != null
+                        && detections.getDetectedItems().size() > 0
+                        && isDecoding) {
+                    for (int i = 0; i < detections.getDetectedItems().size(); i++) {
+                        int key = detections.getDetectedItems().keyAt(i);
+                        Barcode barcode = detections.getDetectedItems().get(key);
+                        Log.d(TAG, "receiveDetections barcode at:" + key + ", " + barcode);
+                        if (barcode != null) {
+                            scannedBarcode(barcode);
+                        }
+                    }
+                    isDecoding = false;
+                }
+            }
+        });
+        if (!barcodeDetector.isOperational()) {
+            // Check for low storage.  If there is low storage, the native library will not be
+            // downloaded, so detection will not become operational.
+            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = getActivity().registerReceiver(null, lowstorageFilter) != null;
+
+            if (hasLowStorage) {
+                Log.d(TAG, "createCameraSource error ");
+                //Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                //Log.w(TAG, getString(R.string.low_storage_error));
+            }
+        }
+        int width = 0;
+        int height = 0;
+        try {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            width = metrics.widthPixels;
+            height = metrics.heightPixels;
+        } catch (Exception e) {
+            //Something went wrong, use default values  (HD)
+            width = 720;
+            height = 1280;
+        }
+        if(width <= 0) {
+            width = 720;
+        }
+        if(height <= 0) {
+            height = 1280;
+        }
+        CameraSource.Builder builder = new CameraSource.Builder(getActivity().getApplicationContext(), barcodeDetector)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedPreviewSize(width, height)
+                .setRequestedFps(15.0f);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            builder = builder.setAutoFocusEnabled(true);
+        }
+        mCameraSource = builder.build();
+    }
+
+    private void startCameraSource() throws SecurityException {
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity().getApplicationContext());
+        if (code != ConnectionResult.SUCCESS) {
+            Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS);
+            dlg.show();
+        } else {
+            //TODO zxing?
+        }
+
+        if (mCameraSource != null) {
+            try {
+                mPreview.start(mCameraSource);
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to start camera source.", e);
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+        }
     }
 
     public void resumeScanning() {
-        barcodeScanner.decodeContinuous(callback);
+        isDecoding = true;
     }
 
-    private BarcodeCallback callback = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(BarcodeResult result) {
-            if (result.getText() != null) {
-                barcodeScanner.getBarcodeView().stopDecoding();
-                ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                barcodeScanner.setStatusText("");
-                barcodeScannedListener.barcodeScanned(result.getText());
-
-                Timber.d(result.getText());
-                Timber.d(result.getBarcodeFormat().toString());
-            }
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
 
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
-            resumeScanning();
+            createCameraSource();
         }
 
         @Override
