@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:zxing_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <com.journeyapps.barcodescanner.CompoundBarcodeView
+        android:id="@+id/scanner_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scanner_view"
-        zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner"/>
+        zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,13 +17,12 @@
         android:background="@android:color/transparent" />
 
     <ImageView
+        android:id="@+id/appIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:id="@+id/appIcon"
-        android:layout_margin="8dp"
-        android:visibility="gone"
-        android:src="@drawable/pola_ic_app_512"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:scaleType="centerCrop" />
+        android:layout_alignParentTop="true"
+        android:layout_margin="4dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_white" />
 </RelativeLayout>
