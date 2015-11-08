@@ -41,7 +41,7 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
     Bus eventBus;
 
     private ProductsAdapter productsAdapter;
-    private List<Product> products;
+    public List<Product> products;
 
     public ProductsListFragment() {
         // Required empty public constructor

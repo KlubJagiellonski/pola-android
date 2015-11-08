@@ -39,9 +39,11 @@ import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.CameraSourcePreview;
+import pl.pola_app.helpers.GraphicOverlay;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.activity.CreateReportActivity;
+import pl.pola_app.ui.scanner.ScannerBox;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
@@ -60,6 +62,10 @@ public class ScannerFragment extends Fragment {
 
     @Bind(R.id.preview)
     CameraSourcePreview mPreview;
+    @Bind(R.id.graphicOverlay)
+    GraphicOverlay graphicOverlay;
+    @Bind(R.id.scannerBox)
+    ScannerBox scannerBox;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
@@ -138,29 +144,7 @@ public class ScannerFragment extends Fragment {
     private void createCameraSource() {
         Context context = getActivity().getApplicationContext();
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-                Log.d(TAG, "release: ");
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                if (detections != null && detections.getDetectedItems() != null
-                        && detections.getDetectedItems().size() > 0
-                        && isDecoding) {
-                    for (int i = 0; i < detections.getDetectedItems().size(); i++) {
-                        int key = detections.getDetectedItems().keyAt(i);
-                        Barcode barcode = detections.getDetectedItems().get(key);
-                        Log.d(TAG, "receiveDetections barcode at:" + key + ", " + barcode);
-                        if (barcode != null) {
-                            scannedBarcode(barcode);
-                        }
-                    }
-                    isDecoding = false;
-                }
-            }
-        });
+        barcodeDetector.setProcessor(frameProcessor);
         if (!barcodeDetector.isOperational()) {
             // Check for low storage.  If there is low storage, the native library will not be
             // downloaded, so detection will not become operational.
@@ -223,6 +207,16 @@ public class ScannerFragment extends Fragment {
 
     public void resumeScanning() {
         isDecoding = true;
+    }
+
+    public void updateBoxPosition(int numberOfCards) {
+        if(numberOfCards == 0) {
+            scannerBox.setDefaultPosition(getActivity());
+        } else if (numberOfCards >= 5) {
+            scannerBox.setMovedPosition(getActivity(), 5);
+        } else {
+            scannerBox.setMovedPosition(getActivity(), numberOfCards);
+        }
     }
 
 
@@ -309,4 +303,28 @@ public class ScannerFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    Detector.Processor frameProcessor = new Detector.Processor<Barcode>() {
+        @Override
+        public void release() {
+            Log.d(TAG, "release: ");
+        }
+
+        @Override
+        public void receiveDetections(Detector.Detections<Barcode> detections) {
+            if (detections != null && detections.getDetectedItems() != null
+                    && detections.getDetectedItems().size() > 0
+                    && isDecoding) {
+                for (int i = 0; i < detections.getDetectedItems().size(); i++) {
+                    int key = detections.getDetectedItems().keyAt(i);
+                    Barcode barcode = detections.getDetectedItems().get(key);
+                    Log.d(TAG, "receiveDetections barcode at:" + key + ", " + barcode);
+                    if (barcode != null) {
+                        scannedBarcode(barcode);
+                    }
+                }
+                isDecoding = false;
+            }
+        }
+    };
 }

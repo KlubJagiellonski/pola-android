@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     @Override
     public void barcodeScanned(String result) {
-
         if(BuildConfig.USE_CRASHLYTICS) {
             Answers.getInstance().logSearch(new SearchEvent()
                             .putQuery(result)
@@ -168,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             Api api = PolaApplication.retrofit.create(Api.class);
             Call<Product> reportResultCall = api.product(result, Utils.getDeviceId(this));
             reportResultCall.enqueue(this);
+            if(scannerFragment != null) {
+                if (productsListFragment != null && productsListFragment.products != null) {
+                    scannerFragment.updateBoxPosition(productsListFragment.products.size());
+                }
+            }
         }
     }
 
@@ -192,8 +196,12 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
                 e.printStackTrace();
             }
         }
-        productsListFragment.addProduct(response.body());
-        scannerFragment.resumeScanning();
+        if(productsListFragment != null) {
+            productsListFragment.addProduct(response.body());
+        }
+        if(scannerFragment != null) {
+            scannerFragment.resumeScanning();
+        }
     }
 
     @Override
@@ -207,8 +215,17 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         } else {
             Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
-        productsListFragment.removeProductPlaceholder();
         handlerScanner.removeCallbacks(runnableResumeScan);
-        scannerFragment.resumeScanning();
+        if(productsListFragment != null) {
+            productsListFragment.removeProductPlaceholder();
+        }
+        if(scannerFragment != null) {
+            scannerFragment.resumeScanning();
+        }
+        if(scannerFragment != null) {
+            if (productsListFragment != null && productsListFragment.products != null) {
+                scannerFragment.updateBoxPosition(productsListFragment.products.size());
+            }
+        }
     }
 }

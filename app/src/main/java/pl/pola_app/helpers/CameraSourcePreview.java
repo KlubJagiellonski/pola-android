@@ -44,9 +44,7 @@ public class CameraSourcePreview extends ViewGroup {
         if (cameraSource == null) {
             stop();
         }
-
         mCameraSource = cameraSource;
-
         if (mCameraSource != null) {
             mStartRequested = true;
             startIfReady();
@@ -70,6 +68,7 @@ public class CameraSourcePreview extends ViewGroup {
     private void startIfReady() throws IOException, SecurityException {
         if (mStartRequested && mSurfaceAvailable) {
             mCameraSource.start(mSurfaceView.getHolder());
+            mSurfaceView.getHolder().setKeepScreenOn(true);
             mStartRequested = false;
         }
     }
@@ -94,6 +93,7 @@ public class CameraSourcePreview extends ViewGroup {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            Log.d(TAG, "surfaceChanged: ");
         }
     }
 
@@ -115,7 +115,6 @@ public class CameraSourcePreview extends ViewGroup {
                 } else {
                     ratioW = (float) size.getWidth() / width;
                 }
-                Log.d(TAG, "onLayout: ");
                 if(ratioH > ratioW) {
                     height = (int) Math.abs(size.getHeight() * ratioH);
                     width = (int) Math.abs(size.getWidth() * ratioH);
