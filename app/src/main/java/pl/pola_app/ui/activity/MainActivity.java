@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         }
         if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
             if(event.product != null) {
-                launchReportActivity(event.product.code);
+                launchReportActivity(Integer.toString(event.product.id));
             } else {
                 launchReportActivity(null);
             }

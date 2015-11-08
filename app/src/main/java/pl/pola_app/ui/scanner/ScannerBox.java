@@ -16,13 +16,14 @@ import pl.pola_app.helpers.Utils;
 
 /**
  * Created by Tajchert on 07.11.2015.
+ * Class used to draw white rectangle over barcode reader
  */
 public class ScannerBox extends View {
     Paint paint;
     Path path;
 
-    final int boxWidth = Utils.dpToPx(200);
-    final int boxHeight = Utils.dpToPx(100);
+    final int boxWidth = Utils.dpToPx(230);
+    final int boxHeight = Utils.dpToPx(150);
     final int verticalPadding = Utils.dpToPx(100);
     int horizontalStart;
     int verticalStart;
