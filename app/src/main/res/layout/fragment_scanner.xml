@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/holo_green_dark">
+    android:layout_height="match_parent">
 
     <pl.pola_app.helpers.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:foregroundGravity="center">
+
+        <pl.pola_app.helpers.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <pl.pola_app.ui.scanner.ScannerBox
+            android:id="@+id/scannerBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </pl.pola_app.helpers.CameraSourcePreview>
 
@@ -27,4 +36,14 @@
         android:layout_margin="4dp"
         android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher_white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/scanner_status_text" />
 </RelativeLayout>
