@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,9 +29,15 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.squareup.otto.Bus;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -38,11 +45,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.helpers.CameraSourcePreview;
-import pl.pola_app.helpers.GraphicOverlay;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.activity.CreateReportActivity;
+import pl.pola_app.ui.scanner.CameraSourcePreview;
 import pl.pola_app.ui.scanner.ScannerBox;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
@@ -61,13 +67,19 @@ public class ScannerFragment extends Fragment {
     Bus eventBus;
 
     @Bind(R.id.preview)
-    CameraSourcePreview mPreview;
-    @Bind(R.id.graphicOverlay)
-    GraphicOverlay graphicOverlay;
+    CameraSourcePreview mPreview;//Google Mobile Vision Barcode API
     @Bind(R.id.scannerBox)
-    ScannerBox scannerBox;
+    ScannerBox scannerBox;//White rectangle over mPreview View
+    @Bind(R.id.textHintScan)
+    TextView textHintScan;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.scanner_view)
+    CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
+    private boolean isGoogleBarcodeOperational = true;
+    private long timestampLastScanned = 0;
+    private long timeBetweenScans = TimeUnit.SECONDS.toMillis(1);//To slow down Google Mobile Vision as otherwise it generates few scans per each barcode.
+
 
     private CameraSource mCameraSource;
     private boolean isDecoding = true;
@@ -89,7 +101,7 @@ public class ScannerFragment extends Fragment {
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
 
-        //barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
@@ -105,11 +117,18 @@ public class ScannerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         startCameraSource();
+        if(barcodeScanner != null) {
+            barcodeScanner.resume();
+        }
+        timestampLastScanned = 0;
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if(barcodeScanner != null) {
+            barcodeScanner.pause();
+        }
         if (mPreview != null) {
             mPreview.stop();
         }
@@ -124,41 +143,25 @@ public class ScannerFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    private void scannedBarcode(Barcode barcode) {
-        final String result = barcode.displayValue;
-        if (result != null) {
-            ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (barcodeScannedListener != null) {
-                        barcodeScannedListener.barcodeScanned(result);
-                    }
-                }
-            });
-
-            Timber.d(result);
-        }
-    }
-
+    //Good explanation https://github.com/googlesamples/android-vision/blob/master/visionSamples/barcode-reader/app/src/main/java/com/google/android/gms/samples/vision/barcodereader/BarcodeCaptureActivity.java
     private void createCameraSource() {
         Context context = getActivity().getApplicationContext();
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
         barcodeDetector.setProcessor(frameProcessor);
-        if (!barcodeDetector.isOperational()) {
-            // Check for low storage.  If there is low storage, the native library will not be
-            // downloaded, so detection will not become operational.
-            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-            boolean hasLowStorage = getActivity().registerReceiver(null, lowstorageFilter) != null;
-
+        if(!barcodeDetector.isOperational()) {
+            //Detector dependencies are not yet available.
+            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = getActivity().registerReceiver(null, lowStorageFilter) != null;
             if (hasLowStorage) {
-                Log.d(TAG, "createCameraSource error ");
-                //Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-                //Log.w(TAG, getString(R.string.low_storage_error));
+                isGoogleBarcodeOperational = false;//not enough space to download dependencies
+            } else {
+                isGoogleBarcodeOperational = true;//It will be just wait for download
             }
+        } else {
+            isGoogleBarcodeOperational = true;
         }
-        int width = 0;
-        int height = 0;
+        int width;
+        int height;
         try {
             DisplayMetrics metrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -169,10 +172,10 @@ public class ScannerFragment extends Fragment {
             width = 720;
             height = 1280;
         }
-        if(width <= 0) {
+        if (width <= 0) {
             width = 720;
         }
-        if(height <= 0) {
+        if (height <= 0) {
             height = 1280;
         }
         CameraSource.Builder builder = new CameraSource.Builder(getActivity().getApplicationContext(), barcodeDetector)
@@ -190,48 +193,82 @@ public class ScannerFragment extends Fragment {
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS);
             dlg.show();
-        } else {
-            //TODO zxing?
         }
 
         if (mCameraSource != null) {
             try {
                 mPreview.start(mCameraSource);
+                if(isGoogleBarcodeOperational) {
+                    shutDownZxing();
+                } else {
+                    shutDownGoogleBarcode();
+                }
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
+                shutDownGoogleBarcode();
             }
         }
     }
 
+    private void shutDownZxing() {
+        if(barcodeScanner != null) {
+            barcodeScanner.pause();
+            barcodeScanner.setVisibility(View.GONE);
+            barcodeScanner = null;
+        }
+    }
+
+    private void shutDownGoogleBarcode() {
+        mCameraSource.release();
+        mCameraSource = null;
+        if(barcodeScanner != null) {
+            barcodeScanner.setVisibility(View.VISIBLE);
+            barcodeScanner.resume();
+        }
+        mPreview.setVisibility(View.GONE);
+        scannerBox.setVisibility(View.GONE);
+    }
+
     public void resumeScanning() {
+        if(barcodeScanner != null) {
+            barcodeScanner.decodeContinuous(callback);
+        }
         isDecoding = true;
     }
 
     public void updateBoxPosition(int numberOfCards) {
-        if(numberOfCards == 0) {
-            scannerBox.setDefaultPosition(getActivity());
-        } else if (numberOfCards >= 5) {
-            scannerBox.setMovedPosition(getActivity(), 5);
-        } else {
-            scannerBox.setMovedPosition(getActivity(), numberOfCards);
+        if(scannerBox.getVisibility() == View.VISIBLE) {
+            if (numberOfCards == 0) {
+                if (textHintScan != null) {
+                    textHintScan.setVisibility(View.VISIBLE);
+                }
+                scannerBox.setDefaultPosition(getActivity());
+            } else if (numberOfCards >= 5) {
+                if (textHintScan != null) {
+                    textHintScan.setVisibility(View.GONE);
+                }
+                scannerBox.setMovedPosition(getActivity(), 5);
+            } else {
+                if (textHintScan != null) {
+                    textHintScan.setVisibility(View.GONE);
+                }
+                scannerBox.setMovedPosition(getActivity(), numberOfCards);
+            }
         }
     }
-
 
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
+            resumeScanning();
             createCameraSource();
         }
 
         @Override
         public void permissionRefused() {
-            Toast.makeText(getActivity(), getString(R.string.toast_no_camera_access),  Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_no_camera_access), Toast.LENGTH_SHORT).show();
         }
     };
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -274,7 +311,7 @@ public class ScannerFragment extends Fragment {
                 startActivity(intent);
                 return true;
             case R.id.action_mail:
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",Utils.POLA_MAIL, null));
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Utils.POLA_MAIL, null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pola");
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_picker)));
                 return true;
@@ -292,11 +329,11 @@ public class ScannerFragment extends Fragment {
                 }
                 return true;
             case R.id.action_fb:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse( Utils.URL_POLA_FB));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB));
                 startActivity(intent);
                 return true;
             case R.id.action_twitter:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse( Utils.URL_POLA_TWITTER));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_TWITTER));
                 startActivity(intent);
                 return true;
             default:
@@ -304,6 +341,7 @@ public class ScannerFragment extends Fragment {
         }
     }
 
+    //Handlling Google Mobile Vision Detections if there are any
     Detector.Processor frameProcessor = new Detector.Processor<Barcode>() {
         @Override
         public void release() {
@@ -312,19 +350,66 @@ public class ScannerFragment extends Fragment {
 
         @Override
         public void receiveDetections(Detector.Detections<Barcode> detections) {
-            if (detections != null && detections.getDetectedItems() != null
+            if (detections != null
+                    && detections.getDetectedItems() != null
                     && detections.getDetectedItems().size() > 0
+                    && System.currentTimeMillis() - timestampLastScanned > timeBetweenScans
                     && isDecoding) {
+                timestampLastScanned = System.currentTimeMillis();
                 for (int i = 0; i < detections.getDetectedItems().size(); i++) {
                     int key = detections.getDetectedItems().keyAt(i);
                     Barcode barcode = detections.getDetectedItems().get(key);
-                    Log.d(TAG, "receiveDetections barcode at:" + key + ", " + barcode);
                     if (barcode != null) {
                         scannedBarcode(barcode);
                     }
                 }
                 isDecoding = false;
             }
+        }
+    };
+
+    //Google Mobile Vision barcode result
+    private void scannedBarcode(Barcode barcode) {
+        final String result = barcode.displayValue;
+        if (result != null) {
+            ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (barcodeScannedListener != null) {
+                        barcodeScannedListener.barcodeScanned(result);
+                    }
+                }
+            });
+            Timber.d(result);
+        }
+    }
+
+    //ZXING barcode result
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(final BarcodeResult result) {
+            if (result.getText() != null) {
+                barcodeScanner.getBarcodeView().stopDecoding();
+                ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                barcodeScanner.setStatusText("");
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (barcodeScannedListener != null) {
+                            barcodeScannedListener.barcodeScanned(result.getText());
+                        }
+                    }
+                });
+
+                Timber.d(result.getText());
+                Timber.d(result.getBarcodeFormat().toString());
+
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
         }
     };
 }

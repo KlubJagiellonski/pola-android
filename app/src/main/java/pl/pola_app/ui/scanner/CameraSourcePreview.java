@@ -1,4 +1,4 @@
-package pl.pola_app.helpers;
+package pl.pola_app.ui.scanner;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,6 +18,7 @@ import java.io.IOException;
 /**
  * Created by Tajchert on 07.11.2015.
  * SOURCE: https://github.com/googlesamples/android-vision/blob/master/visionSamples/barcode-reader/app/src/main/java/com/google/android/gms/samples/vision/barcodereader/ui/camera/CameraSourcePreview.java
+ * Class used to show Camera preview on screen, a bit of logic due to need of center crop CameraPreview on screen so no padding are visible/needed.
  */
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
