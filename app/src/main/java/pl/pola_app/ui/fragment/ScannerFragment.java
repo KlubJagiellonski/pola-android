@@ -1,19 +1,14 @@
 package pl.pola_app.ui.fragment;
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,21 +18,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.squareup.otto.Bus;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +32,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -79,7 +65,7 @@ public class ScannerFragment extends Fragment {
     Toolbar toolbar;
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
-    private boolean isGoogleBarcodeOperational = true;
+    private final boolean isGoogleBarcodeOperational = false;
     private long timestampLastScanned = 0;
     private long timeBetweenScans = TimeUnit.SECONDS.toMillis(1);//To slow down Google Mobile Vision as otherwise it generates few scans per each barcode.
 
@@ -119,7 +105,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        startCameraSource();
+        //startCameraSource();//FIXME using Google mobile vision
         if(barcodeScanner != null) {
             barcodeScanner.resume();
         }
@@ -147,6 +133,7 @@ public class ScannerFragment extends Fragment {
     }
 
     //Good explanation https://github.com/googlesamples/android-vision/blob/master/visionSamples/barcode-reader/app/src/main/java/com/google/android/gms/samples/vision/barcodereader/BarcodeCaptureActivity.java
+    /*//FIXME using Google mobile vision
     private void createCameraSource() {
         Context context = getActivity().getApplicationContext();
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
@@ -189,8 +176,9 @@ public class ScannerFragment extends Fragment {
             builder = builder.setAutoFocusEnabled(true);
         }
         mCameraSource = builder.build();
-    }
+    }*/
 
+    /*//FIXME using Google mobile vision
     private void startCameraSource() throws SecurityException {
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity().getApplicationContext());
         if (code != ConnectionResult.SUCCESS) {
@@ -211,7 +199,7 @@ public class ScannerFragment extends Fragment {
                 shutDownGoogleBarcode();
             }
         }
-    }
+    }*/
 
     private void shutDownZxing() {
         if(barcodeScanner != null) {
@@ -221,6 +209,7 @@ public class ScannerFragment extends Fragment {
         }
     }
 
+    /*//FIXME using Google mobile vision
     private void shutDownGoogleBarcode() {
         if(mCameraSource != null) {
             mCameraSource.release();
@@ -238,7 +227,7 @@ public class ScannerFragment extends Fragment {
             Answers.getInstance().logCustom(new CustomEvent("ShutdownGScanner")
                     .putCustomAttribute("deviceId", Utils.getDeviceId(getActivity().getApplicationContext())));
         }
-    }
+    }*/
 
     public void resumeScanning() {
         if(barcodeScanner != null) {
@@ -248,7 +237,8 @@ public class ScannerFragment extends Fragment {
     }
 
     public void updateBoxPosition(int numberOfCards) {
-        if(scannerBox.getVisibility() == View.VISIBLE) {
+        //FIXME using Google mobile vision
+        /*if(scannerBox.getVisibility() == View.VISIBLE) {
             if (numberOfCards == 0) {
                 if (textHintScan != null) {
                     textHintScan.setVisibility(View.VISIBLE);
@@ -265,14 +255,14 @@ public class ScannerFragment extends Fragment {
                 }
                 scannerBox.setMovedPosition(getActivity(), numberOfCards);
             }
-        }
+        }*/
     }
 
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
             resumeScanning();
-            createCameraSource();
+            //createCameraSource();//FIXME using Google mobile vision
         }
 
         @Override
@@ -353,7 +343,8 @@ public class ScannerFragment extends Fragment {
     }
 
     //Handlling Google Mobile Vision Detections if there are any
-    Detector.Processor frameProcessor = new Detector.Processor<Barcode>() {
+    //FIXME using Google mobile vision
+    /*Detector.Processor frameProcessor = new Detector.Processor<Barcode>() {
         @Override
         public void release() {
             Log.d(TAG, "release: ");
@@ -394,7 +385,7 @@ public class ScannerFragment extends Fragment {
             });
             Timber.d(result);
         }
-    }
+    }*/
 
     //ZXING barcode result
     private BarcodeCallback callback = new BarcodeCallback() {

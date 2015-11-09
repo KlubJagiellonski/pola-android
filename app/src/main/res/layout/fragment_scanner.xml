@@ -8,7 +8,7 @@
         android:id="@+id/scanner_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner" />
 
 
@@ -16,6 +16,7 @@
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:foregroundGravity="center">
 
         <pl.pola_app.ui.scanner.ScannerBox
@@ -49,6 +50,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:visibility="gone"
         android:gravity="center_horizontal"
         android:text="@string/scanner_status_text" />
 </RelativeLayout>
