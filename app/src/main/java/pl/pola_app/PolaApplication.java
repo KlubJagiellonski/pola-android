@@ -7,8 +7,11 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+import pl.pola_app.helpers.Utils;
 import pl.pola_app.internal.di.PolaComponent;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -35,6 +38,9 @@ public class PolaApplication extends Application {
         }
 
         OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        client.setReadTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(this.getResources().getString(R.string.pola_api_url))
                 .addConverterFactory(GsonConverterFactory.create())

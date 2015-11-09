@@ -19,6 +19,8 @@ public class Utils {
     public static final String URL_POLA_GOOGLEPLAY= "https://play.google.com/store/apps/details?id=pl.pola_app";
     public static final String URL_POLA_FB = "https://www.facebook.com/app.pola";
     public static final String URL_POLA_TWITTER= "https://twitter.com/pola_app";
+    public static final long TIMEOUT_SECONDS = 20;
+
     public static String getDeviceId(Context context) {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
