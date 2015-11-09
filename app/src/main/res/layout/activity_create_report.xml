@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e7e7e7"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#e7e7e7"
     tools:context="pl.pola_app.ui.activity.CreateReportActivity">
 
     <TextView
@@ -28,9 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/report_textView"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-light"
-        android:layout_below="@+id/report_textView"
         android:text="@string/report_description"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -41,34 +41,28 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/report_description_textView"
+        android:layout_marginLeft="2dp"
         android:layout_marginTop="24dp"
-        android:layout_marginLeft="2dp"
         android:fontFamily="sans-serif-light"
-        android:textColor="#000"
         android:text="@string/photos_report"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#000" />
 
 
-    <HorizontalScrollView
-        android:id="@+id/horizontal_scroll"
+    <LinearLayout
+        android:id="@+id/linearImageViews"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/photos_textView"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="8dp"
+        android:padding="6dp"
         android:background="#fff"
-        android:layout_below="@+id/photos_textView" >
-
-        <LinearLayout
-            android:id="@+id/linearImageViews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-        </LinearLayout>
-
-    </HorizontalScrollView>
+        android:orientation="horizontal"
+        android:weightSum="3"/>
 
     <TextView
         android:id="@+id/description_textView"
@@ -76,13 +70,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/horizontal_scroll"
-        android:text="@string/description_report"
-        android:textColor="#000"
-        android:layout_marginTop="24dp"
+        android:layout_below="@+id/linearImageViews"
         android:layout_marginLeft="2dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:text="@string/description_report"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#000" />
 
     <EditText
         android:id="@+id/descripton_editText"
@@ -91,18 +85,18 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/description_textView"
         android:layout_marginTop="8dp"
-        android:hint="@string/description_hint"
         android:ems="10"
+        android:hint="@string/description_hint"
         android:inputType="textMultiLine" />
 
     <Button
         android:id="@+id/send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#d8002f"
-        android:textColor="#fff"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/send" />
+        android:backgroundTint="#d8002f"
+        android:text="@string/send"
+        android:textColor="#fff" />
 
 </RelativeLayout>
