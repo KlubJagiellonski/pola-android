@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,8 +48,9 @@ import retrofit.Retrofit;
 
 public class CreateReportActivity extends Activity implements Callback<ReportResult> {
     private static final String TAG = CreateReportActivity.class.getSimpleName();
+    private static final int MAX_IMAGE_COUNT = 2;
     private String productId;
-    private int photoMarginDp = 4;
+    private int photoMarginDp = 6;
     private ProgressDialog progressDialog;
     private int numberOfImages;
 
@@ -65,17 +67,17 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         setContentView(R.layout.activity_create_report);
         ButterKnife.bind(this);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
         }
         setImageView(bitmaps);
         Nammu.init(this);
 
-        if(BuildConfig.USE_CRASHLYTICS) {
+        if (BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logLevelStart(new LevelStartEvent()
                                 .putLevelName("Report")
-                                .putCustomAttribute("Code", productId+"") //because can be null, ugly
+                                .putCustomAttribute("Code", productId + "") //because can be null, ugly
                                 .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
                 );
             } catch (Exception e) {
@@ -87,12 +89,15 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private void setImageView(final ArrayList<Bitmap> bitmapsToSet) {
         int margin = Utils.dpToPx(photoMarginDp);
         linearImageViews.removeAllViews();
-        if(bitmapsToSet != null && bitmapsToSet.size() > 0) {
+
+        boolean showAddButton = true;
+        if (bitmapsToSet != null && bitmapsToSet.size() > 0) {
+            int i = 0;
             for (final Bitmap bitmap : bitmapsToSet) {
                 ImageView imageView = new ImageView(this);
-                imageView.setPadding(margin, margin, margin, margin);
-                int width = bitmap.getWidth() * Utils.dpToPx(80)/bitmap.getHeight();
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, Utils.dpToPx(80));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.rightMargin = i == MAX_IMAGE_COUNT ? 0 : margin;
+                layoutParams.weight = 1f;
                 imageView.setLayoutParams(layoutParams);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -101,38 +106,42 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                     }
                 });
                 imageView.setImageBitmap(bitmap);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 linearImageViews.addView(imageView);
+                i++;
             }
+            showAddButton = bitmapsToSet.size() <= MAX_IMAGE_COUNT;
         }
-        //Add add button
-        ImageView imageView = new ImageView(this);
-        imageView.setPadding(margin, margin, margin, margin);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Utils.dpToPx(80), Utils.dpToPx(80));
-        imageView.setLayoutParams(layoutParams);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
-                launchCamera();
-            }
-        });
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_black_24dp));
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        linearImageViews.addView(imageView);
+        if (showAddButton) {
+            //Add add button
+            ImageView imageView = new ImageView(this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.weight = 1f;
+            imageView.setLayoutParams(layoutParams);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: ");
+                    launchCamera();
+                }
+            });
+            imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_black_24dp));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            linearImageViews.addView(imageView);
+        }
     }
 
     private void showDialogDeletePhoto(final int position) {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        if(bitmaps != null && bitmaps.size() >= position) {
+                        if (bitmaps != null && bitmaps.size() >= position) {
                             bitmaps.remove(position);
                             setImageView(bitmaps);
                         }
-                        if(bitmapsPaths!= null && bitmapsPaths.size() >= position) {
+                        if (bitmapsPaths != null && bitmapsPaths.size() >= position) {
                             bitmapsPaths.remove(position);
                         }
                         break;
@@ -147,7 +156,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void launchCamera() {
-        Nammu.askForPermission(CreateReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionWriteCallback);;
+        Nammu.askForPermission(CreateReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionWriteCallback);
+        ;
     }
 
     @OnClick(R.id.send_button)
@@ -157,14 +167,14 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void sendReport(String description, String productId) {
-        if(productId == null && (bitmapsPaths == null || bitmapsPaths.size() == 0 )) {
+        if (productId == null && (bitmapsPaths == null || bitmapsPaths.size() == 0)) {
             Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_pic), Toast.LENGTH_LONG).show();
             return;
-        }else if(description == null) {
+        } else if (description == null) {
             description = "";
         }
         Report report;
-        if(productId != null) {
+        if (productId != null) {
             report = new Report(description, productId);
         } else {
             report = new Report(description);
@@ -175,7 +185,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         reportResultCall.enqueue(this);
         numberOfImages = bitmapsPaths.size();
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
-        if(BuildConfig.USE_CRASHLYTICS) {
+        if (BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logLevelEnd(new LevelEndEvent()
                                 .putLevelName("Report")
@@ -191,11 +201,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @Override
     public void onResponse(Response<ReportResult> response, Retrofit retrofit) {
         Log.d(TAG, "onResponse: ");
-        if(response.isSuccess()) {
-            if(response.body() != null) {
-                if(bitmapsPaths != null && bitmapsPaths.size() > 0) {
+        if (response.isSuccess()) {
+            if (response.body() != null) {
+                if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
                     numberOfImages = 0;
-                    for(String path : bitmapsPaths) {
+                    for (String path : bitmapsPaths) {
                         sendImage(path, Integer.toString(response.body().id));
                     }
                 } else {
@@ -211,14 +221,14 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     private void showEndResult(boolean isSuccess) {
         String toastMessage = getString(R.string.toast_send_raport);
-        if(!isSuccess) {
+        if (!isSuccess) {
             toastMessage = getString(R.string.toast_send_raport_error);
         }
         Toast.makeText(CreateReportActivity.this, toastMessage, Toast.LENGTH_LONG).show();
-        if(progressDialog != null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
-        if(isSuccess) {
+        if (isSuccess) {
             CreateReportActivity.this.finish();
         }
     }
@@ -226,7 +236,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @Override
     public void onFailure(Throwable t) {
         Log.d(TAG, "onFailure: ");
-        if(progressDialog != null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
         Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
@@ -275,7 +285,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
-                Toast.makeText(CreateReportActivity.this, "Brak zdjęcia",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateReportActivity.this, "Brak zdjęcia", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -288,10 +298,10 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private void onPhotoReturned(File file) {
         Bitmap bitmapPhoto = BitmapFactory.decodeFile(file.getAbsolutePath());
         String photoPath = file.getAbsolutePath();
-        if(bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
+        if (bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
             bitmapsPaths.add(photoPath);
         }
-        if(bitmapPhoto.getHeight() > 1000 || bitmapPhoto.getWidth() > 1000) {
+        if (bitmapPhoto.getHeight() > 1000 || bitmapPhoto.getWidth() > 1000) {
             float aspectRatio = bitmapPhoto.getWidth() / (float) bitmapPhoto.getHeight();
             int width = 1000;
             int height = Math.round(width / aspectRatio);
@@ -320,23 +330,23 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void deleteFiles(ArrayList<String> paths) {
-        for(String path : paths) {
-            if(path != null) {
+        for (String path : paths) {
+            if (path != null) {
                 File photoFile = new File(path);
                 photoFile.delete();
             }
         }
-        if(bitmaps != null) {
+        if (bitmaps != null) {
             bitmaps.clear();
         }
-        if(bitmapsPaths != null) {
+        if (bitmapsPaths != null) {
             bitmapsPaths.clear();
         }
     }
 
     @Override
     protected void onDestroy() {
-        if(bitmapsPaths != null && bitmapsPaths.size() > 0) {
+        if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
             deleteFiles(bitmapsPaths);
         }
         super.onDestroy();
@@ -350,7 +360,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
         @Override
         public void permissionRefused() {
-            Toast.makeText(CreateReportActivity.this, getString(R.string.toast_no_camera_access),  Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateReportActivity.this, getString(R.string.toast_no_camera_access), Toast.LENGTH_SHORT).show();
         }
     };
 
