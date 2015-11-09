@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -43,6 +45,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -219,14 +222,22 @@ public class ScannerFragment extends Fragment {
     }
 
     private void shutDownGoogleBarcode() {
-        mCameraSource.release();
-        mCameraSource = null;
+        if(mCameraSource != null) {
+            mCameraSource.release();
+            mCameraSource = null;
+        }
         if(barcodeScanner != null) {
             barcodeScanner.setVisibility(View.VISIBLE);
             barcodeScanner.resume();
         }
-        mPreview.setVisibility(View.GONE);
-        scannerBox.setVisibility(View.GONE);
+        if(mPreview != null && scannerBox != null) {
+            mPreview.setVisibility(View.GONE);
+            scannerBox.setVisibility(View.GONE);
+        }
+        if(BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logCustom(new CustomEvent("ShutdownGScanner")
+                    .putCustomAttribute("deviceId", Utils.getDeviceId(getActivity().getApplicationContext())));
+        }
     }
 
     public void resumeScanning() {
