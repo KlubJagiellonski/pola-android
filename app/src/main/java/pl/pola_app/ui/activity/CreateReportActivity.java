@@ -53,6 +53,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private int photoMarginDp = 6;
     private ProgressDialog progressDialog;
     private int numberOfImages;
+    private Call<ReportResult> reportResultCall;
 
     @Bind(R.id.descripton_editText)
     EditText descriptionEditText;
@@ -84,6 +85,14 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.cancel();
+        }
+        super.onPause();
     }
 
     private void setImageView(final ArrayList<Bitmap> bitmapsToSet) {
@@ -180,7 +189,6 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             report = new Report(description);
         }
         Api api = PolaApplication.retrofit.create(Api.class);
-        Call<ReportResult> reportResultCall;
         reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
         reportResultCall.enqueue(this);
         numberOfImages = bitmapsPaths.size();
@@ -348,6 +356,9 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     protected void onDestroy() {
         if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
             deleteFiles(bitmapsPaths);
+        }
+        if(reportResultCall != null) {
+            reportResultCall.cancel();
         }
         super.onDestroy();
     }
