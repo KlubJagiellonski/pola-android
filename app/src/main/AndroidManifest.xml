@@ -34,12 +34,13 @@
         <activity
             android:name=".ui.activity.CreateReportActivity"
             android:label="@string/title_activity_create_report"
-            android:theme="@style/AppThemeLight">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight"></activity>
         <activity
             android:name=".ui.activity.ActivityWebView"
-            android:theme="@style/AppThemeWeb"
-            android:parentActivityName=".ui.activity.MainActivity"/>
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeWeb" />
     </application>
 
 </manifest>
