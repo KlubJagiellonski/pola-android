@@ -304,7 +304,16 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void onPhotoReturned(File file) {
-        Bitmap bitmapPhoto = BitmapFactory.decodeFile(file.getAbsolutePath());
+        Bitmap bitmapPhoto = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inDither = true;
+            bitmapPhoto = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        } catch (OutOfMemoryError e) {
+            Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_memory), Toast.LENGTH_LONG).show();
+        }
         String photoPath = file.getAbsolutePath();
         if (bitmapsPaths != null && !bitmapsPaths.contains(photoPath)) {
             bitmapsPaths.add(photoPath);
@@ -357,7 +366,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
             deleteFiles(bitmapsPaths);
         }
-        if(reportResultCall != null) {
+        if (reportResultCall != null) {
             reportResultCall.cancel();
         }
         super.onDestroy();

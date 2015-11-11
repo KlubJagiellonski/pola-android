@@ -19,6 +19,7 @@
     <string name="toast_send_raport">Raport przesłany, dziękujemy</string>
     <string name="toast_send_raport_error">Problem z wysyłanie, spróbuj później.</string>
     <string name="toast_raport_error_no_pic">Wykonaj zdjęcie przed zgłoszeniem produktu</string>
+    <string name="toast_raport_error_no_memory">Za mało pamięci dostępnej by otworzyć zdjęcie</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="dialog_delete_photo">Usunąć zdjęcie?</string>
