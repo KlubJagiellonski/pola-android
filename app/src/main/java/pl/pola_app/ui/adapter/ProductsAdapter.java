@@ -112,7 +112,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         public void onClick(View v) {
             if(productClickListener != null) {
                 int position = getAdapterPosition();
-                if(products != null && position > 0 && products.size() >= position) {
+                if(products != null && position >= 0 && products.size() >= position) {
                     Product product = products.get(position);
                     if(product != null) {
                         productClickListener.itemClicked(product);
