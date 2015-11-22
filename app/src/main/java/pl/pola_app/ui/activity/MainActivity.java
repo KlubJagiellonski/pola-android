@@ -99,38 +99,31 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(event.product.company.name + "") //As it might be null
+                                .putContentName(event.product.name + "") //As it might be null
                                 .putContentType("Open Card")
-                                .putContentId(Integer.toString(event.product.id))
+                                .putContentId(Integer.toString(event.product.product_id))
                                 .putCustomAttribute("Code", event.product.code)
                                 .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
-                                .putCustomAttribute("Verified", Boolean.toString(event.product.verified))
                 );
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
-            if(event.product != null) {
-                launchReportActivity(Integer.toString(event.product.id));
-            } else {
-                launchReportActivity(null);
-            }
-        } else {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-            ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
-            ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
-            ft.hide(productsListFragment);
-            ft.addToBackStack(ProductDetailsFragment.class.getName());
-            ft.commit();
-        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
+        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
+        ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
+        ft.hide(productsListFragment);
+        ft.addToBackStack(ProductDetailsFragment.class.getName());
+        ft.commit();
     }
 
     @Subscribe
     public void reportButtonClicked(ReportButtonClickedEvent event) {
-        if(event.product != null) {
-            launchReportActivity(Integer.toString(event.product.id));
+        if(event.product.product_id != null) {
+            launchReportActivity(Integer.toString(event.product.product_id));
+        } else {
+            launchReportActivity(null);
         }
     }
 
@@ -185,12 +178,11 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if (BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(response.body().company.name + "")//To avoid null as it might be empty
+                                .putContentName(response.body().name + "")//To avoid null as it might be empty
                                 .putContentType("Card Preview")
-                                .putContentId(Integer.toString(response.body().id))
+                                .putContentId(Integer.toString(response.body().product_id))
                                 .putCustomAttribute("Code", response.code())
                                 .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
-                                .putCustomAttribute("Verified", Boolean.toString(response.body().verified))
                 );
             } catch (Exception e) {
                 e.printStackTrace();

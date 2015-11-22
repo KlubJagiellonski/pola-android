@@ -18,15 +18,15 @@ import retrofit.http.Query;
 
 public interface Api {
 
-    @GET("/a/get_by_code/{barcode}")
-    Call<Product>  product(@Path("barcode") String barcode, @Query("device_id") String deviceId);
+    @GET("/a/v2/get_by_code")
+    Call<Product>  product(@Query("code") String barcode, @Query("device_id") String deviceId);
 
     @Headers("Content-Encoding: gzip")
-    @POST("/a/create_report")
+    @POST("/a/v2/create_report")
     Call<ReportResult> createReport(@Query("device_id") String deviceId, @Body Report report);
 
     @Multipart
-    @POST("/a/attach_file")
+    @POST("/a/v2/attach_file")
     Call<JsonObject> sendReportImage(@Query("device_id") String deviceId, @Query("report_id") String reportId, @Part("file\"; filename=\"image.jpg\"") RequestBody file);
 
 }

@@ -3,4 +3,13 @@
     <color name="theme_web_primary">#fff</color>
     <color name="theme_web_primarydark">#e5e5e5</color>
     <color name="theme_web_accent">#000000</color>
+
+    <color name="card_type_white_bk">#fff</color>
+    <color name="card_type_white_score_bk">#cccccc</color>
+    <color name="card_type_white_report_bt_text">#d8002f</color>
+
+    <color name="card_type_grey_bk">#e9e8e7</color>
+    <color name="card_type_grey_score_bk">#666666</color>
+    <color name="card_type_red_report_bt_bk">#d8002f</color>
+    <color name="card_type_red_report_bt_text">#fff</color>
 </resources>

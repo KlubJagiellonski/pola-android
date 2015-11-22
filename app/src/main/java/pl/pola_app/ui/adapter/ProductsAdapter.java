@@ -1,5 +1,7 @@
 package pl.pola_app.ui.adapter;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +13,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.Product;
 
@@ -22,11 +27,13 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         void itemClicked(Product product);
     }
 
+    private final Context context;
     private final List<Product> products;
     private ProductClickListener productClickListener;
 
-    public ProductsAdapter(List<Product> products) {
+    public ProductsAdapter(Context context, List<Product> products) {
         this.products = products;
+        this.context = context;
     }
 
     public void setOnProductClickListener(ProductClickListener productClickListener) {
@@ -65,11 +72,15 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.progressBar)
         ProgressBar progress;
 
+        @Inject
+        Resources resources;
+
         View.OnClickListener onClickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            PolaApplication.component(context).inject(this);
             itemView.setOnClickListener(this);
         }
 
@@ -78,33 +89,33 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         void bind(Product product) {
-            productCard.setCardBackgroundColor(Color.WHITE);
-            plScore.setBackgroundColor(Color.parseColor("#CCCCCC"));
-
             if (product == null) {
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
                 plScore.setProgress(0);
+                applyStyle(resources.getString(R.string.type_white));
                 return;
             }
 
             progress.setVisibility(View.GONE);
 
-            if (product.verified == false) {
-                productCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
-                plScore.setBackgroundColor(Color.parseColor("#666666"));
-            }
+            applyStyle(product.card_type);
+            companyName.setText(product.name);
 
             if (product.plScore != null) {
                 plScore.setProgress(product.plScore);
             } else {
                 plScore.setProgress(0);
             }
+        }
 
-            if (product.company != null && product.company.name != null) {
-                companyName.setText(product.company.name);
+        private void applyStyle(String style) {
+            if (style.equals(resources.getString(R.string.type_grey))) {
+                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
+                plScore.setBackgroundColor(resources.getColor(R.color.card_type_grey_score_bk));
             } else {
-                companyName.setText(R.string.unknown_company);
+                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
+                plScore.setBackgroundColor(resources.getColor(R.color.card_type_white_score_bk));
             }
         }
 

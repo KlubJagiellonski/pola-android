@@ -2,6 +2,7 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -67,8 +69,17 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.report_button)
     Button reportButton;
 
+    @Bind(R.id.tv_altText)
+    TextView altText;
+
+    @Bind(R.id.pl_data_layout)
+    LinearLayout plDataLayout;
+
     @Inject
     Bus eventBus;
+
+    @Inject
+    Resources resources;
 
     private Product product;
 
@@ -106,23 +117,11 @@ public class ProductDetailsFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(product.verified == false) {
-            productInfoCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
-            reportMessage.setText(R.string.not_verified_report_message);
-            reportButton.setText(R.string.send_report);
-            reportButton.setBackgroundColor(Color.parseColor("#D8002F"));
-            reportButton.setTextColor(Color.WHITE);
-        } else {
-            productInfoCard.setCardBackgroundColor(Color.WHITE);
-            reportMessage.setText(R.string.report_message);
-            reportButton.setText(R.string.report_button_text);
-            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
-            reportButton.setTextColor(Color.parseColor("#D8002F"));
-        }
+        applyStyle(product.card_type, product.report_button_type);
+        reportMessage.setText(product.report_text);
+        reportButton.setText(product.report_button_text);
 
-        if(product.company.name != null) {
-            tv_companyName.setText(product.company.name);
-        }
+        tv_companyName.setText(product.name);
 
         if(product.plScore != null) {
             plScoreBar.setProgress(product.plScore);
@@ -132,36 +131,45 @@ public class ProductDetailsFragment extends DialogFragment {
             plScoreText.setText("?");
         }
 
-        if(product.company.plCapital != null) {
-            plCapitalBar.setProgress(product.company.plCapital);
-            plCapitalText.setText(product.company.plCapital + "%");
+        if(product.plCapital != null) {
+            plCapitalBar.setProgress(product.plCapital);
+            plCapitalText.setText(product.plCapital + "%");
         } else {
             plCapitalBar.setProgress(0);
             plCapitalText.setText("?");
         }
 
-        if (product.company.plWorkers != null && product.company.plWorkers != 0) {
-            buttonWorkers.setSelected(true);
-        } else if (product.company.plWorkers == null) {
-            buttonWorkers.setEnabled(false);
-        }
+        if(product.altText != null) {
+            plDataLayout.setVisibility(View.GONE);
+            altText.setVisibility(View.VISIBLE);
+            altText.setText(product.altText);
+        } else {
+            altText.setVisibility(View.GONE);
+            plDataLayout.setVisibility(View.VISIBLE);
 
-        if (product.company.plRnD != null && product.company.plRnD != 0) {
-            buttonRnd.setSelected(true);
-        } else if (product.company.plRnD == null) {
-            buttonRnd.setEnabled(false);
-        }
+            if (product.plWorkers != null && product.plWorkers != 0) {
+                buttonWorkers.setSelected(true);
+            } else if (product.plWorkers == null) {
+                buttonWorkers.setEnabled(false);
+            }
 
-        if (product.company.plRegistered != null && product.company.plRegistered != 0) {
-            buttonRegistered.setSelected(true);
-        } else if (product.company.plRegistered == null) {
-            buttonRegistered.setEnabled(false);
-        }
+            if (product.plRnD != null && product.plRnD != 0) {
+                buttonRnd.setSelected(true);
+            } else if (product.plRnD == null) {
+                buttonRnd.setEnabled(false);
+            }
 
-        if (product.company.plNotGlobEnt != null && product.company.plNotGlobEnt != 0) {
-            buttonGlobent.setSelected(true);
-        } else if (product.company.plNotGlobEnt == null) {
-            buttonGlobent.setEnabled(false);
+            if (product.plRegistered != null && product.plRegistered != 0) {
+                buttonRegistered.setSelected(true);
+            } else if (product.plRegistered == null) {
+                buttonRegistered.setEnabled(false);
+            }
+
+            if (product.plNotGlobEnt != null && product.plNotGlobEnt != 0) {
+                buttonGlobent.setSelected(true);
+            } else if (product.plNotGlobEnt == null) {
+                buttonGlobent.setEnabled(false);
+            }
         }
 
         productInfoCard.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +179,22 @@ public class ProductDetailsFragment extends DialogFragment {
                 eventBus.post(new ProductDetailsFragmentDismissedEvent());
             }
         });
+    }
+
+    private void applyStyle(String cardType, String reportType) {
+        if (cardType.equals(resources.getString(R.string.type_grey))) {
+            productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
+        } else {
+            productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
+        }
+
+        if(reportType.equals(resources.getString(R.string.type_red))) {
+            reportButton.setBackgroundColor(resources.getColor(R.color.card_type_red_report_bt_bk));
+            reportButton.setTextColor(resources.getColor(R.color.card_type_red_report_bt_text));
+        } else {
+            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
+            reportButton.setTextColor(resources.getColor(R.color.card_type_white_report_bt_text));
+        }
     }
 
     @OnClick(R.id.report_button)

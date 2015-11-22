@@ -28,9 +28,6 @@
     <string name="pl_rnd_text">prowadzi badania i rozwój w Polsce</string>
     <string name="pl_registered_text">zarejestrowana w Polsce</string>
     <string name="pl_globent_text">nie jest częścią zagranicznego koncernu</string>
-    <string name="report_message">Zgłoś jeśli posiadasz bardziej aktualne dane na temat tego producenta.</string>
-    <string name="report_button_text">Zgłoś</string>
-    <string name="not_verified_report_message">Pola nie ma jeszcze wszystkich danych dotyczących tego producenta. Prześlij nam zdjęcia tego produktu.</string>
     <string name="send_report">Wyślij</string>
     <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
     <string name="toast_no_camera_access">Brak dostępu do kamery</string>
@@ -46,4 +43,7 @@
     <string name="action_fb">Pola na Facebooku</string>
     <string name="action_twitter">Pola na Twitterze</string>
     <string name="send_email_picker">Wyślij email…</string>
+    <string name="type_grey">type_grey</string>
+    <string name="type_white">type_white</string>
+    <string name="type_red">type_red</string>
 </resources>

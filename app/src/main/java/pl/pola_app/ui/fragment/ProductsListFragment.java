@@ -66,7 +66,7 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
             products = Parcels.unwrap(savedInstanceState.getParcelable(Product.class.getName()));
         }
 
-        productsAdapter = new ProductsAdapter(products);
+        productsAdapter = new ProductsAdapter(getContext(), products);
         productsAdapter.setOnProductClickListener(this);
 
         productsList.setLayoutManager(productsListLinearLayoutManager);
