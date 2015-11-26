@@ -48,6 +48,22 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="16dp"
+                    android:id="@+id/tv_altText"
+                    android:visibility="gone"
+                    android:textColor="@android:color/black"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/pl_data_layout">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -76,7 +92,7 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/company_plRnD"
+                    android:id="@+id/company_plCapital_percent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -113,22 +129,6 @@
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
                 </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="16dp"
-                    android:id="@+id/tv_altText"
-                    android:visibility="gone"
-                    android:textColor="@android:color/black"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/pl_data_layout">
 
                     <LinearLayout
                         android:layout_width="wrap_content"

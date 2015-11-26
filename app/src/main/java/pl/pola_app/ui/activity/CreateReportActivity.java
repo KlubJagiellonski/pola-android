@@ -49,6 +49,10 @@ import retrofit.Retrofit;
 public class CreateReportActivity extends Activity implements Callback<ReportResult> {
     private static final String TAG = CreateReportActivity.class.getSimpleName();
     private static final int MAX_IMAGE_COUNT = 2;
+
+    private static final String MIME_TYPE = "image/*";
+    private static final String FILE_EXT = "jpg"; //EasyImage captures jpegs
+
     private String productId;
     private int photoMarginDp = 6;
     private ProgressDialog progressDialog;
@@ -182,16 +186,18 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         } else if (description == null) {
             description = "";
         }
+        numberOfImages = bitmapsPaths.size();
+        //get ext from path
         Report report;
         if (productId != null) {
-            report = new Report(description, productId);
+            report = new Report(description, productId, numberOfImages, MIME_TYPE, FILE_EXT);
         } else {
-            report = new Report(description);
+            report = new Report(description, numberOfImages, MIME_TYPE, FILE_EXT);
         }
         Api api = PolaApplication.retrofit.create(Api.class);
         reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
         reportResultCall.enqueue(this);
-        numberOfImages = bitmapsPaths.size();
+
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
         if (BuildConfig.USE_CRASHLYTICS) {
             try {
@@ -210,11 +216,15 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     public void onResponse(Response<ReportResult> response, Retrofit retrofit) {
         Log.d(TAG, "onResponse: ");
         if (response.isSuccess()) {
-            if (response.body() != null) {
+            if (response.body() != null &&
+                    response.body().signed_requests !=null &&
+                    response.body().signed_requests.size() == bitmapsPaths.size()) {
                 if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
                     numberOfImages = 0;
-                    for (String path : bitmapsPaths) {
-                        sendImage(path, Integer.toString(response.body().id));
+                    for (int i=0; i<bitmapsPaths.size(); i++) {
+                        String path = bitmapsPaths.get(i);
+                        String url = response.body().signed_requests.get(i).get(0);
+                        sendImage(path, url);
                     }
                 } else {
                     showEndResult(true);
@@ -250,12 +260,12 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
     }
 
-    private void sendImage(final String imagePath, String reportId) {
+    private void sendImage(final String imagePath, String url) {
         numberOfImages++;
         Api api = PolaApplication.retrofit.create(Api.class);
         File imageFile = new File(imagePath);
-        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
-        Call<JsonObject> reportResultCall = api.sendReportImage(Utils.getDeviceId(CreateReportActivity.this), reportId, photoBody);
+        RequestBody photoBody = RequestBody.create(MediaType.parse(MIME_TYPE), imageFile);
+        Call<JsonObject> reportResultCall = api.sendReportImage(url, photoBody);
         reportResultCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
@@ -293,7 +303,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
-                Toast.makeText(CreateReportActivity.this, "Brak zdjęcia", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_photo), Toast.LENGTH_SHORT).show();
             }
 
             @Override
