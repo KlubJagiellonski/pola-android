@@ -83,7 +83,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Answers.getInstance().logLevelStart(new LevelStartEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "") //because can be null, ugly
-                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid())
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -195,7 +195,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             report = new Report(description, numberOfImages, MIME_TYPE, FILE_EXT);
         }
         Api api = PolaApplication.retrofit.create(Api.class);
-        reportResultCall = api.createReport(Utils.getDeviceId(CreateReportActivity.this), report);
+        reportResultCall = api.createReport(Utils.getSessionGuid(), report);
         reportResultCall.enqueue(this);
 
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
@@ -204,7 +204,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Answers.getInstance().logLevelEnd(new LevelEndEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "")
-                                .putCustomAttribute("DeviceId", Utils.getDeviceId(CreateReportActivity.this))
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid())
                 );
             } catch (Exception e) {
                 e.printStackTrace();
