@@ -150,11 +150,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        if (bitmaps != null && bitmaps.size() >= position) {
+                        if (bitmaps != null && position < bitmaps.size()) {
                             bitmaps.remove(position);
                             setImageView(bitmaps);
                         }
-                        if (bitmapsPaths != null && bitmapsPaths.size() >= position) {
+                        if (bitmapsPaths != null && position < bitmapsPaths.size()) {
                             bitmapsPaths.remove(position);
                         }
                         break;

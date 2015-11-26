@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.hide(productsListFragment);
         ft.addToBackStack(ProductDetailsFragment.class.getName());
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     @Subscribe
