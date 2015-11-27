@@ -20,7 +20,7 @@ public class SearchResult {
     public String plWorkers_notes;
     public String plRnD_notes;
     public String plRegistered_notes;
-    public String plNotGlobalEnt_notes;
+    public String plNotGlobEnt_notes;
 
     public String report_text;
     public String report_button_text;

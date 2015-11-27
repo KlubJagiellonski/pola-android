@@ -50,6 +50,9 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.plcapital_details_text)
     TextView plCapitalText;
 
+    @Bind(R.id.tv_pl_capital_notes)
+    TextView plCapitalNotesTextView;
+
     @Bind(R.id.buttonWorkers)
     ImageButton buttonWorkers;
 
@@ -70,6 +73,18 @@ public class ProductDetailsFragment extends DialogFragment {
 
     @Bind(R.id.tv_altText)
     TextView altText;
+
+    @Bind(R.id.tv_pl_workers_notes)
+    TextView plWorkersTextView;
+
+    @Bind(R.id.tv_pl_rnd_notes)
+    TextView plRndTextView;
+
+    @Bind(R.id.tv_pl_registered_notes)
+    TextView plRegisteredTextView;
+
+    @Bind(R.id.tv_pl_globent_notes)
+    TextView plGlobentTextView;
 
     @Bind(R.id.pl_data_layout)
     LinearLayout plDataLayout;
@@ -138,6 +153,13 @@ public class ProductDetailsFragment extends DialogFragment {
             plCapitalText.setText("?");
         }
 
+        if(searchResult.plCapital_notes != null) {
+            plCapitalNotesTextView.setVisibility(View.VISIBLE);
+            plCapitalNotesTextView.setText(searchResult.plCapital_notes);
+        } else {
+            plCapitalNotesTextView.setVisibility(View.GONE);
+        }
+
         if(searchResult.altText != null) {
             plDataLayout.setVisibility(View.GONE);
             altText.setVisibility(View.VISIBLE);
@@ -152,10 +174,24 @@ public class ProductDetailsFragment extends DialogFragment {
                 buttonWorkers.setEnabled(false);
             }
 
+            if(searchResult.plWorkers_notes != null) {
+                plWorkersTextView.setVisibility(View.VISIBLE);
+                plWorkersTextView.setText(searchResult.plWorkers_notes);
+            } else {
+                plWorkersTextView.setVisibility(View.GONE);
+            }
+
             if (searchResult.plRnD != null && searchResult.plRnD != 0) {
                 buttonRnd.setSelected(true);
             } else if (searchResult.plRnD == null) {
                 buttonRnd.setEnabled(false);
+            }
+
+            if(searchResult.plRnD_notes != null) {
+                plRndTextView.setVisibility(View.VISIBLE);
+                plRndTextView.setText(searchResult.plRnD_notes);
+            } else {
+                plRndTextView.setVisibility(View.GONE);
             }
 
             if (searchResult.plRegistered != null && searchResult.plRegistered != 0) {
@@ -164,10 +200,24 @@ public class ProductDetailsFragment extends DialogFragment {
                 buttonRegistered.setEnabled(false);
             }
 
+            if(searchResult.plRegistered_notes != null) {
+                plRegisteredTextView.setVisibility(View.VISIBLE);
+                plRegisteredTextView.setText(searchResult.plRegistered_notes);
+            } else {
+                plRegisteredTextView.setVisibility(View.GONE);
+            }
+
             if (searchResult.plNotGlobEnt != null && searchResult.plNotGlobEnt != 0) {
                 buttonGlobent.setSelected(true);
             } else if (searchResult.plNotGlobEnt == null) {
                 buttonGlobent.setEnabled(false);
+            }
+
+            if(searchResult.plNotGlobEnt_notes != null) {
+                plGlobentTextView.setVisibility(View.VISIBLE);
+                plGlobentTextView.setText(searchResult.plNotGlobEnt_notes);
+            } else {
+                plGlobentTextView.setVisibility(View.GONE);
             }
         }
 
