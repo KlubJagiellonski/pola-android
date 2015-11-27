@@ -3,7 +3,6 @@ package pl.pola_app.ui.fragment;
 
 import android.app.DialogFragment;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -27,7 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
@@ -81,12 +80,12 @@ public class ProductDetailsFragment extends DialogFragment {
     @Inject
     Resources resources;
 
-    private Product product;
+    private SearchResult searchResult;
 
-    public static ProductDetailsFragment newInstance(Product product) {
+    public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Product.class.getName(), Parcels.wrap(product));
+        args.putParcelable(SearchResult.class.getName(), Parcels.wrap(searchResult));
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,7 +98,7 @@ public class ProductDetailsFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            product = Parcels.unwrap(getArguments().getParcelable(Product.class.getName()));
+            searchResult = Parcels.unwrap(getArguments().getParcelable(SearchResult.class.getName()));
         }
     }
 
@@ -117,57 +116,57 @@ public class ProductDetailsFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        applyStyle(product.card_type, product.report_button_type);
-        reportMessage.setText(product.report_text);
-        reportButton.setText(product.report_button_text);
+        applyStyle(searchResult.card_type, searchResult.report_button_type);
+        reportMessage.setText(searchResult.report_text);
+        reportButton.setText(searchResult.report_button_text);
 
-        tv_companyName.setText(product.name);
+        tv_companyName.setText(searchResult.name);
 
-        if(product.plScore != null) {
-            plScoreBar.setProgress(product.plScore);
-            plScoreText.setText(product.plScore + " pkt");
+        if(searchResult.plScore != null) {
+            plScoreBar.setProgress(searchResult.plScore);
+            plScoreText.setText(searchResult.plScore + " pkt");
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
         }
 
-        if(product.plCapital != null) {
-            plCapitalBar.setProgress(product.plCapital);
-            plCapitalText.setText(product.plCapital + "%");
+        if(searchResult.plCapital != null) {
+            plCapitalBar.setProgress(searchResult.plCapital);
+            plCapitalText.setText(searchResult.plCapital + "%");
         } else {
             plCapitalBar.setProgress(0);
             plCapitalText.setText("?");
         }
 
-        if(product.altText != null) {
+        if(searchResult.altText != null) {
             plDataLayout.setVisibility(View.GONE);
             altText.setVisibility(View.VISIBLE);
-            altText.setText(product.altText);
+            altText.setText(searchResult.altText);
         } else {
             altText.setVisibility(View.GONE);
             plDataLayout.setVisibility(View.VISIBLE);
 
-            if (product.plWorkers != null && product.plWorkers != 0) {
+            if (searchResult.plWorkers != null && searchResult.plWorkers != 0) {
                 buttonWorkers.setSelected(true);
-            } else if (product.plWorkers == null) {
+            } else if (searchResult.plWorkers == null) {
                 buttonWorkers.setEnabled(false);
             }
 
-            if (product.plRnD != null && product.plRnD != 0) {
+            if (searchResult.plRnD != null && searchResult.plRnD != 0) {
                 buttonRnd.setSelected(true);
-            } else if (product.plRnD == null) {
+            } else if (searchResult.plRnD == null) {
                 buttonRnd.setEnabled(false);
             }
 
-            if (product.plRegistered != null && product.plRegistered != 0) {
+            if (searchResult.plRegistered != null && searchResult.plRegistered != 0) {
                 buttonRegistered.setSelected(true);
-            } else if (product.plRegistered == null) {
+            } else if (searchResult.plRegistered == null) {
                 buttonRegistered.setEnabled(false);
             }
 
-            if (product.plNotGlobEnt != null && product.plNotGlobEnt != 0) {
+            if (searchResult.plNotGlobEnt != null && searchResult.plNotGlobEnt != 0) {
                 buttonGlobent.setSelected(true);
-            } else if (product.plNotGlobEnt == null) {
+            } else if (searchResult.plNotGlobEnt == null) {
                 buttonGlobent.setEnabled(false);
             }
         }
@@ -199,6 +198,6 @@ public class ProductDetailsFragment extends DialogFragment {
 
     @OnClick(R.id.report_button)
     public void report() {
-        eventBus.post(new ReportButtonClickedEvent(product));
+        eventBus.post(new ReportButtonClickedEvent(searchResult));
     }
 }

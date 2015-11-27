@@ -1,15 +1,15 @@
 package pl.pola_app.ui.event;
 
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 
 /**
  * Created by grzegorzkapusta on 08.10.2015.
  */
 public class ProductItemClickedEvent {
-    public Product product;
+    public SearchResult searchResult;
 
-    public ProductItemClickedEvent(Product item) {
-        this.product = item;
+    public ProductItemClickedEvent(SearchResult item) {
+        this.searchResult = item;
     }
 
 }

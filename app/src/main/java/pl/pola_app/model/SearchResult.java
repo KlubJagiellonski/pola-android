@@ -3,7 +3,7 @@ package pl.pola_app.model;
 import org.parceler.Parcel;
 
 @Parcel
-public class Product {
+public class SearchResult {
     public Integer product_id;
     public String code;
     public String name;

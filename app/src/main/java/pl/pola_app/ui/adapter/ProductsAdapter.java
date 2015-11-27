@@ -2,7 +2,6 @@ package pl.pola_app.ui.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,20 +18,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
     public interface ProductClickListener {
-        void itemClicked(Product product);
+        void itemClicked(SearchResult searchResult);
     }
 
     private final Context context;
-    private final List<Product> products;
+    private final List<SearchResult> searchResults;
     private ProductClickListener productClickListener;
 
-    public ProductsAdapter(Context context, List<Product> products) {
-        this.products = products;
+    public ProductsAdapter(Context context, List<SearchResult> searchResults) {
+        this.searchResults = searchResults;
         this.context = context;
     }
 
@@ -49,13 +48,13 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        final Product p = products.get(i);
+        final SearchResult p = searchResults.get(i);
         viewHolder.bind(p);
     }
 
     @Override
     public int getItemCount() {
-        return products == null ? 0 : products.size();
+        return searchResults == null ? 0 : searchResults.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -88,8 +87,8 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
             this.onClickListener = onClickListener;
         }
 
-        void bind(Product product) {
-            if (product == null) {
+        void bind(SearchResult searchResult) {
+            if (searchResult == null) {
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
                 plScore.setProgress(0);
@@ -99,11 +98,11 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
             progress.setVisibility(View.GONE);
 
-            applyStyle(product.card_type);
-            companyName.setText(product.name);
+            applyStyle(searchResult.card_type);
+            companyName.setText(searchResult.name);
 
-            if (product.plScore != null) {
-                plScore.setProgress(product.plScore);
+            if (searchResult.plScore != null) {
+                plScore.setProgress(searchResult.plScore);
             } else {
                 plScore.setProgress(0);
             }
@@ -123,10 +122,10 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         public void onClick(View v) {
             if(productClickListener != null) {
                 int position = getAdapterPosition();
-                if(products != null && position >= 0 && products.size() >= position) {
-                    Product product = products.get(position);
-                    if(product != null) {
-                        productClickListener.itemClicked(product);
+                if(searchResults != null && position >= 0 && searchResults.size() >= position) {
+                    SearchResult searchResult = searchResults.get(position);
+                    if(searchResult != null) {
+                        productClickListener.itemClicked(searchResult);
                     }
                 }
             }

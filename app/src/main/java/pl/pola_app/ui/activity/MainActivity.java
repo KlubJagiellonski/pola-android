@@ -22,7 +22,7 @@ import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
@@ -37,7 +37,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements Callback<Product>, ScannerFragment.BarcodeScannedListener {
+public class MainActivity extends AppCompatActivity implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
 
     @Inject
     Bus eventBus;
@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(event.product.name + "") //As it might be null
+                                .putContentName(event.searchResult.name + "") //As it might be null
                                 .putContentType("Open Card")
-                                .putContentId(Integer.toString(event.product.product_id))
-                                .putCustomAttribute("Code", event.product.code)
+                                .putContentId(Integer.toString(event.searchResult.product_id))
+                                .putCustomAttribute("Code", event.searchResult.code)
                                 .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
                 );
             } catch (Exception e) {
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
+        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.searchResult);
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.hide(productsListFragment);
         ft.addToBackStack(ProductDetailsFragment.class.getName());
@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
 
     @Subscribe
     public void reportButtonClicked(ReportButtonClickedEvent event) {
-        if(event.product.product_id != null) {
-            launchReportActivity(Integer.toString(event.product.product_id));
+        if(event.searchResult.product_id != null) {
+            launchReportActivity(Integer.toString(event.searchResult.product_id));
         } else {
             launchReportActivity(null);
         }
@@ -158,11 +158,11 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             productsListFragment.createProductPlaceholder();
 
             Api api = PolaApplication.retrofit.create(Api.class);
-            Call<Product> reportResultCall = api.product(result, Utils.getSessionGuid(this));
+            Call<SearchResult> reportResultCall = api.getByCode(result, Utils.getSessionGuid(this));
             reportResultCall.enqueue(this);
             if(scannerFragment != null) {
-                if (productsListFragment != null && productsListFragment.products != null) {
-                    scannerFragment.updateBoxPosition(productsListFragment.products.size());
+                if (productsListFragment != null && productsListFragment.searchResults != null) {
+                    scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
                 }
             }
         }
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     }
 
     @Override
-    public void onResponse(Response<Product> response, Retrofit retrofit) {
+    public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
         if (BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             scannerFragment.resumeScanning();
         }
         if(scannerFragment != null) {
-            if (productsListFragment != null && productsListFragment.products != null) {
-                scannerFragment.updateBoxPosition(productsListFragment.products.size());
+            if (productsListFragment != null && productsListFragment.searchResults != null) {
+                scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
             }
         }
     }

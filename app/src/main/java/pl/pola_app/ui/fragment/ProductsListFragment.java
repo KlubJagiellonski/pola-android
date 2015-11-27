@@ -25,7 +25,7 @@ import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
 
@@ -41,7 +41,7 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
     Bus eventBus;
 
     private ProductsAdapter productsAdapter;
-    public List<Product> products;
+    public List<SearchResult> searchResults;
 
     public ProductsListFragment() {
         // Required empty public constructor
@@ -54,7 +54,7 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
         PolaApplication.component(getActivity()).inject(this);
         ButterKnife.bind(this, productsListView);
 
-        products = new ArrayList<>();
+        searchResults = new ArrayList<>();
         return productsListView;
     }
 
@@ -63,10 +63,10 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
         super.onActivityCreated(savedInstanceState);
 
         if(savedInstanceState != null) {
-            products = Parcels.unwrap(savedInstanceState.getParcelable(Product.class.getName()));
+            searchResults = Parcels.unwrap(savedInstanceState.getParcelable(SearchResult.class.getName()));
         }
 
-        productsAdapter = new ProductsAdapter(getContext(), products);
+        productsAdapter = new ProductsAdapter(getContext(), searchResults);
         productsAdapter.setOnProductClickListener(this);
 
         productsList.setLayoutManager(productsListLinearLayoutManager);
@@ -82,49 +82,49 @@ public class ProductsListFragment extends Fragment implements ProductsAdapter.Pr
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Product.class.getName(), Parcels.wrap(products));
+        outState.putParcelable(SearchResult.class.getName(), Parcels.wrap(searchResults));
     }
 
-    public void addProduct(Product product) {
-        if (products.size() > 0 && products.get(0) == null) {
+    public void addProduct(SearchResult searchResult) {
+        if (searchResults.size() > 0 && searchResults.get(0) == null) {
             if(BuildConfig.USE_CRASHLYTICS) {
                 Answers.getInstance().logCustom(new CustomEvent("addProduct")
                         .putCustomAttribute("good", "true"));
             }
-            products.set(0, product);
+            searchResults.set(0, searchResult);
         } else {
             if(BuildConfig.USE_CRASHLYTICS) {
                 Answers.getInstance().logCustom(new CustomEvent("addProduct")
                     .putCustomAttribute("good", "false"));
             }
-            products.add(0, product);
+            searchResults.add(0, searchResult);
         }
         productsAdapter.notifyDataSetChanged();
     }
 
     public void createProductPlaceholder() {
-        products.add(0, null);
+        searchResults.add(0, null);
         productsAdapter.notifyDataSetChanged();
     }
 
     public void removeProductPlaceholder() {
-        if(products.size() > 0 && products.get(0) == null) {
-            products.remove(0);
+        if(searchResults.size() > 0 && searchResults.get(0) == null) {
+            searchResults.remove(0);
             productsAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void itemClicked(Product product) {
-        eventBus.post(new ProductItemClickedEvent(product));
+    public void itemClicked(SearchResult searchResult) {
+        eventBus.post(new ProductItemClickedEvent(searchResult));
     }
 
     public boolean itemExists(String code) {
-        for(Product p : products) {
+        for(SearchResult p : searchResults) {
             if(p != null) {
                 if (p.code.equals(code)) {
-                    products.remove(p);
-                    products.add(0, p);
+                    searchResults.remove(p);
+                    searchResults.add(0, p);
                     productsAdapter.notifyDataSetChanged();
                     return true;
                 }

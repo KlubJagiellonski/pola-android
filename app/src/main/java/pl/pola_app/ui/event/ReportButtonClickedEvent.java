@@ -1,11 +1,11 @@
 package pl.pola_app.ui.event;
 
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 
 public class ReportButtonClickedEvent {
-    public Product product;
+    public SearchResult searchResult;
 
-    public ReportButtonClickedEvent(Product product) {
-        this.product = product;
+    public ReportButtonClickedEvent(SearchResult searchResult) {
+        this.searchResult = searchResult;
     }
 }
