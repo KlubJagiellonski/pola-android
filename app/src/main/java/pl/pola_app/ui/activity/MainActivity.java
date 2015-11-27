@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
                                 .putContentType("Open Card")
                                 .putContentId(Integer.toString(event.product.product_id))
                                 .putCustomAttribute("Code", event.product.code)
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid())
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if(BuildConfig.USE_CRASHLYTICS) {
             Answers.getInstance().logSearch(new SearchEvent()
                             .putQuery(result)
-                            .putCustomAttribute("DeviceId", Utils.getSessionGuid())
+                            .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
             );
         }
         if(productsListFragment.itemExists(result)) {
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             productsListFragment.createProductPlaceholder();
 
             Api api = PolaApplication.retrofit.create(Api.class);
-            Call<Product> reportResultCall = api.product(result, Utils.getSessionGuid());
+            Call<Product> reportResultCall = api.product(result, Utils.getSessionGuid(this));
             reportResultCall.enqueue(this);
             if(scannerFragment != null) {
                 if (productsListFragment != null && productsListFragment.products != null) {
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
                                 .putContentType("Card Preview")
                                 .putContentId(Integer.toString(response.body().product_id))
                                 .putCustomAttribute("Code", response.code())
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid())
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
                 );
             } catch (Exception e) {
                 e.printStackTrace();

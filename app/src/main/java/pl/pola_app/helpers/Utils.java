@@ -1,9 +1,11 @@
 package pl.pola_app.helpers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
 
@@ -22,11 +24,21 @@ public class Utils {
     public static final String URL_POLA_TWITTER= "https://twitter.com/pola_app";
     public static final long TIMEOUT_SECONDS = 20;
 
-    private static String sessionGuid = null;
+    private static final String PREF_SESSION_GUID = "session_guid";
 
-    public static String getSessionGuid() {
+    public static SharedPreferences getDefaultSharedPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static String getSessionGuid(Context context) {
+        SharedPreferences pref = getDefaultSharedPreferences(context);
+        String sessionGuid = pref.getString(PREF_SESSION_GUID, null);
+
         if(sessionGuid == null) {
             sessionGuid = UUID.randomUUID().toString();
+            final SharedPreferences.Editor editor = pref.edit();
+            editor.putString(PREF_SESSION_GUID, sessionGuid);
+            editor.commit();
         }
 
         return sessionGuid;
