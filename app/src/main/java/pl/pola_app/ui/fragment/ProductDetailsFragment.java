@@ -2,7 +2,7 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
-import android.graphics.Color;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
@@ -49,6 +50,9 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.plcapital_details_text)
     TextView plCapitalText;
 
+    @Bind(R.id.tv_pl_capital_notes)
+    TextView plCapitalNotesTextView;
+
     @Bind(R.id.buttonWorkers)
     ImageButton buttonWorkers;
 
@@ -67,15 +71,36 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.report_button)
     Button reportButton;
 
+    @Bind(R.id.tv_altText)
+    TextView altText;
+
+    @Bind(R.id.tv_pl_workers_notes)
+    TextView plWorkersTextView;
+
+    @Bind(R.id.tv_pl_rnd_notes)
+    TextView plRndTextView;
+
+    @Bind(R.id.tv_pl_registered_notes)
+    TextView plRegisteredTextView;
+
+    @Bind(R.id.tv_pl_globent_notes)
+    TextView plGlobentTextView;
+
+    @Bind(R.id.pl_data_layout)
+    LinearLayout plDataLayout;
+
     @Inject
     Bus eventBus;
 
-    private Product product;
+    @Inject
+    Resources resources;
 
-    public static ProductDetailsFragment newInstance(Product product) {
+    private SearchResult searchResult;
+
+    public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Product.class.getName(), Parcels.wrap(product));
+        args.putParcelable(SearchResult.class.getName(), Parcels.wrap(searchResult));
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,7 +113,7 @@ public class ProductDetailsFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            product = Parcels.unwrap(getArguments().getParcelable(Product.class.getName()));
+            searchResult = Parcels.unwrap(getArguments().getParcelable(SearchResult.class.getName()));
         }
     }
 
@@ -106,62 +131,94 @@ public class ProductDetailsFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(product.verified == false) {
-            productInfoCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
-            reportMessage.setText(R.string.not_verified_report_message);
-            reportButton.setText(R.string.send_report);
-            reportButton.setBackgroundColor(Color.parseColor("#D8002F"));
-            reportButton.setTextColor(Color.WHITE);
-        } else {
-            productInfoCard.setCardBackgroundColor(Color.WHITE);
-            reportMessage.setText(R.string.report_message);
-            reportButton.setText(R.string.report_button_text);
-            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
-            reportButton.setTextColor(Color.parseColor("#D8002F"));
-        }
+        applyStyle(searchResult.card_type, searchResult.report_button_type);
+        reportMessage.setText(searchResult.report_text);
+        reportButton.setText(searchResult.report_button_text);
 
-        if(product.company.name != null) {
-            tv_companyName.setText(product.company.name);
-        }
+        tv_companyName.setText(searchResult.name);
 
-        if(product.plScore != null) {
-            plScoreBar.setProgress(product.plScore);
-            plScoreText.setText(product.plScore + " pkt");
+        if(searchResult.plScore != null) {
+            plScoreBar.setProgress(searchResult.plScore);
+            plScoreText.setText(searchResult.plScore + " pkt");
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
         }
 
-        if(product.company.plCapital != null) {
-            plCapitalBar.setProgress(product.company.plCapital);
-            plCapitalText.setText(product.company.plCapital + "%");
+        if(searchResult.plCapital != null) {
+            plCapitalBar.setProgress(searchResult.plCapital);
+            plCapitalText.setText(searchResult.plCapital + "%");
         } else {
             plCapitalBar.setProgress(0);
             plCapitalText.setText("?");
         }
 
-        if (product.company.plWorkers != null && product.company.plWorkers != 0) {
-            buttonWorkers.setSelected(true);
-        } else if (product.company.plWorkers == null) {
-            buttonWorkers.setEnabled(false);
+        if(searchResult.plCapital_notes != null) {
+            plCapitalNotesTextView.setVisibility(View.VISIBLE);
+            plCapitalNotesTextView.setText(searchResult.plCapital_notes);
+        } else {
+            plCapitalNotesTextView.setVisibility(View.GONE);
         }
 
-        if (product.company.plRnD != null && product.company.plRnD != 0) {
-            buttonRnd.setSelected(true);
-        } else if (product.company.plRnD == null) {
-            buttonRnd.setEnabled(false);
-        }
+        if(searchResult.altText != null) {
+            plDataLayout.setVisibility(View.GONE);
+            altText.setVisibility(View.VISIBLE);
+            altText.setText(searchResult.altText);
+        } else {
+            altText.setVisibility(View.GONE);
+            plDataLayout.setVisibility(View.VISIBLE);
 
-        if (product.company.plRegistered != null && product.company.plRegistered != 0) {
-            buttonRegistered.setSelected(true);
-        } else if (product.company.plRegistered == null) {
-            buttonRegistered.setEnabled(false);
-        }
+            if (searchResult.plWorkers != null && searchResult.plWorkers != 0) {
+                buttonWorkers.setSelected(true);
+            } else if (searchResult.plWorkers == null) {
+                buttonWorkers.setEnabled(false);
+            }
 
-        if (product.company.plNotGlobEnt != null && product.company.plNotGlobEnt != 0) {
-            buttonGlobent.setSelected(true);
-        } else if (product.company.plNotGlobEnt == null) {
-            buttonGlobent.setEnabled(false);
+            if(searchResult.plWorkers_notes != null) {
+                plWorkersTextView.setVisibility(View.VISIBLE);
+                plWorkersTextView.setText(searchResult.plWorkers_notes);
+            } else {
+                plWorkersTextView.setVisibility(View.GONE);
+            }
+
+            if (searchResult.plRnD != null && searchResult.plRnD != 0) {
+                buttonRnd.setSelected(true);
+            } else if (searchResult.plRnD == null) {
+                buttonRnd.setEnabled(false);
+            }
+
+            if(searchResult.plRnD_notes != null) {
+                plRndTextView.setVisibility(View.VISIBLE);
+                plRndTextView.setText(searchResult.plRnD_notes);
+            } else {
+                plRndTextView.setVisibility(View.GONE);
+            }
+
+            if (searchResult.plRegistered != null && searchResult.plRegistered != 0) {
+                buttonRegistered.setSelected(true);
+            } else if (searchResult.plRegistered == null) {
+                buttonRegistered.setEnabled(false);
+            }
+
+            if(searchResult.plRegistered_notes != null) {
+                plRegisteredTextView.setVisibility(View.VISIBLE);
+                plRegisteredTextView.setText(searchResult.plRegistered_notes);
+            } else {
+                plRegisteredTextView.setVisibility(View.GONE);
+            }
+
+            if (searchResult.plNotGlobEnt != null && searchResult.plNotGlobEnt != 0) {
+                buttonGlobent.setSelected(true);
+            } else if (searchResult.plNotGlobEnt == null) {
+                buttonGlobent.setEnabled(false);
+            }
+
+            if(searchResult.plNotGlobEnt_notes != null) {
+                plGlobentTextView.setVisibility(View.VISIBLE);
+                plGlobentTextView.setText(searchResult.plNotGlobEnt_notes);
+            } else {
+                plGlobentTextView.setVisibility(View.GONE);
+            }
         }
 
         productInfoCard.setOnClickListener(new View.OnClickListener() {
@@ -173,8 +230,24 @@ public class ProductDetailsFragment extends DialogFragment {
         });
     }
 
+    private void applyStyle(String cardType, String reportType) {
+        if (cardType.equals(resources.getString(R.string.type_grey))) {
+            productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
+        } else {
+            productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
+        }
+
+        if(reportType.equals(resources.getString(R.string.type_red))) {
+            reportButton.setBackgroundColor(resources.getColor(R.color.card_type_red_report_bt_bk));
+            reportButton.setTextColor(resources.getColor(R.color.card_type_red_report_bt_text));
+        } else {
+            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
+            reportButton.setTextColor(resources.getColor(R.color.card_type_white_report_bt_text));
+        }
+    }
+
     @OnClick(R.id.report_button)
     public void report() {
-        eventBus.post(new ReportButtonClickedEvent(product));
+        eventBus.post(new ReportButtonClickedEvent(searchResult));
     }
 }

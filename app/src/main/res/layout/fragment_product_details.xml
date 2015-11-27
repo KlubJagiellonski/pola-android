@@ -75,143 +75,217 @@
                         android:textSize="15sp" />
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/company_plRnD"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/pl_capital_percent"
-                    android:textColor="@android:color/black" />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="16dp"
+                        android:id="@+id/tv_altText"
+                        android:visibility="gone"
+                        android:textColor="@android:color/black" />
+                </ScrollView>
 
-                <RelativeLayout
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ProgressBar
-                        android:id="@+id/plcapital_details_progressbar"
-                        style="?android:attr/progressBarStyleHorizontal"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="8dp"
-                        android:progressDrawable="@drawable/capital_bar" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/pl_data_layout">
 
-                    <TextView
-                        android:id="@+id/plcapital_details_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_alignBottom="@+id/plcapital_details_progressbar"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:gravity="center_vertical"
-                        android:text="0%"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/company_plCapital_percent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/pl_capital_percent"
+                            android:textColor="@android:color/black" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                    <ImageButton
-                        android:id="@+id/buttonWorkers"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/button_three_selector" />
+                            <ProgressBar
+                                android:id="@+id/plcapital_details_progressbar"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="8dp"
+                                android:progressDrawable="@drawable/capital_bar" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:layout_marginLeft="4dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/pl_workers_text"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/plcapital_details_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_alignBottom="@+id/plcapital_details_progressbar"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="16dp"
+                                android:gravity="center_vertical"
+                                android:text="0%"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp" />
+                        </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="4dp"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:visibility="gone"
+                            android:id="@+id/tv_pl_capital_notes" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/buttonRnd"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/button_three_selector" />
+                            <ImageButton
+                                android:id="@+id/buttonWorkers"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/button_three_selector" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:layout_marginLeft="4dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/pl_rnd_text"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/pl_workers_text"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="42dp"
+                            android:layout_marginRight="10dp"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:visibility="gone"
+                            android:id="@+id/tv_pl_workers_notes"/>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="6dp"
+                            android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/buttonRegistered"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/button_three_selector" />
+                            <ImageButton
+                                android:id="@+id/buttonRnd"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/button_three_selector" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:layout_marginLeft="4dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/pl_registered_text"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/pl_rnd_text"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="42dp"
+                            android:layout_marginRight="10dp"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:visibility="gone"
+                            android:id="@+id/tv_pl_rnd_notes"/>
 
-                    <ImageButton
-                        android:id="@+id/buttonGlobent"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/button_three_selector" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="6dp"
+                            android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:layout_marginLeft="4dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/pl_globent_text"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
+                            <ImageButton
+                                android:id="@+id/buttonRegistered"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/button_three_selector" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/pl_registered_text"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="42dp"
+                            android:layout_marginRight="10dp"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:visibility="gone"
+                            android:id="@+id/tv_pl_registered_notes"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="6dp"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:id="@+id/buttonGlobent"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/button_three_selector" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/pl_globent_text"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="42dp"
+                            android:layout_marginRight="10dp"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:visibility="gone"
+                            android:id="@+id/tv_pl_globent_notes"/>
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/bottomLinear"
@@ -232,7 +306,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="12dp"
-                    android:text="@string/report_message"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
@@ -246,7 +319,6 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/button_border"
-                    android:text="@string/report_button_text"
                     android:textColor="#D8002F" />
 
             </LinearLayout>

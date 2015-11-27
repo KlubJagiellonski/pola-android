@@ -1,6 +1,7 @@
 package pl.pola_app.ui.adapter;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,22 +12,27 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
     public interface ProductClickListener {
-        void itemClicked(Product product);
+        void itemClicked(SearchResult searchResult);
     }
 
-    private final List<Product> products;
+    private final Context context;
+    private final List<SearchResult> searchResults;
     private ProductClickListener productClickListener;
 
-    public ProductsAdapter(List<Product> products) {
-        this.products = products;
+    public ProductsAdapter(Context context, List<SearchResult> searchResults) {
+        this.searchResults = searchResults;
+        this.context = context;
     }
 
     public void setOnProductClickListener(ProductClickListener productClickListener) {
@@ -42,13 +48,13 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        final Product p = products.get(i);
+        final SearchResult p = searchResults.get(i);
         viewHolder.bind(p);
     }
 
     @Override
     public int getItemCount() {
-        return products == null ? 0 : products.size();
+        return searchResults == null ? 0 : searchResults.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -65,11 +71,15 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.progressBar)
         ProgressBar progress;
 
+        @Inject
+        Resources resources;
+
         View.OnClickListener onClickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            PolaApplication.component(context).inject(this);
             itemView.setOnClickListener(this);
         }
 
@@ -77,34 +87,34 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
             this.onClickListener = onClickListener;
         }
 
-        void bind(Product product) {
-            productCard.setCardBackgroundColor(Color.WHITE);
-            plScore.setBackgroundColor(Color.parseColor("#CCCCCC"));
-
-            if (product == null) {
+        void bind(SearchResult searchResult) {
+            if (searchResult == null) {
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
                 plScore.setProgress(0);
+                applyStyle(resources.getString(R.string.type_white));
                 return;
             }
 
             progress.setVisibility(View.GONE);
 
-            if (product.verified == false) {
-                productCard.setCardBackgroundColor(Color.parseColor("#E9E8E7"));
-                plScore.setBackgroundColor(Color.parseColor("#666666"));
-            }
+            applyStyle(searchResult.card_type);
+            companyName.setText(searchResult.name);
 
-            if (product.plScore != null) {
-                plScore.setProgress(product.plScore);
+            if (searchResult.plScore != null) {
+                plScore.setProgress(searchResult.plScore);
             } else {
                 plScore.setProgress(0);
             }
+        }
 
-            if (product.company != null && product.company.name != null) {
-                companyName.setText(product.company.name);
+        private void applyStyle(String style) {
+            if (style.equals(resources.getString(R.string.type_grey))) {
+                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
+                plScore.setBackgroundColor(resources.getColor(R.color.card_type_grey_score_bk));
             } else {
-                companyName.setText(R.string.unknown_company);
+                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
+                plScore.setBackgroundColor(resources.getColor(R.color.card_type_white_score_bk));
             }
         }
 
@@ -112,10 +122,10 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         public void onClick(View v) {
             if(productClickListener != null) {
                 int position = getAdapterPosition();
-                if(products != null && position >= 0 && products.size() >= position) {
-                    Product product = products.get(position);
-                    if(product != null) {
-                        productClickListener.itemClicked(product);
+                if(searchResults != null && position >= 0 && searchResults.size() >= position) {
+                    SearchResult searchResult = searchResults.get(position);
+                    if(searchResult != null) {
+                        productClickListener.itemClicked(searchResult);
                     }
                 }
             }

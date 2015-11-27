@@ -22,7 +22,7 @@ import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
-import pl.pola_app.model.Product;
+import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
@@ -37,7 +37,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements Callback<Product>, ScannerFragment.BarcodeScannedListener {
+public class MainActivity extends AppCompatActivity implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
 
     @Inject
     Bus eventBus;
@@ -99,38 +99,31 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if(BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(event.product.company.name + "") //As it might be null
+                                .putContentName(event.searchResult.name + "") //As it might be null
                                 .putContentType("Open Card")
-                                .putContentId(Integer.toString(event.product.id))
-                                .putCustomAttribute("Code", event.product.code)
-                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
-                                .putCustomAttribute("Verified", Boolean.toString(event.product.verified))
+                                .putContentId(Integer.toString(event.searchResult.product_id))
+                                .putCustomAttribute("Code", event.searchResult.code)
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
                 );
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(event.product.company == null && event.product.report.equals(getResources().getString(R.string.ask_for_company_property_name))) {
-            if(event.product != null) {
-                launchReportActivity(Integer.toString(event.product.id));
-            } else {
-                launchReportActivity(null);
-            }
-        } else {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-            ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.product);
-            ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
-            ft.hide(productsListFragment);
-            ft.addToBackStack(ProductDetailsFragment.class.getName());
-            ft.commit();
-        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
+        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.searchResult);
+        ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
+        ft.hide(productsListFragment);
+        ft.addToBackStack(ProductDetailsFragment.class.getName());
+        ft.commitAllowingStateLoss();
     }
 
     @Subscribe
     public void reportButtonClicked(ReportButtonClickedEvent event) {
-        if(event.product != null) {
-            launchReportActivity(Integer.toString(event.product.id));
+        if(event.searchResult.product_id != null) {
+            launchReportActivity(Integer.toString(event.searchResult.product_id));
+        } else {
+            launchReportActivity(null);
         }
     }
 
@@ -151,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
         if(BuildConfig.USE_CRASHLYTICS) {
             Answers.getInstance().logSearch(new SearchEvent()
                             .putQuery(result)
-                            .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
+                            .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
             );
         }
         if(productsListFragment.itemExists(result)) {
@@ -165,11 +158,11 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             productsListFragment.createProductPlaceholder();
 
             Api api = PolaApplication.retrofit.create(Api.class);
-            Call<Product> reportResultCall = api.product(result, Utils.getDeviceId(this));
+            Call<SearchResult> reportResultCall = api.getByCode(result, Utils.getSessionGuid(this));
             reportResultCall.enqueue(this);
             if(scannerFragment != null) {
-                if (productsListFragment != null && productsListFragment.products != null) {
-                    scannerFragment.updateBoxPosition(productsListFragment.products.size());
+                if (productsListFragment != null && productsListFragment.searchResults != null) {
+                    scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
                 }
             }
         }
@@ -181,16 +174,15 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
     }
 
     @Override
-    public void onResponse(Response<Product> response, Retrofit retrofit) {
+    public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
         if (BuildConfig.USE_CRASHLYTICS) {
             try {
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(response.body().company.name + "")//To avoid null as it might be empty
+                                .putContentName(response.body().name + "")//To avoid null as it might be empty
                                 .putContentType("Card Preview")
-                                .putContentId(Integer.toString(response.body().id))
+                                .putContentId(Integer.toString(response.body().product_id))
                                 .putCustomAttribute("Code", response.code())
-                                .putCustomAttribute("DeviceId", Utils.getDeviceId(this))
-                                .putCustomAttribute("Verified", Boolean.toString(response.body().verified))
+                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -223,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Product>
             scannerFragment.resumeScanning();
         }
         if(scannerFragment != null) {
-            if (productsListFragment != null && productsListFragment.products != null) {
-                scannerFragment.updateBoxPosition(productsListFragment.products.size());
+            if (productsListFragment != null && productsListFragment.searchResults != null) {
+                scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
             }
         }
     }

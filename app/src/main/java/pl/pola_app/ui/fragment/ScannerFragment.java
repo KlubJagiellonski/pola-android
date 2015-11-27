@@ -392,9 +392,11 @@ public class ScannerFragment extends Fragment {
         @Override
         public void barcodeResult(final BarcodeResult result) {
             if (result.getText() != null) {
-                barcodeScanner.getBarcodeView().stopDecoding();
+                if(barcodeScanner != null) {
+                    barcodeScanner.getBarcodeView().stopDecoding();
+                    barcodeScanner.setStatusText("");
+                }
                 ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                barcodeScanner.setStatusText("");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

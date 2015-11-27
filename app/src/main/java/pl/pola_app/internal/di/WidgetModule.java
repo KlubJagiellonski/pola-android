@@ -1,6 +1,7 @@
 package pl.pola_app.internal.di;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,5 +18,10 @@ public class WidgetModule {
     @Provides
     ProductsListLinearLayoutManager provideProductsListLinearLayoutManager() {
         return new ProductsListLinearLayoutManager(context);
+    }
+
+    @Provides
+    Resources provideResources() {
+        return context.getResources();
     }
 }
