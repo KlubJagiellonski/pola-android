@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
@@ -43,7 +45,7 @@ import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
-public class ScannerFragment extends Fragment {
+public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
     private static final String TAG = ScannerFragment.class.getSimpleName();
 
     public interface BarcodeScannedListener {
@@ -74,6 +76,8 @@ public class ScannerFragment extends Fragment {
     private boolean isDecoding = true;
     private static final int RC_HANDLE_GMS = 9001;
 
+    private boolean isTorchOn = false;
+
     public ScannerFragment() {
         // Required empty public constructor
     }
@@ -91,6 +95,9 @@ public class ScannerFragment extends Fragment {
         PolaApplication.component(getActivity()).inject(this);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        barcodeScanner.setTorchListener(this);
+        barcodeScanner.setTorchOff();
+
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
@@ -416,4 +423,23 @@ public class ScannerFragment extends Fragment {
         public void possibleResultPoints(List<ResultPoint> resultPoints) {
         }
     };
+
+    @OnClick(R.id.appIcon)
+    public void onAppIconClick() {
+        if(isTorchOn) {
+            barcodeScanner.setTorchOff();
+        } else {
+            barcodeScanner.setTorchOn();
+        }
+    }
+
+    @Override
+    public void onTorchOn() {
+        isTorchOn = true;
+    }
+
+    @Override
+    public void onTorchOff() {
+        isTorchOn = false;
+    }
 }
