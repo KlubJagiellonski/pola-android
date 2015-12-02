@@ -16,11 +16,7 @@ public class SearchResult {
     public Integer plRegistered;
     public Integer plNotGlobEnt;
 
-    public String plCapital_notes;
-    public String plWorkers_notes;
-    public String plRnD_notes;
-    public String plRegistered_notes;
-    public String plNotGlobEnt_notes;
+    public String description;
 
     public String report_text;
     public String report_button_text;

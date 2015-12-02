@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="12dp"
                             android:text="@string/pl_capital_percent"
                             android:textColor="@android:color/black" />
 
@@ -136,16 +136,6 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="12sp" />
                         </RelativeLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="4dp"
-                            android:textSize="11sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:visibility="gone"
-                            android:id="@+id/tv_pl_capital_notes" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -171,16 +161,6 @@
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="42dp"
-                            android:layout_marginRight="10dp"
-                            android:textSize="11sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:visibility="gone"
-                            android:id="@+id/tv_pl_workers_notes"/>
-
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -205,16 +185,6 @@
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="42dp"
-                            android:layout_marginRight="10dp"
-                            android:textSize="11sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:visibility="gone"
-                            android:id="@+id/tv_pl_rnd_notes"/>
-
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -238,16 +208,6 @@
                                 android:text="@string/pl_registered_text"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="42dp"
-                            android:layout_marginRight="10dp"
-                            android:textSize="11sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:visibility="gone"
-                            android:id="@+id/tv_pl_registered_notes"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -276,12 +236,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="42dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:textSize="11sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:visibility="gone"
-                            android:id="@+id/tv_pl_globent_notes"/>
+                            android:layout_marginTop="10dp"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/black"
+                            android:id="@+id/tv_description"/>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
