@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.journeyapps.barcodescanner.Size;
 import com.squareup.otto.Bus;
 
 import java.util.List;
@@ -67,6 +72,10 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     Toolbar toolbar;
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
+
+    @Bind(R.id.flash_icon)
+    ImageView flashIconView;
+
     private final boolean isGoogleBarcodeOperational = false;
     private long timestampLastScanned = 0;
     private long timeBetweenScans = TimeUnit.SECONDS.toMillis(1);//To slow down Google Mobile Vision as otherwise it generates few scans per each barcode.
@@ -93,6 +102,17 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         View scannerView = inflater.inflate(R.layout.fragment_scanner, container, false);
         ButterKnife.bind(this, scannerView);
         PolaApplication.component(getActivity()).inject(this);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width*0.9f), (int) (height*0.25f)));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
+        barcodeScanner.setLayoutParams(layoutParams);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         barcodeScanner.setTorchListener(this);
@@ -424,7 +444,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     };
 
-    @OnClick(R.id.appIcon)
+    @OnClick(R.id.flash_icon)
     public void onAppIconClick() {
         if(isTorchOn) {
             barcodeScanner.setTorchOff();
@@ -436,10 +456,12 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onTorchOn() {
         isTorchOn = true;
+        flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_off_white_48dp));
     }
 
     @Override
     public void onTorchOff() {
         isTorchOn = false;
+        flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_on_white_48dp));
     }
 }

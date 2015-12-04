@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pola_api_url">https://pola-staging.herokuapp.com/</string>
+    <string name="pola_api_url">https://www.pola-app.pl/</string>
 </resources>
