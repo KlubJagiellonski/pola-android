@@ -29,7 +29,9 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.journeyapps.barcodescanner.Size;
+import com.journeyapps.barcodescanner.camera.CameraSettings;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +46,7 @@ import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.activity.CreateReportActivity;
+import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.pola_app.ui.scanner.CameraSourcePreview;
 import pl.pola_app.ui.scanner.ScannerBox;
 import pl.tajchert.nammu.Nammu;
@@ -111,8 +114,12 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
+        //layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
         barcodeScanner.setLayoutParams(layoutParams);
+
+        CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
+        cameraSettings.setBarcodeSceneModeEnabled(true);
+        barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         barcodeScanner.setTorchListener(this);
@@ -132,6 +139,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onResume() {
         super.onResume();
+        eventBus.register(this);
         //startCameraSource();//FIXME using Google mobile vision
         if(barcodeScanner != null) {
             barcodeScanner.resume();
@@ -139,10 +147,14 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         timestampLastScanned = 0;
     }
 
+
+
     @Override
     public void onPause() {
         super.onPause();
+        eventBus.unregister(this);
         if(barcodeScanner != null) {
+            barcodeScanner.setTorchOff();
             barcodeScanner.pause();
         }
         if (mPreview != null) {
@@ -445,7 +457,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     };
 
     @OnClick(R.id.flash_icon)
-    public void onAppIconClick() {
+    public void onFlashIconClicked() {
         if(isTorchOn) {
             barcodeScanner.setTorchOff();
         } else {
@@ -456,12 +468,23 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onTorchOn() {
         isTorchOn = true;
-        flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_off_white_48dp));
+        if(flashIconView != null) {
+            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_off_white_48dp));
+        }
     }
 
     @Override
     public void onTorchOff() {
         isTorchOn = false;
-        flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_on_white_48dp));
+        if(flashIconView != null) {
+            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_on_white_48dp));
+        }
+    }
+
+    @Subscribe
+    public void productItemClicked(ProductItemClickedEvent event) {
+        if(isTorchOn) {
+            barcodeScanner.setTorchOff();
+        }
     }
 }
