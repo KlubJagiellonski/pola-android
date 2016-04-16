@@ -32,7 +32,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -101,7 +100,9 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         barcodeScanner.setLayoutParams(layoutParams);
 
         CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
-        cameraSettings.setBarcodeSceneModeEnabled(true);
+        //cameraSettings.setBarcodeSceneModeEnabled(true);
+        cameraSettings.setContinuousFocusEnabled(true);
+        cameraSettings.setAutoFocusEnabled(true);
         barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));

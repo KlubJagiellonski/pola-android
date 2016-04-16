@@ -148,10 +148,10 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
                             .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
             );
         }
-//        if(productsListFragment.itemExists(result)) {
-//           handlerScanner.removeCallbacks(runnableResumeScan);
-//            handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
-//        } else {
+        if(productsListFragment.itemExists(result)) {
+           handlerScanner.removeCallbacks(runnableResumeScan);
+            handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
+        } else {
             if(BuildConfig.USE_CRASHLYTICS) {
                 Answers.getInstance().logCustom(new CustomEvent("Scanned")
                         .putCustomAttribute("existing", "false"));
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
                     scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
                 }
             }
- //       }
+        }
     }
 
     @Override
