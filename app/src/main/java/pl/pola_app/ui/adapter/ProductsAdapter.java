@@ -12,11 +12,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
 
@@ -57,7 +55,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         return searchResults == null ? 0 : searchResults.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @Bind(R.id.company_name)
         TextView companyName;
@@ -71,20 +69,10 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         @Bind(R.id.progressBar)
         ProgressBar progress;
 
-        @Inject
-        Resources resources;
-
-        View.OnClickListener onClickListener;
-
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            PolaApplication.component(context).inject(this);
             itemView.setOnClickListener(this);
-        }
-
-        void bindClickListener(View.OnClickListener onClickListener) {
-            this.onClickListener = onClickListener;
         }
 
         void bind(SearchResult searchResult) {
@@ -92,7 +80,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
                 plScore.setProgress(0);
-                applyStyle(resources.getString(R.string.type_white));
+                applyStyle(context.getString(R.string.type_white));
                 return;
             }
 
@@ -109,6 +97,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         private void applyStyle(String style) {
+            final Resources resources = context.getResources();
             if (style.equals(resources.getString(R.string.type_grey))) {
                 productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
                 plScore.setBackgroundColor(resources.getColor(R.color.card_type_grey_score_bk));
