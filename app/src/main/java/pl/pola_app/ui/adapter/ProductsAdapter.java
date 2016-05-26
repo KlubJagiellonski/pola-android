@@ -2,6 +2,8 @@ package pl.pola_app.ui.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,10 +14,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
+import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
 
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
@@ -24,11 +26,12 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         void itemClicked(SearchResult searchResult);
     }
 
-    private final Context context;
-    private final List<SearchResult> searchResults;
-    private ProductClickListener productClickListener;
+    @NonNull private final Context context;
+    @NonNull private final List<SearchResult> searchResults;
+    @Nullable private ProductClickListener productClickListener;
 
-    public ProductsAdapter(Context context, List<SearchResult> searchResults) {
+    public ProductsAdapter(@NonNull final Context context,
+                           @NonNull final List<SearchResult> searchResults) {
         this.searchResults = searchResults;
         this.context = context;
     }
@@ -52,7 +55,23 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
     @Override
     public int getItemCount() {
-        return searchResults == null ? 0 : searchResults.size();
+        return searchResults.size();
+    }
+
+    private void onItemClicked(int position) {
+        if (productClickListener == null) {
+            return;
+        }
+
+        if (position > searchResults.size()) { //TODO: is it even possible to reach this state?
+            Utils.logException(new IndexOutOfBoundsException("Position: " + position + ", list size: " + searchResults.size()));
+            return;
+        }
+
+        SearchResult searchResult = searchResults.get(position);
+        if (searchResult != null) {
+            productClickListener.itemClicked(searchResult);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -108,15 +127,10 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         @Override
-        public void onClick(View v) {
-            if(productClickListener != null) {
-                int position = getAdapterPosition();
-                if(searchResults != null && position >= 0 && searchResults.size() >= position) {
-                    SearchResult searchResult = searchResults.get(position);
-                    if(searchResult != null) {
-                        productClickListener.itemClicked(searchResult);
-                    }
-                }
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                onItemClicked(position);
             }
         }
     }

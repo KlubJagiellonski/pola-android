@@ -3,14 +3,13 @@ package pl.pola_app.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Base64;
 
-import java.io.ByteArrayOutputStream;
+import com.crashlytics.android.Crashlytics;
+
 import java.util.UUID;
+
+import pl.pola_app.BuildConfig;
 
 public class Utils {
     public static final String URL_POLA_ABOUT = "https://www.pola-app.pl/m/about";
@@ -50,5 +49,11 @@ public class Utils {
 
     public static int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static void logException(Throwable throwable) {
+        if (!BuildConfig.USE_CRASHLYTICS) {
+            Crashlytics.logException(throwable);
+        }
     }
 }
