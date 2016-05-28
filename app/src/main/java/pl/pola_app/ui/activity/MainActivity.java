@@ -160,11 +160,6 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
             Api api = PolaApplication.retrofit.create(Api.class);
             Call<SearchResult> reportResultCall = api.getByCode(result, Utils.getSessionGuid(this));
             reportResultCall.enqueue(this);
-            if(scannerFragment != null) {
-                if (productsListFragment != null && productsListFragment.searchResults != null) {
-                    scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
-                }
-            }
         }
     }
 
@@ -213,11 +208,6 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
         }
         if(scannerFragment != null) {
             scannerFragment.resumeScanning();
-        }
-        if(scannerFragment != null) {
-            if (productsListFragment != null && productsListFragment.searchResults != null) {
-                scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
-            }
         }
     }
 }
