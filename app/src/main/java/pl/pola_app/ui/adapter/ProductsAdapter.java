@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
@@ -27,11 +25,11 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
     }
 
     @NonNull private final Context context;
-    @NonNull private final List<SearchResult> searchResults;
+    @NonNull private final ProductList searchResults;
     @Nullable private ProductClickListener productClickListener;
 
     public ProductsAdapter(@NonNull final Context context,
-                           @NonNull final List<SearchResult> searchResults) {
+                           @NonNull final ProductList searchResults) {
         this.searchResults = searchResults;
         this.context = context;
     }
