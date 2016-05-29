@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
@@ -18,18 +20,22 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
+import pl.pola_app.ui.adapter.OnProductListChanged;
+import pl.pola_app.ui.adapter.ProductList;
+import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
-import pl.pola_app.ui.fragment.ProductsListFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
 import retrofit.Call;
@@ -42,8 +48,12 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
 
     @Inject
     Bus eventBus;
+    @Bind(R.id.products_list)
+    RecyclerView productsListView;
+    @Inject
+    ProductsListLinearLayoutManager productsListLinearLayoutManager;
 
-    private ProductsListFragment productsListFragment;
+    private ProductList productList;
     private ScannerFragment scannerFragment;
     private int milisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
     private Handler handlerScanner;
@@ -69,9 +79,26 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
 
         Nammu.init(this);
 
-        productsListFragment = (ProductsListFragment) getFragmentManager().findFragmentById(R.id.product_list_fragment);
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
         scannerFragment.setOnBarcodeScannedListener(this);
+        productList = ProductList.create(savedInstanceState);
+
+        final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
+        productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
+            @Override
+            public void itemClicked(SearchResult searchResult) {
+                eventBus.post(new ProductItemClickedEvent(searchResult));
+            }
+        });
+        productList.setOnProductListChanged(new OnProductListChanged() {
+            @Override
+            public void onChanged() {
+                productsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        productsListView.setLayoutManager(productsListLinearLayoutManager);
+        productsListView.setAdapter(productsAdapter);
     }
 
     @Override
@@ -90,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
+            productsListView.setVisibility(View.VISIBLE);
         } else {
             super.onBackPressed();
         }
@@ -110,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
                 e.printStackTrace();
             }
         }
+        productsListView.setVisibility(View.INVISIBLE);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
         ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.searchResult);
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
-        ft.hide(productsListFragment);
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
     }
@@ -148,24 +176,19 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
                             .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
             );
         }
-        if(productsListFragment.itemExists(result)) {
-           handlerScanner.removeCallbacks(runnableResumeScan);
+        if (productList.itemExists(result)) {
+            handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
         } else {
             if(BuildConfig.USE_CRASHLYTICS) {
                 Answers.getInstance().logCustom(new CustomEvent("Scanned")
                         .putCustomAttribute("existing", "false"));
             }
-            productsListFragment.createProductPlaceholder();
+            productList.createProductPlaceholder();
 
             Api api = PolaApplication.retrofit.create(Api.class);
             Call<SearchResult> reportResultCall = api.getByCode(result, Utils.getSessionGuid(this));
             reportResultCall.enqueue(this);
-            if(scannerFragment != null) {
-                if (productsListFragment != null && productsListFragment.searchResults != null) {
-                    scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
-                }
-            }
         }
     }
 
@@ -189,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
                 e.printStackTrace();
             }
         }
-        if(productsListFragment != null) {
-            productsListFragment.addProduct(response.body());
+        if(productList != null) {
+            productList.addProduct(response.body());
         }
         if(scannerFragment != null) {
             scannerFragment.resumeScanning();
@@ -209,16 +232,11 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
             Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
         handlerScanner.removeCallbacks(runnableResumeScan);
-        if(productsListFragment != null) {
-            productsListFragment.removeProductPlaceholder();
+        if(productList != null) {
+            productList.removeProductPlaceholder();
         }
         if(scannerFragment != null) {
             scannerFragment.resumeScanning();
-        }
-        if(scannerFragment != null) {
-            if (productsListFragment != null && productsListFragment.searchResults != null) {
-                scannerFragment.updateBoxPosition(productsListFragment.searchResults.size());
-            }
         }
     }
 }
