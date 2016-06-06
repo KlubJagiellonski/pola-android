@@ -1,3 +1,6 @@
+import java.util.logging.Level
+import java.util.logging.Logger
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -33,12 +36,17 @@ android {
 
     signingConfigs {
         release {
-            def Properties keyProps = new Properties()
-            keyProps.load(new FileInputStream(file("../keystore.properties")))
-            storeFile file(keyProps["store"])
-            keyAlias keyProps["alias"]
-            storePassword keyProps["storePass"]
-            keyPassword keyProps["pass"]
+            File keystore = file("../keystore.properties")
+            if (keystore.exists()) {
+                def Properties keyProps = new Properties()
+                keyProps.load(new FileInputStream(keystore))
+                storeFile file(keyProps["store"])
+                keyAlias keyProps["alias"]
+                storePassword keyProps["storePass"]
+                keyPassword keyProps["pass"]
+            } else {
+                Logger.getLogger("pl.pola_app").log(Level.WARNING, "SIGNING: 'keystore.properties' file does not exist!")
+            }
         }
     }
 
