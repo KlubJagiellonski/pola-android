@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
             );
         }
         if(productsListFragment.itemExists(result)) {
-            handlerScanner.removeCallbacks(runnableResumeScan);
+           handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
         } else {
             if(BuildConfig.USE_CRASHLYTICS) {
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
@@ -300,15 +301,15 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
-                Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_photo), Toast.LENGTH_SHORT).show();
+            public void onImagePicked(File file, EasyImage.ImageSource imageSource, int type) {
+                onPhotoReturned(file);
             }
 
             @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
-                onPhotoReturned(imageFile);
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_photo), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -385,7 +386,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     final PermissionCallback permissionWriteCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
-            EasyImage.openCamera(CreateReportActivity.this);
+            EasyImage.openCamera(CreateReportActivity.this, 0);
         }
 
         @Override
