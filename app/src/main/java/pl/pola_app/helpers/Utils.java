@@ -3,13 +3,8 @@ package pl.pola_app.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Base64;
 
-import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class Utils {
