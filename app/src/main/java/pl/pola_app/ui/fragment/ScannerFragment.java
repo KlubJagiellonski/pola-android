@@ -18,12 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -34,7 +32,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -54,7 +51,6 @@ import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
 public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
-    private static final String TAG = ScannerFragment.class.getSimpleName();
 
     public interface BarcodeScannedListener {
         void barcodeScanned(String result);
@@ -79,20 +75,8 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Bind(R.id.flash_icon)
     ImageView flashIconView;
 
-    private final boolean isGoogleBarcodeOperational = false;
-    private long timestampLastScanned = 0;
-    private long timeBetweenScans = TimeUnit.SECONDS.toMillis(1);//To slow down Google Mobile Vision as otherwise it generates few scans per each barcode.
-
-
-    private CameraSource mCameraSource;
-    private boolean isDecoding = true;
-    private static final int RC_HANDLE_GMS = 9001;
-
     private boolean isTorchOn = false;
 
-    public ScannerFragment() {
-        // Required empty public constructor
-    }
 
     public void setOnBarcodeScannedListener(BarcodeScannedListener barcodeScannedListener) {
         this.barcodeScannedListener = barcodeScannedListener;
@@ -101,36 +85,35 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         View scannerView = inflater.inflate(R.layout.fragment_scanner, container, false);
         ButterKnife.bind(this, scannerView);
-        PolaApplication.component(getActivity()).inject(this);
+        PolaApplication.component(activity).inject(this);
 
         DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
         barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width*0.9f), (int) (height*0.25f)));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        //layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
         barcodeScanner.setLayoutParams(layoutParams);
 
         CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
         cameraSettings.setBarcodeSceneModeEnabled(true);
         barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
 
-        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        barcodeScanner.setStatusText(activity.getString(R.string.scanner_status_text));
         barcodeScanner.setTorchListener(this);
         barcodeScanner.setTorchOff();
 
-        Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+        Nammu.askForPermission(activity, android.Manifest.permission.CAMERA, permissionCameraCallback);
+        activity.setSupportActionBar(toolbar);
+        activity.setTitle(getString(R.string.app_name));
+        activity.getSupportActionBar().setTitle("");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        activity.getSupportActionBar().setHomeButtonEnabled(false);
         setHasOptionsMenu(true);
 
         return scannerView;
@@ -140,11 +123,9 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     public void onResume() {
         super.onResume();
         eventBus.register(this);
-        //startCameraSource();//FIXME using Google mobile vision
         if(barcodeScanner != null) {
             barcodeScanner.resume();
         }
-        timestampLastScanned = 0;
     }
 
 
@@ -171,137 +152,16 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         ButterKnife.unbind(this);
     }
 
-    //Good explanation https://github.com/googlesamples/android-vision/blob/master/visionSamples/barcode-reader/app/src/main/java/com/google/android/gms/samples/vision/barcodereader/BarcodeCaptureActivity.java
-    /*//FIXME using Google mobile vision
-    private void createCameraSource() {
-        Context context = getActivity().getApplicationContext();
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        barcodeDetector.setProcessor(frameProcessor);
-        if(!barcodeDetector.isOperational()) {
-            //Detector dependencies are not yet available.
-            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-            boolean hasLowStorage = getActivity().registerReceiver(null, lowStorageFilter) != null;
-            if (hasLowStorage) {
-                isGoogleBarcodeOperational = false;//not enough space to download dependencies
-            } else {
-                isGoogleBarcodeOperational = true;//It will be just wait for download
-            }
-        } else {
-            isGoogleBarcodeOperational = true;
-        }
-        int width;
-        int height;
-        try {
-            DisplayMetrics metrics = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            width = metrics.widthPixels;
-            height = metrics.heightPixels;
-        } catch (Exception e) {
-            //Something went wrong, use default values  (HD)
-            width = 720;
-            height = 1280;
-        }
-        if (width <= 0) {
-            width = 720;
-        }
-        if (height <= 0) {
-            height = 1280;
-        }
-        CameraSource.Builder builder = new CameraSource.Builder(getActivity().getApplicationContext(), barcodeDetector)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(width, height)
-                .setRequestedFps(15.0f);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            builder = builder.setAutoFocusEnabled(true);
-        }
-        mCameraSource = builder.build();
-    }*/
-
-    /*//FIXME using Google mobile vision
-    private void startCameraSource() throws SecurityException {
-        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity().getApplicationContext());
-        if (code != ConnectionResult.SUCCESS) {
-            Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS);
-            dlg.show();
-        }
-
-        if (mCameraSource != null) {
-            try {
-                mPreview.start(mCameraSource);
-                if(isGoogleBarcodeOperational) {
-                    shutDownZxing();
-                } else {
-                    shutDownGoogleBarcode();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
-                shutDownGoogleBarcode();
-            }
-        }
-    }*/
-
-    private void shutDownZxing() {
-        if(barcodeScanner != null) {
-            barcodeScanner.pause();
-            barcodeScanner.setVisibility(View.GONE);
-            barcodeScanner = null;
-        }
-    }
-
-    /*//FIXME using Google mobile vision
-    private void shutDownGoogleBarcode() {
-        if(mCameraSource != null) {
-            mCameraSource.release();
-            mCameraSource = null;
-        }
-        if(barcodeScanner != null) {
-            barcodeScanner.setVisibility(View.VISIBLE);
-            barcodeScanner.resume();
-        }
-        if(mPreview != null && scannerBox != null) {
-            mPreview.setVisibility(View.GONE);
-            scannerBox.setVisibility(View.GONE);
-        }
-        if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("ShutdownGScanner")
-                    .putCustomAttribute("deviceId", Utils.getDeviceId(getActivity().getApplicationContext())));
-        }
-    }*/
-
     public void resumeScanning() {
         if(barcodeScanner != null) {
             barcodeScanner.decodeContinuous(callback);
         }
-        isDecoding = true;
     }
 
-    public void updateBoxPosition(int numberOfCards) {
-        //FIXME using Google mobile vision
-        /*if(scannerBox.getVisibility() == View.VISIBLE) {
-            if (numberOfCards == 0) {
-                if (textHintScan != null) {
-                    textHintScan.setVisibility(View.VISIBLE);
-                }
-                scannerBox.setDefaultPosition(getActivity());
-            } else if (numberOfCards >= 5) {
-                if (textHintScan != null) {
-                    textHintScan.setVisibility(View.GONE);
-                }
-                scannerBox.setMovedPosition(getActivity(), 5);
-            } else {
-                if (textHintScan != null) {
-                    textHintScan.setVisibility(View.GONE);
-                }
-                scannerBox.setMovedPosition(getActivity(), numberOfCards);
-            }
-        }*/
-    }
-
-    final PermissionCallback permissionCameraCallback = new PermissionCallback() {
+    private final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
             resumeScanning();
-            //createCameraSource();//FIXME using Google mobile vision
         }
 
         @Override
@@ -381,52 +241,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     }
 
-    //Handlling Google Mobile Vision Detections if there are any
-    //FIXME using Google mobile vision
-    /*Detector.Processor frameProcessor = new Detector.Processor<Barcode>() {
-        @Override
-        public void release() {
-            Log.d(TAG, "release: ");
-        }
 
-        @Override
-        public void receiveDetections(Detector.Detections<Barcode> detections) {
-            if (detections != null
-                    && detections.getDetectedItems() != null
-                    && detections.getDetectedItems().size() > 0
-                    && System.currentTimeMillis() - timestampLastScanned > timeBetweenScans
-                    && isDecoding) {
-                timestampLastScanned = System.currentTimeMillis();
-                for (int i = 0; i < detections.getDetectedItems().size(); i++) {
-                    int key = detections.getDetectedItems().keyAt(i);
-                    Barcode barcode = detections.getDetectedItems().get(key);
-                    if (barcode != null) {
-                        scannedBarcode(barcode);
-                    }
-                }
-                isDecoding = false;
-            }
-        }
-    };
-
-    //Google Mobile Vision barcode result
-    private void scannedBarcode(Barcode barcode) {
-        final String result = barcode.displayValue;
-        if (result != null) {
-            ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (barcodeScannedListener != null) {
-                        barcodeScannedListener.barcodeScanned(result);
-                    }
-                }
-            });
-            Timber.d(result);
-        }
-    }*/
-
-    //ZXING barcode result
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(final BarcodeResult result) {
