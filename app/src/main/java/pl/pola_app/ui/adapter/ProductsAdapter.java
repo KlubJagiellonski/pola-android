@@ -17,8 +17,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
-import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
+import timber.log.Timber;
 
 public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
@@ -64,7 +64,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
         }
 
         if (position > searchResults.size()) { //TODO: is it even possible to reach this state?
-            Utils.logException(new IndexOutOfBoundsException("Position: " + position + ", list size: " + searchResults.size()));
+            Timber.w(new IndexOutOfBoundsException(), "Position: %d, list size: %d", position, searchResults.size());
             return;
         }
 
