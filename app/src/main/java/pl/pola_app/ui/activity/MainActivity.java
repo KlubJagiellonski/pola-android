@@ -4,47 +4,30 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.SearchEvent;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
-import pl.pola_app.network.Api;
-import pl.pola_app.ui.adapter.OnProductListChanged;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
-import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
-import pl.pola_app.ui.event.ProductItemClickedEvent;
-import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
+public class MainActivity extends AppCompatActivity implements MainViewBinder {
 
     @Inject
     Bus eventBus;
@@ -53,20 +36,8 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
     @Inject
     ProductsListLinearLayoutManager productsListLinearLayoutManager;
 
-    private ProductList productList;
     private ScannerFragment scannerFragment;
-    private int milisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
-    private Handler handlerScanner;
-    private Runnable runnableResumeScan = new Runnable() {
-        @Override
-        public void run() {
-            if (BuildConfig.USE_CRASHLYTICS) {
-                Answers.getInstance().logCustom(new CustomEvent("Scanned")
-                        .putCustomAttribute("existing", "true"));
-            }
-            scannerFragment.resumeScanning();
-        }
-    };
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,121 +46,82 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
 
         ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
-        handlerScanner = new Handler();
-
         Nammu.init(this);
 
-        scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
-        scannerFragment.setOnBarcodeScannedListener(this);
-        productList = ProductList.create(savedInstanceState);
-
+        ProductList productList = ProductList.create(savedInstanceState);
         final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
-        productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
-            @Override
-            public void itemClicked(SearchResult searchResult) {
-                eventBus.post(new ProductItemClickedEvent(searchResult));
-            }
-        });
-        productList.setOnProductListChanged(new OnProductListChanged() {
-            @Override
-            public void onChanged() {
-                productsAdapter.notifyDataSetChanged();
-            }
-        });
+        mainPresenter = MainPresenter.create(this, productList, productsAdapter, eventBus);
+
+
+        scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
+        scannerFragment.setOnBarcodeScannedListener(mainPresenter);
 
         productsListView.setLayoutManager(productsListLinearLayoutManager);
-        productsListView.setAdapter(productsAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        eventBus.register(this);
+        mainPresenter.register();
     }
 
     @Override
     protected void onStop() {
-        eventBus.unregister(this);
+        mainPresenter.unregister();
         super.onStop();
     }
 
     @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
-            getFragmentManager().popBackStack();
-            productsListView.setVisibility(View.VISIBLE);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Subscribe
-    public void productItemClicked(ProductItemClickedEvent event) {
-        if(BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(event.searchResult.name + "") //As it might be null
-                                .putContentType("Open Card")
-                                .putContentId(Integer.toString(event.searchResult.product_id))
-                                .putCustomAttribute("Code", event.searchResult.code)
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        productsListView.setVisibility(View.INVISIBLE);
+    public void openProductDetails(@NonNull final SearchResult searchResult) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(event.searchResult);
+        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(searchResult);
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
     }
 
-    @Subscribe
-    public void reportButtonClicked(ReportButtonClickedEvent event) {
-        if(event.searchResult.product_id != null) {
-            launchReportActivity(Integer.toString(event.searchResult.product_id));
-        } else {
-            launchReportActivity(null);
-        }
+    @Override
+    public void setAdapter(@NonNull final RecyclerView.Adapter adapter) {
+        productsListView.setAdapter(adapter);
     }
 
-    private void launchReportActivity(String productId) {
+    @Override
+    public void resumeScanning() {
+        scannerFragment.resumeScanning();
+    }
+
+    @Override
+    public void turnOffTorch() {
+        scannerFragment.setTorchOff();
+    }
+
+    @Override
+    public void showNoConnectionMessage() {
+        Toast.makeText(this, getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public String getSessionId() {
+        return Utils.getSessionGuid(this);
+    }
+
+    @Override
+    public void launchReportActivity(String productId) {
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.setAction("product_report");
         intent.putExtra("productId", productId);
         startActivity(intent);
     }
 
-    @Subscribe
-    public void productDetailsFragmentDismissed(ProductDetailsFragmentDismissedEvent event) {
-        getFragmentManager().popBackStack(ProductDetailsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    }
-
     @Override
-    public void barcodeScanned(String result) {
-        if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logSearch(new SearchEvent()
-                            .putQuery(result)
-                            .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
-            );
-        }
-        if (productList.itemExists(result)) {
-            handlerScanner.removeCallbacks(runnableResumeScan);
-            handlerScanner.postDelayed(runnableResumeScan, milisecondsBetweenExisting);
-        } else {
-            if(BuildConfig.USE_CRASHLYTICS) {
-                Answers.getInstance().logCustom(new CustomEvent("Scanned")
-                        .putCustomAttribute("existing", "false"));
-            }
-            productList.createProductPlaceholder();
-
-            Api api = PolaApplication.retrofit.create(Api.class);
-            Call<SearchResult> reportResultCall = api.getByCode(result, Utils.getSessionGuid(this));
-            reportResultCall.enqueue(this);
-        }
+    public void dismissProductDetailsView() {
+        getFragmentManager().popBackStack(ProductDetailsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -197,46 +129,4 @@ public class MainActivity extends AppCompatActivity implements Callback<SearchRe
         Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
-        if (BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(response.body().name + "")//To avoid null as it might be empty
-                                .putContentType("Card Preview")
-                                .putContentId(Integer.toString(response.body().product_id))
-                                .putCustomAttribute("Code", response.code())
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if(productList != null) {
-            productList.addProduct(response.body());
-        }
-        if(scannerFragment != null) {
-            scannerFragment.resumeScanning();
-        }
-    }
-
-    @Override
-    public void onFailure(Throwable t) {
-        if(BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed")
-            .putCustomAttribute("message", t.getLocalizedMessage()));
-        }
-        if("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
-            Toast.makeText(this, getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-        }
-        handlerScanner.removeCallbacks(runnableResumeScan);
-        if(productList != null) {
-            productList.removeProductPlaceholder();
-        }
-        if(scannerFragment != null) {
-            scannerFragment.resumeScanning();
-        }
-    }
 }

@@ -29,7 +29,6 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.journeyapps.barcodescanner.Size;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -43,7 +42,6 @@ import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.activity.CreateReportActivity;
-import pl.pola_app.ui.event.ProductItemClickedEvent;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
@@ -294,8 +292,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     }
 
-    @Subscribe
-    public void productItemClicked(ProductItemClickedEvent event) {
+    public void setTorchOff() {
         if(isTorchOn) {
             barcodeScanner.setTorchOff();
         }
