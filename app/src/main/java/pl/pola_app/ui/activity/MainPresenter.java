@@ -1,0 +1,185 @@
+package pl.pola_app.ui.activity;
+
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.SearchEvent;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import pl.pola_app.BuildConfig;
+import pl.pola_app.PolaApplication;
+import pl.pola_app.model.SearchResult;
+import pl.pola_app.network.Api;
+import pl.pola_app.ui.adapter.OnProductListChanged;
+import pl.pola_app.ui.adapter.ProductList;
+import pl.pola_app.ui.adapter.ProductsAdapter;
+import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
+import pl.pola_app.ui.event.ReportButtonClickedEvent;
+import pl.pola_app.ui.fragment.ScannerFragment;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
+class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
+    private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
+    private final MainViewBinder viewBinder;
+    private final ProductList productList;
+    private final Handler handlerScanner = new Handler();
+    @Nullable private Call<SearchResult> reportResultCall;
+    private final Runnable runnableResumeScan = new Runnable() {
+        @Override
+        public void run() {
+            if (BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("Scanned")
+                        .putCustomAttribute("existing", "true"));
+            }
+            viewBinder.resumeScanning();
+        }
+    };
+    private Api api;
+    private Bus eventBus;
+
+    public static MainPresenter create(@NonNull final MainViewBinder viewBinder,
+                                       @NonNull final ProductList productList,
+                                       @NonNull final ProductsAdapter productsAdapter,
+                                       @NonNull final Bus eventBus) {
+
+        productList.setOnProductListChanged(new OnProductListChanged() {
+            @Override
+            public void onChanged() {
+                productsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        viewBinder.setAdapter(productsAdapter);
+        final Api api = PolaApplication.retrofit.create(Api.class);
+
+        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, eventBus);
+        productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
+            @Override
+            public void itemClicked(SearchResult searchResult) {
+                mainPresenter.onItemClicked(searchResult);
+            }
+        });
+        return mainPresenter;
+    }
+
+    MainPresenter(@NonNull MainViewBinder viewBinder,
+                  @NonNull ProductList productList,
+                  @NonNull Api api,
+                  @NonNull Bus eventBus) {
+        this.viewBinder = viewBinder;
+        this.productList = productList;
+        this.api = api;
+        this.eventBus = eventBus;
+    }
+
+    void register() {
+        eventBus.register(this);
+    }
+
+    void unregister() {
+        eventBus.unregister(this);
+        if (reportResultCall != null) {
+            reportResultCall.cancel();
+        }
+    }
+
+    @Override
+    public void barcodeScanned(String result) {
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(result)
+                    .putCustomAttribute("DeviceId", viewBinder.getSessionId())
+            );
+        }
+        if (productList.itemExists(result)) {
+            handlerScanner.removeCallbacks(runnableResumeScan);
+            handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting);
+        } else {
+            if (BuildConfig.USE_CRASHLYTICS) {
+                Answers.getInstance().logCustom(new CustomEvent("Scanned")
+                        .putCustomAttribute("existing", "false"));
+            }
+            productList.createProductPlaceholder();
+
+            reportResultCall = api.getByCode(result, viewBinder.getSessionId());
+            reportResultCall.enqueue(this);
+        }
+    }
+
+    @Override
+    public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
+        if (BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName(response.body().name + "")//To avoid null as it might be empty
+                        .putContentType("Card Preview")
+                        .putContentId(Integer.toString(response.body().product_id))
+                        .putCustomAttribute("Code", response.code())
+                        .putCustomAttribute("DeviceId", viewBinder.getSessionId())
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        productList.addProduct(response.body());
+        viewBinder.resumeScanning();
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed")
+                    .putCustomAttribute("message", t.getLocalizedMessage()));
+        }
+        if ("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
+            viewBinder.showNoConnectionMessage();
+        } else {
+            viewBinder.showErrorMessage(t.getLocalizedMessage());
+        }
+        handlerScanner.removeCallbacks(runnableResumeScan);
+        productList.removeProductPlaceholder();
+        viewBinder.resumeScanning();
+    }
+
+    void onItemClicked(@NonNull final SearchResult searchResult) {
+        if (BuildConfig.USE_CRASHLYTICS) {
+            try {
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName(searchResult.name + "") //As it might be null
+                        .putContentType("Open Card")
+                        .putContentId(Integer.toString(searchResult.product_id))
+                        .putCustomAttribute("Code", searchResult.code)
+                        .putCustomAttribute("DeviceId", viewBinder.getSessionId())
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        viewBinder.turnOffTorch();
+        viewBinder.openProductDetails(searchResult);
+    }
+
+    @Subscribe
+    @SuppressWarnings("WeakerAccess")
+    public void productDetailsFragmentDismissed(@SuppressWarnings("UnusedParameters") ProductDetailsFragmentDismissedEvent event) {
+        viewBinder.dismissProductDetailsView();
+    }
+
+    @Subscribe
+    @SuppressWarnings("WeakerAccess")
+    public void reportButtonClicked(ReportButtonClickedEvent event) {
+        String productId = null;
+        if (event.searchResult.product_id != null) {
+            productId = Integer.toString(event.searchResult.product_id);
+        }
+        viewBinder.launchReportActivity(productId);
+    }
+}
