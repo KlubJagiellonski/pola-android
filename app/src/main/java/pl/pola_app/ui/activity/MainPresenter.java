@@ -3,16 +3,16 @@ package pl.pola_app.ui.activity;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.SearchEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
+import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.ui.adapter.OnProductListChanged;
@@ -31,14 +31,12 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     private final MainViewBinder viewBinder;
     private final ProductList productList;
     private final Handler handlerScanner = new Handler();
+    private final EventLogger logger;
     @Nullable private Call<SearchResult> reportResultCall;
     private final Runnable runnableResumeScan = new Runnable() {
         @Override
         public void run() {
-            if (BuildConfig.USE_CRASHLYTICS) {
-                Answers.getInstance().logCustom(new CustomEvent("Scanned")
-                        .putCustomAttribute("existing", "true"));
-            }
+            logger.logCustom("Scanned", new Pair<>("existing", "true"));
             viewBinder.resumeScanning();
         }
     };
@@ -60,7 +58,8 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
         viewBinder.setAdapter(productsAdapter);
         final Api api = PolaApplication.retrofit.create(Api.class);
 
-        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, eventBus);
+        final EventLogger logger = new EventLogger();
+        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, eventBus);
         productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
             @Override
             public void itemClicked(SearchResult searchResult) {
@@ -73,10 +72,12 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     MainPresenter(@NonNull MainViewBinder viewBinder,
                   @NonNull ProductList productList,
                   @NonNull Api api,
+                  @NonNull EventLogger logger,
                   @NonNull Bus eventBus) {
         this.viewBinder = viewBinder;
         this.productList = productList;
         this.api = api;
+        this.logger = logger;
         this.eventBus = eventBus;
     }
 
@@ -93,20 +94,12 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
 
     @Override
     public void barcodeScanned(String result) {
-        if (BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logSearch(new SearchEvent()
-                    .putQuery(result)
-                    .putCustomAttribute("DeviceId", viewBinder.getSessionId())
-            );
-        }
+        logger.logSearch(result, viewBinder.getSessionId());
         if (productList.itemExists(result)) {
             handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting);
         } else {
-            if (BuildConfig.USE_CRASHLYTICS) {
-                Answers.getInstance().logCustom(new CustomEvent("Scanned")
-                        .putCustomAttribute("existing", "false"));
-            }
+            logger.logCustom("Scanned", new Pair<>("existing", "false"));
             productList.createProductPlaceholder();
 
             reportResultCall = api.getByCode(result, viewBinder.getSessionId());
@@ -116,29 +109,18 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
 
     @Override
     public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
-        if (BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(response.body().name + "")//To avoid null as it might be empty
-                        .putContentType("Card Preview")
-                        .putContentId(Integer.toString(response.body().product_id))
-                        .putCustomAttribute("Code", response.code())
-                        .putCustomAttribute("DeviceId", viewBinder.getSessionId())
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        logger.logContentView(response.body().name + "",
+                "Card Preview"
+                , Integer.toString(response.body().product_id),
+                String.valueOf(response.code()),
+                viewBinder.getSessionId());
         productList.addProduct(response.body());
         viewBinder.resumeScanning();
     }
 
     @Override
     public void onFailure(Throwable t) {
-        if (BuildConfig.USE_CRASHLYTICS) {
-            Answers.getInstance().logCustom(new CustomEvent("Barcode request failed")
-                    .putCustomAttribute("message", t.getLocalizedMessage()));
-        }
+        logger.logCustom("Barcode request failed", new Pair<>("message", t.getLocalizedMessage()));
         if ("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
             viewBinder.showNoConnectionMessage();
         } else {
@@ -150,19 +132,11 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     }
 
     void onItemClicked(@NonNull final SearchResult searchResult) {
-        if (BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(searchResult.name + "") //As it might be null
-                        .putContentType("Open Card")
-                        .putContentId(Integer.toString(searchResult.product_id))
-                        .putCustomAttribute("Code", searchResult.code)
-                        .putCustomAttribute("DeviceId", viewBinder.getSessionId())
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        logger.logContentView(searchResult.name + "",
+                "Open Card",
+                Integer.toString(searchResult.product_id),
+                searchResult.code,
+                viewBinder.getSessionId());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
     }
