@@ -1,5 +1,7 @@
 package pl.pola_app.ui.activity;
 
+import android.os.Bundle;
+
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -162,5 +164,13 @@ public class MainPresenterTest {
         presenter.reportButtonClicked(new ReportButtonClickedEvent(searchResult));
 
         verify(viewBinder).launchReportActivity("123");
+    }
+
+    @Test
+    public void testSaveState() throws Exception {
+        Bundle bundle = new Bundle();
+        presenter.onSaveState(bundle);
+
+        verify(productList).writeToBundle(bundle);
     }
 }
