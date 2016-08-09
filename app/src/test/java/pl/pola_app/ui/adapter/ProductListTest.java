@@ -5,7 +5,9 @@ import android.os.Bundle;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+import pl.pola_app.TestApplication;
 import pl.pola_app.model.SearchResult;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +16,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static pl.pola_app.testutil.SearchUtil.createSearchResult;
 
+@Config(application = TestApplication.class)
 @RunWith(RobolectricGradleTestRunner.class)
 public class ProductListTest {
     private ProductList productList;
@@ -108,24 +112,4 @@ public class ProductListTest {
         assertTrue(productList.itemExists(code));
     }
 
-    private SearchResult createSearchResult(int id) {
-        SearchResult searchResult = new SearchResult();
-        searchResult.code = "code" + id;
-        searchResult.name = "name" + id;
-        searchResult.card_type = "card_type" + id;
-        searchResult.altText = "altText" + id;
-        searchResult.description = "description" + id;
-        searchResult.report_text = "report_text" + id;
-        searchResult.report_button_text = "report_button_text" + id;
-        searchResult.report_button_type = "report_button_type" + id;
-        searchResult.product_id = id;
-        searchResult.plScore = 1 + id;
-        searchResult.plCapital = 2 + id;
-        searchResult.plWorkers = 3 + id;
-        searchResult.plRnD = 4 + id;
-        searchResult.plRegistered = 5 + id;
-        searchResult.plNotGlobEnt = 6 + id;
-
-        return searchResult;
-    }
 }

@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
         Nammu.init(this);
 
         ProductList productList = ProductList.create(savedInstanceState);
+        productList.setLogger(new EventLogger());
         final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
         mainPresenter = MainPresenter.create(this, productList, productsAdapter, eventBus);
 

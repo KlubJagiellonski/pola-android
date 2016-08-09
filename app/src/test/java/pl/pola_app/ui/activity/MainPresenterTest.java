@@ -6,9 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+import pl.pola_app.TestApplication;
+import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
+import pl.pola_app.testutil.SearchUtil;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import retrofit.Call;
@@ -21,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@Config(application = TestApplication.class)
 @RunWith(RobolectricGradleTestRunner.class)
 public class MainPresenterTest {
 
@@ -29,14 +34,16 @@ public class MainPresenterTest {
     private MainPresenter presenter;
     private Api api;
     private Bus eventBus;
+    private EventLogger logger;
 
     @Before
     public void setUp() throws Exception {
         viewBinder = mock(MainViewBinder.class);
         productList = mock(ProductList.class);
         api = mock(Api.class);
+        logger = mock(EventLogger.class);
         eventBus = mock(Bus.class);
-        presenter = new MainPresenter(viewBinder, productList, api, eventBus);
+        presenter = new MainPresenter(viewBinder, productList, api, logger, eventBus);
     }
 
     @Test
@@ -55,6 +62,7 @@ public class MainPresenterTest {
 
     @Test
     public void testCallCanceledOnUnregister() throws Exception {
+        //noinspection unchecked
         Call<SearchResult> resultCall = mock(Call.class);
         when(api.getByCode(anyString(), anyString())).thenReturn(resultCall);
         presenter.barcodeScanned("code");
@@ -75,6 +83,7 @@ public class MainPresenterTest {
     @Test
     public void testAddProduct() throws Exception {
         when(viewBinder.getSessionId()).thenReturn("sessionId");
+        //noinspection unchecked
         when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class));
         presenter.barcodeScanned("barcode");
 
@@ -84,8 +93,7 @@ public class MainPresenterTest {
 
     @Test
     public void testProductAddedOnResponse() throws Exception {
-        final SearchResult searchResult = new SearchResult();
-        searchResult.code = "123";
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
 
         presenter.onResponse(Response.success(searchResult), null);
 
@@ -95,7 +103,7 @@ public class MainPresenterTest {
 
     @Test
     public void testResumeScanningOnResponse() throws Exception {
-        final SearchResult searchResult = new SearchResult();
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
         presenter.onResponse(Response.success(searchResult), null);
 
         verify(viewBinder).resumeScanning();
@@ -133,7 +141,7 @@ public class MainPresenterTest {
 
     @Test
     public void testOpenProductDetailsOnClick() throws Exception {
-        final SearchResult searchResult = new SearchResult();
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
         presenter.onItemClicked(searchResult);
 
         verify(viewBinder).openProductDetails(searchResult);
@@ -149,7 +157,7 @@ public class MainPresenterTest {
 
     @Test
     public void testLaunchReportActivity() throws Exception {
-        final SearchResult searchResult = new SearchResult();
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
         searchResult.product_id = 123;
         presenter.reportButtonClicked(new ReportButtonClickedEvent(searchResult));
 
