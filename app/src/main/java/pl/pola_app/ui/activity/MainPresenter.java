@@ -1,16 +1,14 @@
 package pl.pola_app.ui.activity;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.model.SearchResult;
@@ -139,6 +137,10 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
                 viewBinder.getSessionId());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
+    }
+
+    void onSaveState(@NonNull final Bundle bundle) {
+        productList.writeToBundle(bundle);
     }
 
     @Subscribe

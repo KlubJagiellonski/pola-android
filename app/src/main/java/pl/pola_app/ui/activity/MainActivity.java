@@ -74,6 +74,12 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mainPresenter.onSaveState(outState);
+    }
+
+    @Override
     public void openProductDetails(@NonNull final SearchResult searchResult) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
