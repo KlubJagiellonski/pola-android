@@ -47,4 +47,16 @@
     <string name="type_white">type_white</string>
     <string name="type_red">type_red</string>
     <string name="toast_raport_error_no_photo">Brak zdjęcia</string>
+    <string name="button_1">1</string>
+    <string name="button_2">2</string>
+    <string name="button_3">3</string>
+    <string name="button_4">4</string>
+    <string name="button_5">5</string>
+    <string name="button_6">6</string>
+    <string name="button_7">7</string>
+    <string name="button_8">8</string>
+    <string name="button_9">9</string>
+    <string name="button_0">0</string>
+    <string name="backspace_content_description">Usuń</string>
+    <string name="done_content_description">Zatwierdź</string>
 </resources>

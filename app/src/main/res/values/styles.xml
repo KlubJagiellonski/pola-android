@@ -16,4 +16,13 @@
     <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
     </style>
+    <style name="key_border">
+        <item name="android:background">@drawable/key_border</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_width">@dimen/keyboard_button</item>
+        <item name="android:layout_height">@dimen/keyboard_button</item>
+    </style>
 </resources>
