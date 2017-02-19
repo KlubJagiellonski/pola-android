@@ -42,5 +42,6 @@
         android:src="@drawable/ic_dialpad_white_36dp"
         app:elevation="4dp"
         app:rippleColor="@android:color/white"
+        app:backgroundTint="@color/pola_red"
         app:useCompatPadding="true"/>
 </RelativeLayout>
