@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.squareup.otto.Bus;
@@ -31,6 +33,7 @@ import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.fragment.BarcodeListener;
+import pl.pola_app.ui.fragment.KeyboardFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     RecyclerView productsListView;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.open_keyboard_button)
+    FloatingActionButton openKeyboard;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
@@ -63,7 +68,12 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         SessionId sessionId = SessionId.create(this);
         mainPresenter = MainPresenter.create(this, productList, productsAdapter, sessionId, eventBus);
 
-
+        openKeyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openKeyboard();
+            }
+        });
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
 
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
@@ -107,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(searchResult);
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.addToBackStack(ProductDetailsFragment.class.getName());
+        ft.commitAllowingStateLoss();
+    }
+
+    public void openKeyboard() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        KeyboardFragment newFragment = new KeyboardFragment();
+        ft.add(R.id.container, newFragment, KeyboardFragment.class.getName());
+        ft.addToBackStack(KeyboardFragment.class.getName());
         ft.commitAllowingStateLoss();
     }
 
