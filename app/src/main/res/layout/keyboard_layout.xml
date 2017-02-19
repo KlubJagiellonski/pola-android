@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginBottom="24dp"
-        android:gravity="center_horizontal"
-
+        android:hint="@string/keyboard_input_hint"
         android:inputType="number"
         android:maxLines="1"
         android:minWidth="248dp"

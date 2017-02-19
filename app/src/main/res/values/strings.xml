@@ -59,4 +59,5 @@
     <string name="button_0">0</string>
     <string name="backspace_content_description">Usuń</string>
     <string name="done_content_description">Zatwierdź</string>
+    <string name="keyboard_input_hint">Wpisz kod</string>
 </resources>
