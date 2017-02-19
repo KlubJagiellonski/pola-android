@@ -12,6 +12,7 @@ import org.robolectric.annotation.Config;
 
 import pl.pola_app.TestApplication;
 import pl.pola_app.helpers.EventLogger;
+import pl.pola_app.helpers.SessionId;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.testutil.SearchUtil;
@@ -37,6 +38,7 @@ public class MainPresenterTest {
     private Api api;
     private Bus eventBus;
     private EventLogger logger;
+    private SessionId sessionId;
 
     @Before
     public void setUp() throws Exception {
@@ -44,8 +46,9 @@ public class MainPresenterTest {
         productList = mock(ProductList.class);
         api = mock(Api.class);
         logger = mock(EventLogger.class);
+        sessionId = mock(SessionId.class);
         eventBus = mock(Bus.class);
-        presenter = new MainPresenter(viewBinder, productList, api, logger, eventBus);
+        presenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
     }
 
     @Test
@@ -84,7 +87,7 @@ public class MainPresenterTest {
 
     @Test
     public void testAddProduct() throws Exception {
-        when(viewBinder.getSessionId()).thenReturn("sessionId");
+        when(sessionId.get()).thenReturn("sessionId");
         //noinspection unchecked
         when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class));
         presenter.barcodeScanned("barcode");

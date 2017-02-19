@@ -1,11 +1,6 @@
 package pl.pola_app.helpers;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
-
-import java.util.UUID;
 
 public class Utils {
     public static final String URL_POLA_ABOUT = "https://www.pola-app.pl/m/about";
@@ -18,26 +13,6 @@ public class Utils {
     public static final String URL_POLA_FB = "https://www.facebook.com/app.pola";
     public static final String URL_POLA_TWITTER= "https://twitter.com/pola_app";
     public static final long TIMEOUT_SECONDS = 20;
-
-    private static final String PREF_SESSION_GUID = "session_guid";
-
-    public static SharedPreferences getDefaultSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static String getSessionGuid(Context context) {
-        SharedPreferences pref = getDefaultSharedPreferences(context);
-        String sessionGuid = pref.getString(PREF_SESSION_GUID, null);
-
-        if(sessionGuid == null) {
-            sessionGuid = UUID.randomUUID().toString();
-            final SharedPreferences.Editor editor = pref.edit();
-            editor.putString(PREF_SESSION_GUID, sessionGuid);
-            editor.commit();
-        }
-
-        return sessionGuid;
-    }
 
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
