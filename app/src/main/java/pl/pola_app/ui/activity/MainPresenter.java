@@ -113,8 +113,8 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     @Override
     public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
         logger.logContentView(response.body().name + "",
-                "Card Preview"
-                , Integer.toString(response.body().product_id),
+                "Card Preview",
+                String.valueOf(response.body().product_id),
                 String.valueOf(response.code()),
                 sessionId.get());
         productList.addProduct(response.body());
@@ -137,7 +137,7 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     void onItemClicked(@NonNull final SearchResult searchResult) {
         logger.logContentView(searchResult.name + "",
                 "Open Card",
-                Integer.toString(searchResult.product_id),
+                String.valueOf(searchResult.product_id),
                 searchResult.code,
                 sessionId.get());
         viewBinder.turnOffTorch();

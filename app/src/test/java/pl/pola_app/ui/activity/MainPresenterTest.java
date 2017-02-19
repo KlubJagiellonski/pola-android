@@ -1,6 +1,7 @@
 package pl.pola_app.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -21,6 +22,7 @@ import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import retrofit.Call;
 import retrofit.Response;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -112,6 +114,18 @@ public class MainPresenterTest {
         presenter.onResponse(Response.success(searchResult), null);
 
         verify(viewBinder).resumeScanning();
+    }
+
+    @Test
+    public void testResponseForUnsupportedBarCodes() throws Exception {
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
+        searchResult.product_id = null;
+
+        try {
+            presenter.onResponse(Response.success(searchResult), null);
+        } catch (Exception e) {
+            fail(Log.getStackTraceString(e));
+        }
     }
 
     @Test
