@@ -41,8 +41,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Inject
     Bus eventBus;
 
-    @Bind(R.id.textHintScan)
-    TextView textHintScan;
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
     @Bind(R.id.flash_icon)
