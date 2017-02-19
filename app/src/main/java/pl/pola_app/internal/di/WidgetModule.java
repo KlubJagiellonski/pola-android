@@ -5,7 +5,6 @@ import android.content.res.Resources;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 
 @Module
 public class WidgetModule {
@@ -13,11 +12,6 @@ public class WidgetModule {
 
     public WidgetModule(Context context) {
         this.context = context;
-    }
-
-    @Provides
-    ProductsListLinearLayoutManager provideProductsListLinearLayoutManager() {
-        return new ProductsListLinearLayoutManager(context);
     }
 
     @Provides

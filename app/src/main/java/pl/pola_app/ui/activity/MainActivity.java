@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
     Bus eventBus;
     @Bind(R.id.products_list)
     RecyclerView productsListView;
-    @Inject
-    ProductsListLinearLayoutManager productsListLinearLayoutManager;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
@@ -58,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
         scannerFragment.setOnBarcodeScannedListener(mainPresenter);
 
-        productsListView.setLayoutManager(productsListLinearLayoutManager);
+        productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
     }
 
     @Override
