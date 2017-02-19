@@ -1,20 +1,12 @@
 package pl.pola_app.ui.fragment;
 
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,15 +31,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.helpers.Utils;
-import pl.pola_app.ui.activity.ActivityWebView;
-import pl.pola_app.ui.activity.CreateReportActivity;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
 public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
-    private static final String TAG = ScannerFragment.class.getSimpleName();
 
     public interface BarcodeScannedListener {
         void barcodeScanned(String result);
@@ -60,11 +48,8 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
     @Bind(R.id.textHintScan)
     TextView textHintScan;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
-
     @Bind(R.id.flash_icon)
     ImageView flashIconView;
 
@@ -108,12 +93,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         barcodeScanner.setTorchOff();
 
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
-        setHasOptionsMenu(true);
 
         return scannerView;
     }
@@ -151,9 +130,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     }
 
-    public void updateBoxPosition(int numberOfCards) {
-    }
-
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
@@ -165,77 +141,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
             Toast.makeText(getActivity(), getString(R.string.toast_no_camera_access), Toast.LENGTH_SHORT).show();
         }
     };
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                intent = new Intent(getActivity(), ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_ABOUT);
-                startActivity(intent);
-                return true;
-            case R.id.action_metodology:
-                intent = new Intent(getActivity(), ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_METHOD);
-                startActivity(intent);
-                return true;
-            case R.id.action_club:
-                intent = new Intent(getActivity(), ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_KJ);
-                startActivity(intent);
-                return true;
-            case R.id.action_team:
-                intent = new Intent(getActivity(), ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_TEAM);
-                startActivity(intent);
-                return true;
-            case R.id.action_partners:
-                intent = new Intent(getActivity(), ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_PARTNERS);
-                startActivity(intent);
-                return true;
-            case R.id.action_bug:
-                intent = new Intent(getActivity(), CreateReportActivity.class);
-                intent.setAction("product_report");
-                startActivity(intent);
-                return true;
-            case R.id.action_mail:
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Utils.POLA_MAIL, null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pola");
-                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_picker)));
-                return true;
-            case R.id.action_rate:
-                Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + getActivity().getPackageName())));
-                }
-                return true;
-            case R.id.action_fb:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB));
-                startActivity(intent);
-                return true;
-            case R.id.action_twitter:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_TWITTER));
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     //ZXING barcode result
     private BarcodeCallback callback = new BarcodeCallback() {

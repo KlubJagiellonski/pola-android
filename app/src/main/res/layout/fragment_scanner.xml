@@ -14,19 +14,10 @@
         zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner"
         app:zxing_use_texture_view="true" />
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent" />
-
     <ImageView
         android:id="@+id/appIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_margin="4dp"
         android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher_white" />
