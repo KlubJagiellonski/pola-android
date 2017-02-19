@@ -72,7 +72,7 @@ public class MainPresenterTest {
         //noinspection unchecked
         Call<SearchResult> resultCall = mock(Call.class);
         when(api.getByCode(anyString(), anyString())).thenReturn(resultCall);
-        presenter.barcodeScanned("code");
+        presenter.onBarcode("code");
         presenter.unregister();
 
         verify(resultCall).cancel();
@@ -81,7 +81,7 @@ public class MainPresenterTest {
     @Test
     public void testDontAddExistingProduct() throws Exception {
         when(productList.itemExists("itemA")).thenReturn(true);
-        presenter.barcodeScanned("itemA");
+        presenter.onBarcode("itemA");
 
         verify(productList, never()).createProductPlaceholder();
         verifyNoMoreInteractions(api);
@@ -92,7 +92,7 @@ public class MainPresenterTest {
         when(sessionId.get()).thenReturn("sessionId");
         //noinspection unchecked
         when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class));
-        presenter.barcodeScanned("barcode");
+        presenter.onBarcode("barcode");
 
         verify(productList).createProductPlaceholder();
         verify(api).getByCode("barcode", "sessionId");

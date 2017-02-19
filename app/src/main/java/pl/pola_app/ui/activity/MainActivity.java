@@ -30,12 +30,13 @@ import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
+import pl.pola_app.ui.fragment.BarcodeListener;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
 
 
-public class MainActivity extends AppCompatActivity implements MainViewBinder {
+public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener {
 
     @Inject
     Bus eventBus;
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
 
 
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
-        scannerFragment.setOnBarcodeScannedListener(mainPresenter);
 
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder {
     @Override
     public void setAdapter(@NonNull final RecyclerView.Adapter adapter) {
         productsListView.setAdapter(adapter);
+    }
+
+    public void onBarcode(String barcode) {
+        mainPresenter.onBarcode(barcode);
     }
 
     @Override

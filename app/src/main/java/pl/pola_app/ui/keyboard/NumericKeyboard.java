@@ -60,7 +60,7 @@ public class NumericKeyboard extends LinearLayout {
     private void onConfirm() {
         final String text = keyboardInput.getText().toString();
         if (keyboardListener != null) {
-            keyboardListener.confirm(text);
+            keyboardListener.onInputConfirmed(text);
         }
     }
 

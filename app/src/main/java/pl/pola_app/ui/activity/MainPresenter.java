@@ -19,13 +19,13 @@ import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
-import pl.pola_app.ui.fragment.ScannerFragment;
+import pl.pola_app.ui.fragment.BarcodeListener;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
+class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
     private final MainViewBinder viewBinder;
     private final ProductList productList;
@@ -96,16 +96,16 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     }
 
     @Override
-    public void barcodeScanned(String result) {
-        logger.logSearch(result, sessionId.get());
-        if (productList.itemExists(result)) {
+    public void onBarcode(String barcode) {
+        logger.logSearch(barcode, sessionId.get());
+        if (productList.itemExists(barcode)) {
             handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting);
         } else {
             logger.logCustom("Scanned", new Pair<>("existing", "false"));
             productList.createProductPlaceholder();
 
-            reportResultCall = api.getByCode(result, sessionId.get());
+            reportResultCall = api.getByCode(barcode, sessionId.get());
             reportResultCall.enqueue(this);
         }
     }

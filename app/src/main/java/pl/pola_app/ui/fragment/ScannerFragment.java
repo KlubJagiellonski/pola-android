@@ -1,5 +1,6 @@
 package pl.pola_app.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -37,12 +38,6 @@ import timber.log.Timber;
 
 public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
 
-    public interface BarcodeScannedListener {
-        void barcodeScanned(String result);
-    }
-
-    private BarcodeScannedListener barcodeScannedListener;
-
     @Inject
     Bus eventBus;
 
@@ -57,10 +52,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
     public ScannerFragment() {
         // Required empty public constructor
-    }
-
-    public void setOnBarcodeScannedListener(BarcodeScannedListener barcodeScannedListener) {
-        this.barcodeScannedListener = barcodeScannedListener;
     }
 
     @Override
@@ -155,9 +146,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (barcodeScannedListener != null) {
-                            barcodeScannedListener.barcodeScanned(result.getText());
-                        }
+                        onBarcode(result.getText());
                     }
                 });
 
@@ -171,6 +160,13 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         public void possibleResultPoints(List<ResultPoint> resultPoints) {
         }
     };
+
+    private void onBarcode(String barcode) {
+        final Activity activity = getActivity();
+        if (activity != null && !activity.isFinishing() && activity instanceof BarcodeListener) {
+            ((BarcodeListener) activity).onBarcode(barcode);
+        }
+    }
 
     @OnClick(R.id.flash_icon)
     public void onFlashIconClicked() {
