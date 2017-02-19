@@ -79,6 +79,17 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
         setupActionBar();
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                    openKeyboard.hide();
+                } else {
+                    openKeyboard.show();
+                }
+            }
+        });
     }
 
     private void setupActionBar() {
@@ -121,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     }
 
     public void openKeyboard() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            return; // prevent adding fragment twice
+        }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         KeyboardFragment newFragment = new KeyboardFragment();
         ft.add(R.id.container, newFragment, KeyboardFragment.class.getName());
