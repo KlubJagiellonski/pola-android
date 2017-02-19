@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
             return; // prevent adding fragment twice
         }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.fade_in, 0, 0, R.animator.fade_out);
         KeyboardFragment newFragment = new KeyboardFragment();
         ft.add(R.id.container, newFragment, KeyboardFragment.class.getName());
         ft.addToBackStack(KeyboardFragment.class.getName());
