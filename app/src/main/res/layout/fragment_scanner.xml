@@ -14,19 +14,10 @@
         zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner"
         app:zxing_use_texture_view="true" />
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent" />
-
     <ImageView
         android:id="@+id/appIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_margin="4dp"
         android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher_white" />
@@ -40,16 +31,4 @@
         android:layout_margin="14dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_flash_on_white_48dp" />
-
-    <TextView
-        android:id="@+id/textHintScan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:visibility="gone"
-        android:gravity="center_horizontal"
-        android:text="@string/scanner_status_text" />
 </RelativeLayout>

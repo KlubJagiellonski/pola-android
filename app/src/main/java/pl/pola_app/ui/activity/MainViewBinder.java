@@ -18,8 +18,6 @@ interface MainViewBinder {
 
     void showErrorMessage(String message);
 
-    String getSessionId(); //TODO: remove it
-
     void dismissProductDetailsView();
 
     void launchReportActivity(String productId);

@@ -2,6 +2,7 @@ package pl.pola_app.helpers;
 
 import android.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
@@ -44,6 +45,18 @@ public class EventLogger {
                     .putCustomAttribute("Code", code)
                     .putCustomAttribute("DeviceId", deviceId)
             );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logException(Throwable throwable) {
+        if (!BuildConfig.USE_CRASHLYTICS) {
+            return;
+        }
+
+        try {
+            Crashlytics.logException(throwable);
         } catch (Exception e) {
             e.printStackTrace();
         }

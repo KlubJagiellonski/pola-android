@@ -36,6 +36,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.SessionId;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Report;
 import pl.pola_app.model.ReportResult;
@@ -59,6 +60,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private ProgressDialog progressDialog;
     private int numberOfImages;
     private Call<ReportResult> reportResultCall;
+    private SessionId sessionId;
 
     @Bind(R.id.descripton_editText)
     EditText descriptionEditText;
@@ -72,6 +74,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
         ButterKnife.bind(this);
+        sessionId = SessionId.create(this);
 
         if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
@@ -84,7 +87,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Answers.getInstance().logLevelStart(new LevelStartEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "") //because can be null, ugly
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
+                                .putCustomAttribute("DeviceId", sessionId.get())
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -196,7 +199,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             report = new Report(description, numberOfImages, MIME_TYPE, FILE_EXT);
         }
         Api api = PolaApplication.retrofit.create(Api.class);
-        reportResultCall = api.createReport(Utils.getSessionGuid(this), report);
+        reportResultCall = api.createReport(sessionId.get(), report);
         reportResultCall.enqueue(this);
 
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
@@ -205,7 +208,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                 Answers.getInstance().logLevelEnd(new LevelEndEvent()
                                 .putLevelName("Report")
                                 .putCustomAttribute("Code", productId + "")
-                                .putCustomAttribute("DeviceId", Utils.getSessionGuid(this))
+                                .putCustomAttribute("DeviceId", sessionId.get())
                 );
             } catch (Exception e) {
                 e.printStackTrace();

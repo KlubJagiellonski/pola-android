@@ -1,6 +1,7 @@
 package pl.pola_app.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -12,6 +13,7 @@ import org.robolectric.annotation.Config;
 
 import pl.pola_app.TestApplication;
 import pl.pola_app.helpers.EventLogger;
+import pl.pola_app.helpers.SessionId;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.testutil.SearchUtil;
@@ -20,6 +22,7 @@ import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import retrofit.Call;
 import retrofit.Response;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,6 +40,7 @@ public class MainPresenterTest {
     private Api api;
     private Bus eventBus;
     private EventLogger logger;
+    private SessionId sessionId;
 
     @Before
     public void setUp() throws Exception {
@@ -44,8 +48,9 @@ public class MainPresenterTest {
         productList = mock(ProductList.class);
         api = mock(Api.class);
         logger = mock(EventLogger.class);
+        sessionId = mock(SessionId.class);
         eventBus = mock(Bus.class);
-        presenter = new MainPresenter(viewBinder, productList, api, logger, eventBus);
+        presenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
     }
 
     @Test
@@ -67,7 +72,7 @@ public class MainPresenterTest {
         //noinspection unchecked
         Call<SearchResult> resultCall = mock(Call.class);
         when(api.getByCode(anyString(), anyString())).thenReturn(resultCall);
-        presenter.barcodeScanned("code");
+        presenter.onBarcode("code");
         presenter.unregister();
 
         verify(resultCall).cancel();
@@ -76,7 +81,7 @@ public class MainPresenterTest {
     @Test
     public void testDontAddExistingProduct() throws Exception {
         when(productList.itemExists("itemA")).thenReturn(true);
-        presenter.barcodeScanned("itemA");
+        presenter.onBarcode("itemA");
 
         verify(productList, never()).createProductPlaceholder();
         verifyNoMoreInteractions(api);
@@ -84,10 +89,10 @@ public class MainPresenterTest {
 
     @Test
     public void testAddProduct() throws Exception {
-        when(viewBinder.getSessionId()).thenReturn("sessionId");
+        when(sessionId.get()).thenReturn("sessionId");
         //noinspection unchecked
         when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class));
-        presenter.barcodeScanned("barcode");
+        presenter.onBarcode("barcode");
 
         verify(productList).createProductPlaceholder();
         verify(api).getByCode("barcode", "sessionId");
@@ -109,6 +114,18 @@ public class MainPresenterTest {
         presenter.onResponse(Response.success(searchResult), null);
 
         verify(viewBinder).resumeScanning();
+    }
+
+    @Test
+    public void testResponseForUnsupportedBarCodes() throws Exception {
+        final SearchResult searchResult = SearchUtil.createSearchResult(1);
+        searchResult.product_id = null;
+
+        try {
+            presenter.onResponse(Response.success(searchResult), null);
+        } catch (Exception e) {
+            fail(Log.getStackTraceString(e));
+        }
     }
 
     @Test

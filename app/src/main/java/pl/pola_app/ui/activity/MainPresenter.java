@@ -11,6 +11,7 @@ import com.squareup.otto.Subscribe;
 
 import pl.pola_app.PolaApplication;
 import pl.pola_app.helpers.EventLogger;
+import pl.pola_app.helpers.SessionId;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.ui.adapter.OnProductListChanged;
@@ -18,13 +19,13 @@ import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
-import pl.pola_app.ui.fragment.ScannerFragment;
+import pl.pola_app.ui.fragment.BarcodeListener;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeScannedListener {
+class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
     private final MainViewBinder viewBinder;
     private final ProductList productList;
@@ -39,11 +40,13 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
         }
     };
     private Api api;
+    private SessionId sessionId;
     private Bus eventBus;
 
     public static MainPresenter create(@NonNull final MainViewBinder viewBinder,
                                        @NonNull final ProductList productList,
                                        @NonNull final ProductsAdapter productsAdapter,
+                                       @NonNull SessionId sessionId,
                                        @NonNull final Bus eventBus) {
 
         productList.setOnProductListChanged(new OnProductListChanged() {
@@ -57,7 +60,7 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
         final Api api = PolaApplication.retrofit.create(Api.class);
 
         final EventLogger logger = new EventLogger();
-        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, eventBus);
+        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
         productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
             @Override
             public void itemClicked(SearchResult searchResult) {
@@ -71,11 +74,13 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
                   @NonNull ProductList productList,
                   @NonNull Api api,
                   @NonNull EventLogger logger,
+                  @NonNull SessionId sessionId,
                   @NonNull Bus eventBus) {
         this.viewBinder = viewBinder;
         this.productList = productList;
         this.api = api;
         this.logger = logger;
+        this.sessionId = sessionId;
         this.eventBus = eventBus;
     }
 
@@ -91,16 +96,16 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     }
 
     @Override
-    public void barcodeScanned(String result) {
-        logger.logSearch(result, viewBinder.getSessionId());
-        if (productList.itemExists(result)) {
+    public void onBarcode(String barcode) {
+        logger.logSearch(barcode, sessionId.get());
+        if (productList.itemExists(barcode)) {
             handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting);
         } else {
             logger.logCustom("Scanned", new Pair<>("existing", "false"));
             productList.createProductPlaceholder();
 
-            reportResultCall = api.getByCode(result, viewBinder.getSessionId());
+            reportResultCall = api.getByCode(barcode, sessionId.get());
             reportResultCall.enqueue(this);
         }
     }
@@ -108,10 +113,10 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     @Override
     public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
         logger.logContentView(response.body().name + "",
-                "Card Preview"
-                , Integer.toString(response.body().product_id),
+                "Card Preview",
+                String.valueOf(response.body().product_id),
                 String.valueOf(response.code()),
-                viewBinder.getSessionId());
+                sessionId.get());
         productList.addProduct(response.body());
         viewBinder.resumeScanning();
     }
@@ -132,9 +137,9 @@ class MainPresenter implements Callback<SearchResult>, ScannerFragment.BarcodeSc
     void onItemClicked(@NonNull final SearchResult searchResult) {
         logger.logContentView(searchResult.name + "",
                 "Open Card",
-                Integer.toString(searchResult.product_id),
+                String.valueOf(searchResult.product_id),
                 searchResult.code,
-                viewBinder.getSessionId());
+                sessionId.get());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
     }
