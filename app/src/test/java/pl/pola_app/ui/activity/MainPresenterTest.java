@@ -71,7 +71,7 @@ public class MainPresenterTest {
     public void testCallCanceledOnUnregister() throws Exception {
         //noinspection unchecked
         Call<SearchResult> resultCall = mock(Call.class);
-        when(api.getByCode(anyString(), anyString())).thenReturn(resultCall);
+        when(api.getByCode(anyString(), anyString(), false)).thenReturn(resultCall);
         presenter.onBarcode("code");
         presenter.unregister();
 
@@ -91,7 +91,7 @@ public class MainPresenterTest {
     public void testAddProduct() throws Exception {
         when(sessionId.get()).thenReturn("sessionId");
         //noinspection unchecked
-        when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class));
+        when(api.getByCode(anyString(), anyString())).thenReturn(mock(Call.class), false);
         presenter.onBarcode("barcode");
 
         verify(productList).createProductPlaceholder();

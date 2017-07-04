@@ -255,9 +255,22 @@
                 android:orientation="vertical">
 
                 <View
+                    android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@android:color/darker_gray" />
+
+                <Button
+                    android:id="@+id/teach_pola_button"
+                    android:layout_width="match_parent"
+                    android:textColor="#616161"
+                    android:layout_height="33dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/button_gray_border" />
 
                 <TextView
                     android:id="@+id/message"

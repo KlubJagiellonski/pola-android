@@ -15,43 +15,55 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.device.yearclass.YearClass;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.SessionId;
+import pl.pola_app.helpers.SettingsPreference;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
+import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.fragment.BarcodeListener;
+import pl.pola_app.ui.fragment.HelpMessageDialog;
 import pl.pola_app.ui.fragment.KeyboardFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
 
 
-public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener {
+public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, ProductDetailsFragmentDelegate {
 
+    private static final int TEACH_POLA = 1000;
     @Inject
     Bus eventBus;
+    @Inject
+    SettingsPreference settingsPreference;
     @Bind(R.id.products_list)
     RecyclerView productsListView;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.open_keyboard_button)
     FloatingActionButton openKeyboard;
+    @Bind(R.id.teach_pola_main_button)
+    Button teachPolaButton;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
+                mainPresenter.onBackStackChange(isNotBackStackEmpty);
+                if (isNotBackStackEmpty) {
                     openKeyboard.hide();
                 } else {
                     openKeyboard.show();
@@ -129,6 +143,13 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
+        if (searchResult.askForPics()) {
+            teachPolaButton.setVisibility(View.VISIBLE);
+            teachPolaButton.setText(searchResult.askForPicsPreview());
+        } else {
+            teachPolaButton.setVisibility(View.GONE);
+        }
+        mainPresenter.setCurrentSearchResult(searchResult);
     }
 
     public void openKeyboard() {
@@ -148,8 +169,63 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         productsListView.setAdapter(adapter);
     }
 
+    @Override
+    public void displayHelpMessageDialog(SearchResult searchResult) {
+        if (!settingsPreference.shouldDisplayHelpMessageDialog()) {
+            //TODO in current implementation this dialog will never shown.
+            return;
+        }
+        final HelpMessageDialog helpMessageDialog = HelpMessageDialog.newInstance();
+        helpMessageDialog.setOnWantHelpButtonClickListener(() -> mainPresenter.onWantHelpClick(searchResult));
+        helpMessageDialog.show(getSupportFragmentManager(), HelpMessageDialog.class.getSimpleName());
+        //TODO uncomment before review
+        //settingsPreference.neverDisplayHelpMessageDialog();
+    }
+
+    @OnClick(R.id.teach_pola_main_button)
+    public void onTeachPolaButtonClick() {
+        mainPresenter.onTeachPolaButtonClick();
+    }
+
+    @Override
+    public void onTeachPolaAction(SearchResult searchResult) {
+        mainPresenter.onTechPolaClick(searchResult);
+    }
+
+    @Override
+    public void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult) {
+        if (isVisible) {
+            teachPolaButton.setVisibility(View.VISIBLE);
+            teachPolaButton.setText(searchResult.askForPicsPreview());
+            return;
+        }
+        teachPolaButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayVideoActivity(SearchResult searchResult, String deviceId) {
+        startActivityForResult(VideoMessageActivity.IntentFactory.forStart(MainActivity.this, searchResult, deviceId), TEACH_POLA);
+    }
+
     public void onBarcode(String barcode) {
         mainPresenter.onBarcode(barcode);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == TEACH_POLA) {
+            mainPresenter.onTeachPolaFinished();
+        }
+    }
+
+    @Override
+    public int getDeviceYear() {
+        return YearClass.get(getApplication());
     }
 
     @Override

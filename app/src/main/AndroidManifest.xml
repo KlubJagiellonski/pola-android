@@ -7,7 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".PolaApplication"
@@ -35,12 +38,18 @@
             android:name=".ui.activity.CreateReportActivity"
             android:label="@string/title_activity_create_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight"></activity>
+            android:theme="@style/AppThemeLight"/>
         <activity
             android:name=".ui.activity.ActivityWebView"
             android:parentActivityName=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeWeb" />
+        <activity
+            android:name=".ui.activity.VideoMessageActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:keepScreenOn="true"
+            android:theme="@style/AppThemeLight"/>
     </application>
 
 </manifest>

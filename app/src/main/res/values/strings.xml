@@ -17,7 +17,7 @@
     <string name="description_empty">Opis jest wymagany</string>
     <string name="sending_image_dialog">Wysyłanie…</string>
     <string name="toast_send_raport">Raport przesłany, dziękujemy</string>
-    <string name="toast_send_raport_error">Problem z wysyłanie, spróbuj później.</string>
+    <string name="toast_send_raport_error">Problem z wysyłaniem, spróbuj później.</string>
     <string name="toast_raport_error_no_pic">Wykonaj zdjęcie przed zgłoszeniem produktu</string>
     <string name="toast_raport_error_no_memory">Za mało pamięci dostępnej by otworzyć zdjęcie</string>
     <string name="yes">Tak</string>
@@ -60,4 +60,20 @@
     <string name="backspace_content_description">Usuń</string>
     <string name="done_content_description">Zatwierdź</string>
     <string name="keyboard_input_hint">Wpisz kod</string>
+    <string name="teach_pola">Naucz Pole tego produktu</string>
+    <string name="help_dialog_title">Pola będzie rozpoznawała produkty po wyglądzie!</string>
+    <string name="help_dialog_msg">Pomóż nam nauczyć Polę jak wygląda zeskanowany przez Ciebie produkt. Zajmie to 6 sekund.</string>
+    <string name="want_to_help_button_label">Chętnie pomogę</string>
+    <string name="next_time_button_label">Może innym razem…</string>
+    <string name="help_us_to_teach_pola_how_to_look_title">Naucz Polę</string>
+    <string name="help_us_to_teach_pola_how_to_look_msg">Nakreć film obracając produkt producenta %s w dłoni tak jak na przykładzie poniżej. Postaraj się nie zasłaniać produktu.</string>
+    <string name="do_not_show_this_screen_again">Nie pokazuj tego ekranu wiecej</string>
+    <string name="make_move">Nakręć film</string>
+    <string name="video_capture_start">START</string>
+    <string name="video_capture_stop">STOP</string>
+    <string name="seconds_left">sekund</string>
+    <string name="seconds_y">y</string>
+    <string name="seconds_a">a</string>
+    <!-- TODO to jest tekst nie zatwierdzony przez nikogo -->
+    <string name="thank_you_for_teaching">Dziękujemy!</string>
 </resources>

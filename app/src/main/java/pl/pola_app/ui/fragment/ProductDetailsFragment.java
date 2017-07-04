@@ -2,6 +2,7 @@ package pl.pola_app.ui.fragment;
 
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
+import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
@@ -65,6 +67,9 @@ public class ProductDetailsFragment extends DialogFragment {
     @Bind(R.id.message)
     TextView reportMessage;
 
+    @Bind(R.id.teach_pola_button)
+    Button teachPolaButton;
+
     @Bind(R.id.report_button)
     Button reportButton;
 
@@ -85,6 +90,8 @@ public class ProductDetailsFragment extends DialogFragment {
 
     private SearchResult searchResult;
 
+    private ProductDetailsFragmentDelegate delegate;
+
     public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
@@ -95,6 +102,16 @@ public class ProductDetailsFragment extends DialogFragment {
 
     public ProductDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof ProductDetailsFragmentDelegate) {
+            delegate = (ProductDetailsFragmentDelegate) context;
+            return;
+        }
+        throw new IllegalArgumentException("Context that uses this fragment should implements ProductDetailsFragmentDelegate class");
     }
 
     @Override
@@ -181,6 +198,17 @@ public class ProductDetailsFragment extends DialogFragment {
             }
         }
 
+        if(searchResult.askForPics()) {
+            teachPolaButton.setText(searchResult.askForPicsPreview());
+            teachPolaButton.setVisibility(View.VISIBLE);
+            teachPolaButton.setOnClickListener((view) ->{
+                if(delegate != null)
+                delegate.onTeachPolaAction(searchResult);
+            });
+        }else {
+            teachPolaButton.setVisibility(View.GONE);
+        }
+
         productInfoCard.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -188,6 +216,12 @@ public class ProductDetailsFragment extends DialogFragment {
                 eventBus.post(new ProductDetailsFragmentDismissedEvent());
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        delegate = null;
     }
 
     private void applyStyle(String cardType, String reportType) {

@@ -21,8 +21,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LevelEndEvent;
 import com.crashlytics.android.answers.LevelStartEvent;
 import com.google.gson.JsonObject;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +29,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.pola_app.BuildConfig;
@@ -43,16 +43,17 @@ import pl.pola_app.model.ReportResult;
 import pl.pola_app.network.Api;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import timber.log.Timber;
 
 public class CreateReportActivity extends Activity implements Callback<ReportResult> {
     private static final String TAG = CreateReportActivity.class.getSimpleName();
     private static final int MAX_IMAGE_COUNT = 2;
 
-    private static final String MIME_TYPE = "image/*";
+    private static final String MIME_TYPE = "image/jpg";
     private static final String FILE_EXT = "jpg"; //EasyImage captures jpegs
 
     private String productId;
@@ -216,10 +217,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         }
     }
 
+
     @Override
-    public void onResponse(Response<ReportResult> response, Retrofit retrofit) {
+    public void onResponse(Call<ReportResult> call, Response<ReportResult> response) {
         Log.d(TAG, "onResponse: ");
-        if (response.isSuccess()) {
+        if (response.isSuccessful()) {
             if (response.body() != null &&
                     response.body().signed_requests !=null &&
                     response.body().signed_requests.size() == bitmapsPaths.size()) {
@@ -256,15 +258,17 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<ReportResult> call, Throwable t) {
         Log.d(TAG, "onFailure: ");
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
+        Timber.e(t,"Problem with photo report sending - this throwable cached and it is not fatal but app works wrong.");
         Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
     }
 
     private void sendImage(final String imagePath, String url) {
+        //TODO tutaj
         numberOfImages++;
         Api api = PolaApplication.retrofit.create(Api.class);
         File imageFile = new File(imagePath);
@@ -272,7 +276,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Call<JsonObject> reportResultCall = api.sendReportImage(url, photoBody);
         reportResultCall.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d(TAG, "onResponse image");
                 File photoFile = new File(imagePath);
                 photoFile.delete();
@@ -283,7 +287,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 Log.d(TAG, "onFailure image");
                 numberOfImages--;
                 if (numberOfImages == 0) {

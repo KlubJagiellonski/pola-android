@@ -5,16 +5,18 @@ import android.content.Context;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.internal.di.PolaComponent;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class PolaApplication extends Application {
@@ -37,13 +39,18 @@ public class PolaApplication extends Application {
             Timber.plant(new CrashReportingTree());
         }
 
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        client.setReadTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(Utils.TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .build();
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(this.getResources().getString(R.string.pola_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
     }

@@ -21,4 +21,12 @@ interface MainViewBinder {
     void dismissProductDetailsView();
 
     void launchReportActivity(String productId);
+
+    void displayHelpMessageDialog(SearchResult searchResult);
+
+    void displayVideoActivity(SearchResult searchResult, String deviceId);
+
+    void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult);
+
+    int getDeviceYear();
 }

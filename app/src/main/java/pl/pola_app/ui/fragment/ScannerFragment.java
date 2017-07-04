@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
@@ -32,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.ui.delegate.ScannerFragmentDelegate;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
@@ -48,8 +49,10 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
     private boolean isTorchOn = false;
 
-    public ScannerFragment() {
-        // Required empty public constructor
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        PolaApplication.component(getActivity()).inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -58,7 +61,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
         View scannerView = inflater.inflate(R.layout.fragment_scanner, container, false);
         ButterKnife.bind(this, scannerView);
-        PolaApplication.component(getActivity()).inject(this);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -80,7 +82,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         barcodeScanner.setTorchListener(this);
         barcodeScanner.setTorchOff();
-
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
 
         return scannerView;

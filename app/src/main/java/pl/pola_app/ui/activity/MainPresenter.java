@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
+import com.facebook.device.yearclass.YearClass;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -20,10 +21,10 @@ import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.BarcodeListener;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
@@ -42,6 +43,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private Api api;
     private SessionId sessionId;
     private Bus eventBus;
+    SearchResult currentSearchResult;
 
     public static MainPresenter create(@NonNull final MainViewBinder viewBinder,
                                        @NonNull final ProductList productList,
@@ -105,24 +107,33 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
             logger.logCustom("Scanned", new Pair<>("existing", "false"));
             productList.createProductPlaceholder();
 
-            reportResultCall = api.getByCode(barcode, sessionId.get());
+            reportResultCall =
+                    viewBinder.getDeviceYear() < 2010
+                            ? api.getByCode(barcode, sessionId.get(),true)
+                            : api.getByCode(barcode, sessionId.get());
             reportResultCall.enqueue(this);
         }
     }
 
     @Override
-    public void onResponse(Response<SearchResult> response, Retrofit retrofit) {
-        logger.logContentView(response.body().name + "",
+    public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
+        final SearchResult searchResult = response.body();
+        currentSearchResult = searchResult;
+        logger.logContentView(searchResult.name + "",
                 "Card Preview",
-                String.valueOf(response.body().product_id),
+                String.valueOf(searchResult.product_id),
                 String.valueOf(response.code()),
                 sessionId.get());
-        productList.addProduct(response.body());
+        productList.addProduct(searchResult);
         viewBinder.resumeScanning();
+        viewBinder.setTeachPolaButtonVisibility(searchResult.askForPics(), searchResult);
+        if(searchResult.askForPics()) {
+            viewBinder.displayHelpMessageDialog(searchResult);
+        }
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<SearchResult> call, Throwable t) {
         logger.logCustom("Barcode request failed", new Pair<>("message", t.getLocalizedMessage()));
         if ("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
             viewBinder.showNoConnectionMessage();
@@ -162,5 +173,35 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
             productId = Integer.toString(event.searchResult.product_id);
         }
         viewBinder.launchReportActivity(productId);
+    }
+
+    public void onTechPolaClick(SearchResult searchResult) {
+        viewBinder.displayVideoActivity(searchResult, sessionId.get());
+    }
+
+    public void onWantHelpClick(SearchResult searchResult) {
+        viewBinder.displayVideoActivity(searchResult, sessionId.get());
+    }
+
+    public void setCurrentSearchResult(SearchResult currentSearchResult) {
+        this.currentSearchResult = currentSearchResult;
+    }
+
+    public void onBackStackChange(boolean isNotBackStackEmpty){
+            viewBinder.setTeachPolaButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForPics(), currentSearchResult);
+    }
+
+    public void onTeachPolaButtonClick() {
+        if(currentSearchResult != null) {
+            viewBinder.displayVideoActivity(currentSearchResult, sessionId.get());
+        }
+    }
+
+    public void onTeachPolaFinished() {
+        if (currentSearchResult != null) {
+            currentSearchResult.ai = null;
+            viewBinder.setTeachPolaButtonVisibility(false, currentSearchResult);
+
+        }
     }
 }
