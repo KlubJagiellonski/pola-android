@@ -174,7 +174,6 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     private void launchCamera() {
         Nammu.askForPermission(CreateReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionWriteCallback);
-        ;
     }
 
     @OnClick(R.id.send_button)
