@@ -6,12 +6,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -29,25 +28,21 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.ui.delegate.ScannerFragmentDelegate;
+import pl.pola_app.ui.view.FlashIcon;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
-public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
+public class ScannerFragment extends Fragment {
 
     @Inject
     Bus eventBus;
 
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
-    @Bind(R.id.flash_icon)
-    ImageView flashIconView;
-
-    private boolean isTorchOn = false;
+    private FlashIcon flashIconView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +68,19 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
         barcodeScanner.setLayoutParams(layoutParams);
 
+        flashIconView = new FlashIcon(inflater.getContext());
+        flashIconView.setFlashIconStateListener(new FlashIcon.FlashIconStateListener() {
+            @Override
+            public void onFlashOn() {
+                barcodeScanner.setTorchOn();
+            }
+
+            @Override
+            public void onFlashOff() {
+                barcodeScanner.setTorchOff();
+            }
+        });
+
         CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
         //cameraSettings.setBarcodeSceneModeEnabled(true);
         cameraSettings.setContinuousFocusEnabled(true);
@@ -80,11 +88,17 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
 
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
-        barcodeScanner.setTorchListener(this);
-        barcodeScanner.setTorchOff();
+        flashIconView.setFlashOff();
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
 
         return scannerView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        flashIconView.attachToToolbar(toolbar);
     }
 
     @Override
@@ -167,34 +181,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     }
 
-    @OnClick(R.id.flash_icon)
-    public void onFlashIconClicked() {
-        if(isTorchOn) {
-            barcodeScanner.setTorchOff();
-        } else {
-            barcodeScanner.setTorchOn();
-        }
-    }
-
-    @Override
-    public void onTorchOn() {
-        isTorchOn = true;
-        if(flashIconView != null) {
-            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_off_white_48dp));
-        }
-    }
-
-    @Override
-    public void onTorchOff() {
-        isTorchOn = false;
-        if(flashIconView != null) {
-            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_on_white_48dp));
-        }
-    }
-
     public void setTorchOff() {
-        if(isTorchOn) {
-            barcodeScanner.setTorchOff();
-        }
+        flashIconView.setFlashOff();
     }
 }

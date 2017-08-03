@@ -13,22 +13,4 @@
         android:visibility="visible"
         zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner"
         app:zxing_use_texture_view="true" />
-
-    <ImageView
-        android:id="@+id/appIcon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_margin="4dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher_white" />
-
-    <ImageView
-        android:id="@+id/flash_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="14dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_flash_on_white_48dp" />
 </RelativeLayout>

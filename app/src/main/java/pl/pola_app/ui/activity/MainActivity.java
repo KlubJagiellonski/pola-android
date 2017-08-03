@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     private void setupActionBar() {
         setSupportActionBar(toolbar);
+        toolbar.setLogo(R.mipmap.ic_launcher_white);
         setTitle(getString(R.string.app_name));
         final ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
