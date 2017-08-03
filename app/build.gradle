@@ -98,7 +98,7 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     compile 'io.reactivex:rxjava:1.1.8'
-    compile 'com.journeyapps:zxing-android-embedded:3.5.0@aar'
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.2'
     compile 'com.google.dagger:dagger:2.2'
