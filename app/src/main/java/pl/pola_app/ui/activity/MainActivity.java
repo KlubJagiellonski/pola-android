@@ -1,5 +1,6 @@
 package pl.pola_app.ui.activity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.device.yearclass.YearClass;
@@ -37,6 +40,7 @@ import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
+import pl.pola_app.ui.event.FlashActionListener;
 import pl.pola_app.ui.fragment.BarcodeListener;
 import pl.pola_app.ui.fragment.HelpMessageDialog;
 import pl.pola_app.ui.fragment.KeyboardFragment;
@@ -106,6 +110,20 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         });
     }
 
+    @OnClick(R.id.flash_icon)
+    public void onFlashIconClicked(View view) {
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.scanner_fragment);
+        if(fragment != null && fragment instanceof FlashActionListener) {
+            final FlashActionListener flashActionListener = (FlashActionListener) fragment;
+            flashActionListener.onFlashAction();
+            if(view != null && view instanceof ImageView) {
+                ((ImageView) view).setImageDrawable(ContextCompat.getDrawable(this,
+                        flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_white_48dp : R.drawable.ic_flash_on_white_48dp));
+            }
+        }
+
+
+    }
     private void setupActionBar() {
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.app_name));

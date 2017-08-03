@@ -6,13 +6,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"/>
-
     <fragment
         android:id="@+id/scanner_fragment"
         android:name="pl.pola_app.ui.fragment.ScannerFragment"
@@ -22,6 +15,23 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent">
+
+
+        <ImageView
+            android:id="@+id/flash_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_margin="14dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_flash_on_white_48dp" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/products_list"

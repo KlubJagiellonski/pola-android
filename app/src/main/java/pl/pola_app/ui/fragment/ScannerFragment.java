@@ -33,19 +33,19 @@ import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.ui.delegate.ScannerFragmentDelegate;
+import pl.pola_app.ui.event.FlashActionListener;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import timber.log.Timber;
 
-public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener {
+public class ScannerFragment extends Fragment implements CompoundBarcodeView.TorchListener, FlashActionListener {
 
     @Inject
     Bus eventBus;
 
     @Bind(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
-    @Bind(R.id.flash_icon)
-    ImageView flashIconView;
+
 
     private boolean isTorchOn = false;
 
@@ -167,8 +167,13 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     }
 
-    @OnClick(R.id.flash_icon)
-    public void onFlashIconClicked() {
+    @Override
+    public boolean isTorchOn() {
+        return isTorchOn;
+    }
+
+    @Override
+    public void onFlashAction() {
         if(isTorchOn) {
             barcodeScanner.setTorchOff();
         } else {
@@ -179,17 +184,11 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onTorchOn() {
         isTorchOn = true;
-        if(flashIconView != null) {
-            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_off_white_48dp));
-        }
     }
 
     @Override
     public void onTorchOff() {
         isTorchOn = false;
-        if(flashIconView != null) {
-            flashIconView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_flash_on_white_48dp));
-        }
     }
 
     public void setTorchOff() {
