@@ -30,7 +30,7 @@ android {
         applicationId "pl.pola_app"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 21
+        versionCode 22
         versionName "1.5"
     }
 
