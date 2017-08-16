@@ -175,7 +175,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         viewBinder.launchReportActivity(productId);
     }
 
-    public void onTechPolaClick(SearchResult searchResult) {
+    public void onTeachPolaClick(SearchResult searchResult) {
         viewBinder.displayVideoActivity(searchResult, sessionId.get());
     }
 

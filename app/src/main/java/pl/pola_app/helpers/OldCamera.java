@@ -16,7 +16,7 @@ public class OldCamera extends CameraCompat {
 
     private static final int DEFAULT_MIN_PIC_SIZE = 1000;
     Camera camera;
-    boolean saveToTakePicture = false;
+    boolean safeToTakePicture = false;
     boolean isPreviewing = false;
 
     private final int maxPictureSize;
@@ -29,6 +29,7 @@ public class OldCamera extends CameraCompat {
     @Override
     public void open(){
         camera = Camera.open();
+        camera.cancelAutoFocus();
         final Camera.Parameters parameters = camera.getParameters();
         final List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
         Camera.Size size = supportedPictureSizes.get(0);
@@ -39,8 +40,9 @@ public class OldCamera extends CameraCompat {
                 size = cameraSize;
             }
         }
-        parameters.setSceneMode(Camera.Parameters.SCENE_MODE_PORTRAIT);
+
         parameters.setPictureSize(size.width, size.height);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         camera.setParameters(parameters);
         camera.setDisplayOrientation(90);
     }
@@ -51,8 +53,9 @@ public class OldCamera extends CameraCompat {
         try {
             camera.setPreviewDisplay(surface);
             camera.startPreview();
+            camera.autoFocus(null);
             isPreviewing = true;
-            saveToTakePicture = true;
+            safeToTakePicture = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,17 +66,17 @@ public class OldCamera extends CameraCompat {
         camera.stopPreview();
         camera.release();
         isPreviewing = false;
-        saveToTakePicture = false;
+        safeToTakePicture = false;
     }
 
     @Override
     public void takePicture(OnPhotoTakenSuccessListener onPhotoTakenSuccessListener) {
-        if (!saveToTakePicture) {
+        if (!safeToTakePicture) {
             Log.e("TAG", "Skipped photo");
             return;
         }
         camera.takePicture(null, null, (data, camera) -> {
-            saveToTakePicture = true;
+            safeToTakePicture = true;
             final Camera.Parameters parameters = camera.getParameters();
             final Camera.Size pictureSize = parameters.getPictureSize();
             final Bitmap bitmap = FileUtils.rotateImageAndScale(BitmapFactory.decodeByteArray(data, 0, data.length), 90, maxPictureSize);
@@ -87,6 +90,6 @@ public class OldCamera extends CameraCompat {
             );
             camera.startPreview();
         });
-        saveToTakePicture = false;
+        safeToTakePicture = false;
     }
 }

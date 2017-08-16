@@ -99,7 +99,7 @@ public class VideoCapturePresenter {
         view = null;
     }
 
-    public void sandFilesToServer(List<TakenPicInfo> list) {
+    public void sendFilesToServer(List<TakenPicInfo> list) {
         final PhotoPicturesReport photoPicturesReport = PhotoPicturesReport.builder()
                 .setDeviceName(Utils.getDeviceName())
                 .setFilesCount(list.size())
@@ -146,7 +146,7 @@ public class VideoCapturePresenter {
             fileNames.add(new TakenPicInfo(picturePath, originalWidth, originalHeight, width, height));
             Log.d(TAG, "File " + picturePath + " is saved o thread " + Thread.currentThread().getName());
             if (time == 1) {
-                sandFilesToServer(fileNames);
+                sendFilesToServer(fileNames);
             }
         });
     }

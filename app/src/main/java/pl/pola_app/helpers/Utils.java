@@ -2,6 +2,7 @@ package pl.pola_app.helpers;
 
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.compat.BuildConfig;
 import android.text.TextUtils;
 
 public class Utils {
@@ -28,7 +29,7 @@ public class Utils {
         if (Build.MODEL.startsWith(Build.MANUFACTURER)) {
             return upperFirstLetter(Build.MODEL);
         }
-        return "Android: " + upperFirstLetter(Build.MANUFACTURER) + " " + Build.MODEL;
+        return "Android: " + upperFirstLetter(Build.MANUFACTURER) + " " + Build.MODEL + " (" +  BuildConfig.VERSION_NAME + ")";
     }
 
     private static String upperFirstLetter(String strToUpper) {

@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public void onTeachPolaAction(SearchResult searchResult) {
-        mainPresenter.onTechPolaClick(searchResult);
+        mainPresenter.onTeachPolaClick(searchResult);
     }
 
     @Override
