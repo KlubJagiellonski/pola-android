@@ -2,8 +2,9 @@ package pl.pola_app.helpers;
 
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.compat.BuildConfig;
 import android.text.TextUtils;
+
+import pl.pola_app.BuildConfig;
 
 public class Utils {
     public static final String URL_POLA_ABOUT = "https://www.pola-app.pl/m/about";
