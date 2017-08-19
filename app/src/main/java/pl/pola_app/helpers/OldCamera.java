@@ -36,7 +36,11 @@ public class OldCamera extends CameraCompat {
         parameters.setPreviewFormat(ImageFormat.NV21);
         parameters.setRecordingHint(true);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        camera.setParameters(parameters);
+        try {
+            camera.setParameters(parameters);
+        } catch(Exception e) {
+            Timber.e("Error setting camera parameters");
+        }
 
         camera.setDisplayOrientation(90);
     }
