@@ -16,7 +16,7 @@ android:
     - '.+'
 
 script:
-    - ./gradlew clean test
+    - ./gradlew clean test -Pbuild=dev
 
 notifications:
   email: false
