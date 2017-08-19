@@ -12,15 +12,14 @@ import android.view.SurfaceHolder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import timber.log.Timber;
 
 @TargetApi(21)
 public class OldCamera extends CameraCompat {
-    Camera camera;
-    boolean safeToTakePicture = false;
-    boolean isPreviewing = false;
+    private Camera camera;
+    private boolean safeToTakePicture = false;
+    private boolean isPreviewing = false;
 
     private final int maxPictureSize;
 
@@ -33,25 +32,13 @@ public class OldCamera extends CameraCompat {
     public void open() {
         camera = Camera.open();
         camera.cancelAutoFocus();
-        camera.setDisplayOrientation(90);
         final Camera.Parameters parameters = camera.getParameters();
-        final List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
-        Camera.Size size = supportedPictureSizes.get(0);
-        for (Camera.Size cameraSize : supportedPictureSizes) {
-
-            if ((size.width > cameraSize.width && cameraSize.width > maxPictureSize && cameraSize.height > maxPictureSize)
-                    || (size.height < maxPictureSize || size.width < maxPictureSize)) {
-                size = cameraSize;
-            }
-        }
-
-        parameters.setPictureSize(size.width, size.height);
-        parameters.setPreviewSize(size.width, size.height);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         parameters.setPreviewFormat(ImageFormat.NV21);
         parameters.setRecordingHint(true);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         camera.setParameters(parameters);
+
+        camera.setDisplayOrientation(90);
     }
 
 
@@ -84,10 +71,12 @@ public class OldCamera extends CameraCompat {
         camera.setOneShotPreviewCallback((data, camera1) -> {
             if (data != null && data.length != 0) {
                 final Camera.Parameters parameters = camera1.getParameters();
-                final Camera.Size pictureSize = parameters.getPictureSize();
+                final Camera.Size pictureSize = parameters.getPreviewSize();
+                final int imageFormat = parameters.getPreviewFormat();
+
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
-                YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21, pictureSize.width, pictureSize.height, null);
+                YuvImage yuvImage = new YuvImage(data, imageFormat, pictureSize.width, pictureSize.height, null);
                 yuvImage.compressToJpeg(new Rect(0, 0, pictureSize.width, pictureSize.height), 100, out);
                 byte[] imageBytes = out.toByteArray();
                 Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);

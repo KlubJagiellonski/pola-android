@@ -141,7 +141,7 @@ public class VideoCapturePresenter {
 
     public void onTakePicture(Bitmap bitmap, long time, int originalWidth, int originalHeight, int width, int height) {
         threadPoolExecutor.execute(() -> {
-            final String picturePath = Environment.getExternalStorageDirectory() + "/test" + time + ".png";
+            final String picturePath = Environment.getExternalStorageDirectory() + "/test" + time + ".jpg";
             FileUtils.saveBitmap(bitmap, picturePath);
             fileNames.add(new TakenPicInfo(picturePath, originalWidth, originalHeight, width, height));
             Log.d(TAG, "File " + picturePath + " is saved o thread " + Thread.currentThread().getName());

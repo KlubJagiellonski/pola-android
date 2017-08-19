@@ -79,7 +79,7 @@ public class PhotoPicturesReport {
             PhotoPicturesReport result = new PhotoPicturesReport();
             result.productId = productId;
             result.filesCount = filesCount;
-            result.fileExt = "png";
+            result.fileExt = "jpg";
             result.mineType = "image/*";
             result.originalWidth = originalWidth;
             result.originalHeight = originalHeight;
