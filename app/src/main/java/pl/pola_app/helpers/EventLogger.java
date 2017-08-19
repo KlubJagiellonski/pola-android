@@ -9,7 +9,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import pl.pola_app.BuildConfig;
 
-public final class EventLogger {
+public class EventLogger {
 
     private Context c;
 
