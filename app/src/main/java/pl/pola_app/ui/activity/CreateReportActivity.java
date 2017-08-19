@@ -17,9 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.LevelEndEvent;
-import com.crashlytics.android.answers.LevelStartEvent;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -33,9 +30,9 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
-import pl.pola_app.BuildConfig;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Report;
@@ -46,7 +43,6 @@ import pl.tajchert.nammu.PermissionCallback;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class CreateReportActivity extends Activity implements Callback<ReportResult> {
@@ -69,6 +65,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     LinearLayout linearImageViews;
     ArrayList<Bitmap> bitmaps = new ArrayList<>();
     ArrayList<String> bitmapsPaths = new ArrayList<>();//As we save file, it would be good to delete them after we send them
+    private EventLogger logger = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +80,10 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         setImageView(bitmaps);
         Nammu.init(this);
 
-        if (BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logLevelStart(new LevelStartEvent()
-                                .putLevelName("Report")
-                                .putCustomAttribute("Code", productId + "") //because can be null, ugly
-                                .putCustomAttribute("DeviceId", sessionId.get())
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(logger == null) {
+            logger = new EventLogger(this);
         }
+        logger.logLevelStart("report", productId, sessionId.get());
     }
 
     @Override
@@ -203,17 +193,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         reportResultCall.enqueue(this);
 
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
-        if (BuildConfig.USE_CRASHLYTICS) {
-            try {
-                Answers.getInstance().logLevelEnd(new LevelEndEvent()
-                                .putLevelName("Report")
-                                .putCustomAttribute("Code", productId + "")
-                                .putCustomAttribute("DeviceId", sessionId.get())
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        logger.logLevelEnd("report", productId, sessionId.get());
     }
 
 

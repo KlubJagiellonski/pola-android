@@ -3,7 +3,6 @@ package pl.pola_app.ui.adapter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 
 import org.parceler.Parcels;
 
@@ -16,7 +15,6 @@ import pl.pola_app.model.SearchResult;
 public class ProductList {
     @NonNull private final List<SearchResult> searchResults;
     @Nullable private OnProductListChanged onProductListChanged;
-    @Nullable private EventLogger logger;
 
     public static ProductList create(@Nullable Bundle bundle) {
         final List<SearchResult> searchResults;
@@ -44,10 +42,8 @@ public class ProductList {
 
     public void addProduct(SearchResult searchResult) {
         if (searchResults.size() > 0 && searchResults.get(0) == null) {
-            logProductAdded("true");
             searchResults.set(0, searchResult);
         } else {
-            logProductAdded("false");
             searchResults.add(0, searchResult);
         }
         notifyOnChanged();
@@ -86,16 +82,6 @@ public class ProductList {
 
     public SearchResult get(int position) {
         return searchResults.get(position);
-    }
-
-    public void setLogger(@Nullable EventLogger logger) {
-        this.logger = logger;
-    }
-
-    private void logProductAdded(@NonNull String added) {
-        if (logger != null) {
-            logger.logCustom("addProduct", new Pair<>("good", added));
-        }
     }
 
     private void notifyOnChanged() {

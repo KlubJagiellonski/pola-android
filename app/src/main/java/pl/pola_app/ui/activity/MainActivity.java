@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +78,9 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         Nammu.init(this);
 
         ProductList productList = ProductList.create(savedInstanceState);
-        productList.setLogger(new EventLogger());
         final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
         SessionId sessionId = SessionId.create(this);
-        mainPresenter = MainPresenter.create(this, productList, productsAdapter, sessionId, eventBus);
+        mainPresenter = MainPresenter.create(getApplicationContext(), this, productList, productsAdapter, sessionId, eventBus);
 
         openKeyboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         startActivityForResult(VideoMessageActivity.IntentFactory.forStart(MainActivity.this, searchResult, deviceId), TEACH_POLA);
     }
 
-    public void onBarcode(String barcode) {
-        mainPresenter.onBarcode(barcode);
+    public void onBarcode(String barcode, boolean fromCamera) {
+        mainPresenter.onBarcode(barcode, fromCamera);
     }
 
 

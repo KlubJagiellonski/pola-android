@@ -163,7 +163,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     private void onBarcode(String barcode) {
         final Activity activity = getActivity();
         if (activity != null && !activity.isFinishing() && activity instanceof BarcodeListener) {
-            ((BarcodeListener) activity).onBarcode(barcode);
+            ((BarcodeListener) activity).onBarcode(barcode, true);
         }
     }
 

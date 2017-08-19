@@ -4,12 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.pola_app.helpers.Utils;
@@ -28,8 +28,8 @@ public class PolaApplication extends Application {
         super.onCreate();
 
         component = PolaComponent.Initializer.init(this);
-        if(BuildConfig.USE_CRASHLYTICS) {
-            Fabric.with(this, new Crashlytics());
+        if(BuildConfig.USE_FIREBASE) {
+            FirebaseAnalytics.getInstance(this);
         }
         ButterKnife.setDebug(BuildConfig.DEBUG);
 
@@ -64,8 +64,11 @@ public class PolaApplication extends Application {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-            if(BuildConfig.USE_CRASHLYTICS) {
-                Crashlytics.log(priority, tag, message);
+            if(BuildConfig.USE_FIREBASE) {
+                FirebaseCrash.logcat(priority, tag, message);
+                if(t != null) {
+                    FirebaseCrash.report(t);
+                }
             }
 
             if (t != null) {

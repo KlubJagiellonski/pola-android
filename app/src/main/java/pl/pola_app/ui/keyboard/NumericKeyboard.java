@@ -106,7 +106,7 @@ public class NumericKeyboard extends LinearLayout {
                     onConfirm();
                     break;
                 default:
-                    new EventLogger().logException(new UnsupportedOperationException("Unsupported view: " + v.toString()));
+                    new EventLogger(getContext()).logException(new UnsupportedOperationException("Unsupported view: " + v.toString()));
             }
         }
     }

@@ -1,5 +1,6 @@
 package pl.pola_app.ui.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -36,7 +37,6 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private final Runnable runnableResumeScan = new Runnable() {
         @Override
         public void run() {
-            logger.logCustom("Scanned", new Pair<>("existing", "true"));
             viewBinder.resumeScanning();
         }
     };
@@ -45,7 +45,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private Bus eventBus;
     SearchResult currentSearchResult;
 
-    public static MainPresenter create(@NonNull final MainViewBinder viewBinder,
+    public static MainPresenter create(Context applicationContext, @NonNull final MainViewBinder viewBinder,
                                        @NonNull final ProductList productList,
                                        @NonNull final ProductsAdapter productsAdapter,
                                        @NonNull SessionId sessionId,
@@ -61,7 +61,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         viewBinder.setAdapter(productsAdapter);
         final Api api = PolaApplication.retrofit.create(Api.class);
 
-        final EventLogger logger = new EventLogger();
+        final EventLogger logger = new EventLogger(applicationContext);
         final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
         productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
             @Override
@@ -98,13 +98,12 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     }
 
     @Override
-    public void onBarcode(String barcode) {
-        logger.logSearch(barcode, sessionId.get());
+    public void onBarcode(String barcode, boolean fromCamera) {
+        logger.logSearch(barcode, sessionId.get(), fromCamera ? "camera" : "keyboard");
         if (productList.itemExists(barcode)) {
             handlerScanner.removeCallbacks(runnableResumeScan);
             handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting);
         } else {
-            logger.logCustom("Scanned", new Pair<>("existing", "false"));
             productList.createProductPlaceholder();
 
             reportResultCall =
@@ -120,10 +119,11 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         final SearchResult searchResult = response.body();
         currentSearchResult = searchResult;
         logger.logContentView(searchResult.name + "",
-                "Card Preview",
+                "company_received",
                 String.valueOf(searchResult.product_id),
                 String.valueOf(response.code()),
-                sessionId.get());
+                sessionId.get(),
+                searchResult.askForPics());
         productList.addProduct(searchResult);
         viewBinder.resumeScanning();
         viewBinder.setTeachPolaButtonVisibility(searchResult.askForPics(), searchResult);
@@ -134,7 +134,6 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
 
     @Override
     public void onFailure(Call<SearchResult> call, Throwable t) {
-        logger.logCustom("Barcode request failed", new Pair<>("message", t.getLocalizedMessage()));
         if ("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname".equals(t.getLocalizedMessage())) {//TODO this is awefull
             viewBinder.showNoConnectionMessage();
         } else {
@@ -147,10 +146,11 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
 
     void onItemClicked(@NonNull final SearchResult searchResult) {
         logger.logContentView(searchResult.name + "",
-                "Open Card",
+                "card_opened",
                 String.valueOf(searchResult.product_id),
                 searchResult.code,
-                sessionId.get());
+                sessionId.get(),
+                searchResult.askForPics());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
     }
