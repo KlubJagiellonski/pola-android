@@ -59,6 +59,10 @@ public class OldCamera extends CameraCompat {
         isPreviewing = false;
         safeToTakePicture = false;
         camera.stopPreview();
+    }
+
+    @Override
+    public void release() {
         camera.release();
     }
 
