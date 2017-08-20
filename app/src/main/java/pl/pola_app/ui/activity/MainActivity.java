@@ -289,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        logger.logMenuItemOpened("About Menu", sessionId.get());
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -306,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
                 startActivity(intent);
                 return true;
             case R.id.action_metodology:
-                logger.logMenuItemOpened("Metodologia", sessionId.get());
+                logger.logMenuItemOpened("Instrukcja obsługi", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_METHOD);
                 startActivity(intent);
