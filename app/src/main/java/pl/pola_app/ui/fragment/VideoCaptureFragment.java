@@ -99,7 +99,7 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
         deviceId = arguments.getString(DEVICE_ID);
         videoCapturePresenter.onCreate(searchResult, deviceId);
         logger = new EventLogger(getContext());
-        logger.logLevelStart("aipicks", searchResult.code, deviceId);
+        logger.logLevelStart("aipics", searchResult.code, deviceId);
     }
 
     @Nullable
@@ -177,7 +177,7 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
 
     @Override
     public void onPhotosUploadFinish() {
-        logger.logLevelEnd("aipicks", searchResult.code, deviceId);
+        logger.logLevelEnd("aipics", searchResult.code, deviceId);
 
         final FragmentActivity activity = getActivity();
         if (activity != null) {

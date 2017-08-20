@@ -121,7 +121,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         logger.logContentView(searchResult.name + "",
                 "company_received",
                 String.valueOf(searchResult.product_id),
-                String.valueOf(response.code()),
+                String.valueOf(searchResult.code),
                 sessionId.get(),
                 searchResult.askForPics());
         productList.addProduct(searchResult);
@@ -169,10 +169,12 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     @SuppressWarnings("WeakerAccess")
     public void reportButtonClicked(ReportButtonClickedEvent event) {
         String productId = null;
+        String code = null;
         if (event.searchResult.product_id != null) {
             productId = Integer.toString(event.searchResult.product_id);
+            code = event.searchResult.code;
         }
-        viewBinder.launchReportActivity(productId);
+        viewBinder.launchReportActivity(productId, code);
     }
 
     public void onTeachPolaClick(SearchResult searchResult) {

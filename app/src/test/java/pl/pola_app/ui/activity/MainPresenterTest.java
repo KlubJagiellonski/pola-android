@@ -184,9 +184,10 @@ public class MainPresenterTest {
     public void testLaunchReportActivity() throws Exception {
         final SearchResult searchResult = SearchUtil.createSearchResult(1);
         searchResult.product_id = 123;
+        searchResult.code = "12345678";
         presenter.reportButtonClicked(new ReportButtonClickedEvent(searchResult));
 
-        verify(viewBinder).launchReportActivity("123");
+        verify(viewBinder).launchReportActivity("123", "12345678");
     }
 
     @Test

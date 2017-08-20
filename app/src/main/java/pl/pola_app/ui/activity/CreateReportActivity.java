@@ -53,6 +53,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private static final String FILE_EXT = "jpg"; //EasyImage captures jpegs
 
     private String productId;
+    private String code;
     private int photoMarginDp = 6;
     private ProgressDialog progressDialog;
     private int numberOfImages;
@@ -76,6 +77,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
         if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
+            code = getIntent().getStringExtra("code");
         }
         setImageView(bitmaps);
         Nammu.init(this);
@@ -83,7 +85,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         if(logger == null) {
             logger = new EventLogger(this);
         }
-        logger.logLevelStart("report", productId, sessionId.get());
+        logger.logLevelStart("report", code, sessionId.get());
     }
 
     @Override
@@ -193,7 +195,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         reportResultCall.enqueue(this);
 
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
-        logger.logLevelEnd("report", productId, sessionId.get());
+        logger.logLevelEnd("report", code, sessionId.get());
     }
 
 

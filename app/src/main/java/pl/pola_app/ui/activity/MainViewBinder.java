@@ -20,7 +20,7 @@ interface MainViewBinder {
 
     void dismissProductDetailsView();
 
-    void launchReportActivity(String productId);
+    void launchReportActivity(String productId, String code);
 
     void displayHelpMessageDialog(SearchResult searchResult);
 

@@ -65,25 +65,36 @@ public class EventLogger {
         }
     }
 
-    public void logLevelStart(String levelName, String productId, String sessionId) {
+    public void logLevelStart(String levelName, String productId, String deviceId) {
         if(!BuildConfig.USE_FIREBASE) {
             return;
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString("device_id", sessionId);
+        bundle.putString("device_id", deviceId);
         bundle.putString("code", productId);
         FirebaseAnalytics.getInstance(c).logEvent(levelName+"_started", bundle);
     }
 
-    public void logLevelEnd(String levelName, String productId, String sessionId) {
+    public void logLevelEnd(String levelName, String productId, String deviceId) {
         if(!BuildConfig.USE_FIREBASE) {
             return;
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString("device_id", sessionId);
+        bundle.putString("device_id", deviceId);
         bundle.putString("code", productId);
         FirebaseAnalytics.getInstance(c).logEvent(levelName+"_finished", bundle);
+    }
+
+    public void logMenuItemOpened(String itemName, String deviceId) {
+        if(!BuildConfig.USE_FIREBASE) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("item", itemName);
+        bundle.putString("device_id", deviceId);
+        FirebaseAnalytics.getInstance(c).logEvent("menu_item_opened", bundle);
     }
 }

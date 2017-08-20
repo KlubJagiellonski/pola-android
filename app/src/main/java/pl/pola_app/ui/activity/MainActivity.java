@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
+    private EventLogger logger;
+    private SessionId sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +81,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
         ProductList productList = ProductList.create(savedInstanceState);
         final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
-        SessionId sessionId = SessionId.create(this);
+        sessionId = SessionId.create(this);
         mainPresenter = MainPresenter.create(getApplicationContext(), this, productList, productsAdapter, sessionId, eventBus);
+
+        logger = new EventLogger(this);
 
         openKeyboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,10 +269,11 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     }
 
     @Override
-    public void launchReportActivity(String productId) {
+    public void launchReportActivity(String productId, String code) {
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.setAction("product_report");
         intent.putExtra("productId", productId);
+        intent.putExtra("code", code);
         startActivity(intent);
     }
 
@@ -284,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        logger.logMenuItemOpened("About Menu", sessionId.get());
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -294,41 +300,49 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_about:
+                logger.logMenuItemOpened("O Aplikacji Pola", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_ABOUT);
                 startActivity(intent);
                 return true;
             case R.id.action_metodology:
+                logger.logMenuItemOpened("Metodologia", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_METHOD);
                 startActivity(intent);
                 return true;
             case R.id.action_club:
+                logger.logMenuItemOpened("O Klubie Jagiellońskim", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_KJ);
                 startActivity(intent);
                 return true;
             case R.id.action_team:
+                logger.logMenuItemOpened("Zespół", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_TEAM);
                 startActivity(intent);
                 return true;
             case R.id.action_partners:
+                logger.logMenuItemOpened("Partnerzy", sessionId.get());
                 intent = new Intent(this, ActivityWebView.class);
                 intent.putExtra("url", Utils.URL_POLA_PARTNERS);
                 startActivity(intent);
                 return true;
             case R.id.action_bug:
+                logger.logMenuItemOpened("Zgłoś błąd w danych", sessionId.get());
                 intent = new Intent(this, CreateReportActivity.class);
                 intent.setAction("product_report");
                 startActivity(intent);
                 return true;
             case R.id.action_mail:
+                logger.logMenuItemOpened("Napisz do nas", sessionId.get());
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Utils.POLA_MAIL, null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pola");
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_picker)));
                 return true;
             case R.id.action_rate:
+                logger.logMenuItemOpened("Oceń Polę", sessionId.get());
                 Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
                 intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
@@ -342,10 +356,12 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
                 }
                 return true;
             case R.id.action_fb:
+                logger.logMenuItemOpened("Pola na Facebooku", sessionId.get());
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB));
                 startActivity(intent);
                 return true;
             case R.id.action_twitter:
+                logger.logMenuItemOpened("Pola na Twitterze", sessionId.get());
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_TWITTER));
                 startActivity(intent);
                 return true;
