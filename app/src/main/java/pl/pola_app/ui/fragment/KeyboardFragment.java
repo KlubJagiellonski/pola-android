@@ -29,7 +29,7 @@ public class KeyboardFragment extends Fragment implements KeyboardListener {
     @Override
     public void onInputConfirmed(@NonNull String text) {
         final Activity activity = getActivity();
-        ((MainActivity) activity).onBarcode(text);
+        ((MainActivity) activity).onBarcode(text, false);
         activity.getFragmentManager().popBackStack();
     }
 }

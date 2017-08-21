@@ -34,6 +34,7 @@ import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.CameraCompat;
+import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.FileUtils;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.presenter.VideoCapturePresenter;
@@ -60,6 +61,9 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
     SurfaceView videoCaptureSurfaceView;
 
     ProgressDialog progressDialog;
+    private EventLogger logger;
+    private SearchResult searchResult;
+    private String deviceId;
 
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
@@ -91,9 +95,11 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
         if (arguments == null) {
             throw new IllegalArgumentException("Please pass SearchResult as fragment args");
         }
-        SearchResult searchResult = Parcels.unwrap(arguments.getParcelable(SEARCH_RESULT));
-        String deviceId = arguments.getString(DEVICE_ID);
+        searchResult = Parcels.unwrap(arguments.getParcelable(SEARCH_RESULT));
+        deviceId = arguments.getString(DEVICE_ID);
         videoCapturePresenter.onCreate(searchResult, deviceId);
+        logger = new EventLogger(getContext());
+        logger.logLevelStart("aipics", searchResult.code, deviceId);
     }
 
     @Nullable
@@ -172,6 +178,8 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
 
     @Override
     public void onPhotosUploadFinish() {
+        logger.logLevelEnd("aipics", searchResult.code, deviceId);
+
         final FragmentActivity activity = getActivity();
         if (activity != null) {
             Toast.makeText(getActivity(), R.string.thank_you_for_teaching, Toast.LENGTH_LONG).show();

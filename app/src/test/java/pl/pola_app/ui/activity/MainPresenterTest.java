@@ -69,7 +69,7 @@ public class MainPresenterTest {
 
     @Test
     public void testCallCanceledOnUnregister() throws Exception {
-        presenter.onBarcode("code");
+        presenter.onBarcode("code", true);
         presenter.unregister();
 
         verify(mockCall).cancel();
@@ -78,7 +78,7 @@ public class MainPresenterTest {
     @Test
     public void testDontAddExistingProduct() throws Exception {
         when(productList.itemExists("itemA")).thenReturn(true);
-        presenter.onBarcode("itemA");
+        presenter.onBarcode("itemA", true);
 
         verify(productList, never()).createProductPlaceholder();
         verifyNoMoreInteractions(api);
@@ -88,7 +88,7 @@ public class MainPresenterTest {
     public void testAddProduct() throws Exception {
         when(sessionId.get()).thenReturn("sessionId");
         when(viewBinder.getDeviceYear()).thenReturn(2017);
-        presenter.onBarcode("barcode");
+        presenter.onBarcode("barcode", true);
 
         verify(productList).createProductPlaceholder();
         verify(api).getByCode("barcode", "sessionId");
@@ -98,7 +98,7 @@ public class MainPresenterTest {
     public void testAddProductForOldDevices() throws Exception {
         when(sessionId.get()).thenReturn("sessionId");
         when(viewBinder.getDeviceYear()).thenReturn(2009);
-        presenter.onBarcode("barcode");
+        presenter.onBarcode("barcode", true);
 
         verify(productList).createProductPlaceholder();
         verify(api).getByCode("barcode", "sessionId", true);
@@ -184,9 +184,10 @@ public class MainPresenterTest {
     public void testLaunchReportActivity() throws Exception {
         final SearchResult searchResult = SearchUtil.createSearchResult(1);
         searchResult.product_id = 123;
+        searchResult.code = "12345678";
         presenter.reportButtonClicked(new ReportButtonClickedEvent(searchResult));
 
-        verify(viewBinder).launchReportActivity("123");
+        verify(viewBinder).launchReportActivity("123", "12345678");
     }
 
     @Test

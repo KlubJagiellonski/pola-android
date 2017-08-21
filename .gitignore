@@ -8,5 +8,6 @@ app/fabric.properties
 *.iml
 pola-android-release-key.keystore
 keystore.properties
+app/google-services.json
 
 
