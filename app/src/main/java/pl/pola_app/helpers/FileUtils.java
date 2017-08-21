@@ -8,11 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FileUtils {
+
+    public static final int QUALITY = 90;
+
     public static void saveBitmap(Bitmap bitmap, String picturePath) {
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(picturePath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, out);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

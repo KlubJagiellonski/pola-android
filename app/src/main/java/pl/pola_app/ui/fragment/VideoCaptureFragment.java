@@ -141,6 +141,7 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
 
     @Override
     public void onDestroy() {
+        cameraCompat.release();
         videoCapturePresenter.onDestroy();
         videoCapturePresenter = null;
         ButterKnife.unbind(this);

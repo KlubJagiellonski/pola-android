@@ -17,6 +17,8 @@ public abstract class CameraCompat {
 
     public abstract void takePicture(OnPhotoTakenSuccessListener onPhotoTakenSuccessListener);
 
+    public abstract void release();
+
     public interface OnPhotoTakenSuccessListener {
         void onPhotoTakenSuccess(Bitmap bitmap, int originalWidth, int originalHeight, int width, int height);
     }
