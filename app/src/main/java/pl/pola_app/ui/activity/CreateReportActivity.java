@@ -166,7 +166,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void launchCamera() {
-        Nammu.askForPermission(CreateReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionWriteCallback);
+        String permissions[] = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        Nammu.askForPermission(CreateReportActivity.this, permissions, permissionCallback);
     }
 
     @OnClick(R.id.send_button)
@@ -371,7 +372,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         super.onDestroy();
     }
 
-    final PermissionCallback permissionWriteCallback = new PermissionCallback() {
+    final PermissionCallback permissionCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
             EasyImage.openCamera(CreateReportActivity.this, 0);
