@@ -40,8 +40,8 @@
     <string name="action_partners">Partnerzy</string>
     <string name="action_mail">Napisz do nas</string>
     <string name="action_rate">Oceń Polę</string>
-    <string name="action_fb">Pola na Facebooku</string>
-    <string name="action_twitter">Pola na Twitterze</string>
+    <string name="action_fb">Facebook</string>
+    <string name="action_twitter">Twitter</string>
     <string name="send_email_picker">Wyślij email…</string>
     <string name="type_grey">type_grey</string>
     <string name="type_white">type_white</string>
@@ -76,4 +76,5 @@
     <string name="seconds_a">a</string>
     <!-- TODO to jest tekst nie zatwierdzony przez nikogo -->
     <string name="thank_you_for_teaching">Dziękujemy!</string>
+    <string name="informations">Informacje</string>
 </resources>

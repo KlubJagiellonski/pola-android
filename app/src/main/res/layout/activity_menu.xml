@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/informations"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/menu_back_iv"
+            android:src="@drawable/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/menu_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/menu_separator" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/activity_menu_about_app_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_about" />
+
+            <TextView
+                android:id="@+id/activity_menu_user_manual_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_metodology" />
+
+            <TextView
+                android:id="@+id/activity_menu_about_kj_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_club" />
+
+            <TextView
+                android:id="@+id/activity_menu_team_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_team" />
+
+            <TextView
+                android:id="@+id/activity_menu_partners_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_partners" />
+
+            <TextView
+                android:id="@+id/activity_found_bug_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_bug" />
+
+            <TextView
+                android:id="@+id/activity_rate_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_rate" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_facebook_tv"
+                    style="@style/MenuTextViewSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/menu_margin"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight=".5"
+                    android:text="@string/action_fb" />
+
+                <TextView
+                    android:id="@+id/activity_twitter_tv"
+                    style="@style/MenuTextViewSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/menu_margin"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight=".5"
+                    android:text="@string/action_twitter" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/app_build_tv"
+                style="@style/TextViewAppBuild"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

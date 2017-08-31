@@ -41,7 +41,7 @@
             android:theme="@style/AppThemeLight"/>
         <activity
             android:name=".ui.activity.ActivityWebView"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:parentActivityName=".ui.activity.MenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeWeb" />
         <activity
@@ -50,6 +50,9 @@
             android:screenOrientation="portrait"
             android:keepScreenOn="true"
             android:theme="@style/AppThemeLight"/>
+        <activity android:name=".ui.activity.MenuActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
