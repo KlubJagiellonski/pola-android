@@ -77,4 +77,7 @@
     <!-- TODO to jest tekst nie zatwierdzony przez nikogo -->
     <string name="thank_you_for_teaching">Dziękujemy!</string>
     <string name="informations">Informacje</string>
+    <string name="pola_application">Aplikacja Pola</string>
+    <string name="version">wersja</string>
+    <string name="kj_copyright">© Klub Jagielloński</string>
 </resources>

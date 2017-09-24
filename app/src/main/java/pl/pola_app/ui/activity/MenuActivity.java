@@ -42,9 +42,10 @@ public class MenuActivity extends AppCompatActivity {
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
 
-        String appBuild = "Aplikacja Pola\n" +
-                "wersja " + versionName + " (" + Integer.toString(versionCode) + ")\n" +
-                "© Klub Jagielloński";
+        String appBuild = getString(R.string.pola_application) +
+                getString(R.string.version) + versionName +
+                " (" + Integer.toString(versionCode) + ")\n" +
+                getString(R.string.kj_copyright);
 
         appBuildTv.setText(appBuild);
     }
