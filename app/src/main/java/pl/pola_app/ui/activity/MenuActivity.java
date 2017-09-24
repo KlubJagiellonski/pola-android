@@ -42,8 +42,8 @@ public class MenuActivity extends AppCompatActivity {
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
 
-        String appBuild = getString(R.string.pola_application) +
-                getString(R.string.version) + versionName +
+        String appBuild = getString(R.string.pola_application) + "\n" +
+                getString(R.string.version) + " " + versionName +
                 " (" + Integer.toString(versionCode) + ")\n" +
                 getString(R.string.kj_copyright);
 
