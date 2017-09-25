@@ -39,15 +39,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setupView() {
-        int versionCode = BuildConfig.VERSION_CODE;
-        String versionName = BuildConfig.VERSION_NAME;
-
-        String appBuild = getString(R.string.pola_application) + "\n" +
-                getString(R.string.version) + " " + versionName +
-                " (" + Integer.toString(versionCode) + ")\n" +
-                getString(R.string.kj_copyright);
-
-        appBuildTv.setText(appBuild);
+        appBuildTv.setText(getString(R.string.pola_application, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
     }
 
     @OnClick(R.id.menu_back_iv)
