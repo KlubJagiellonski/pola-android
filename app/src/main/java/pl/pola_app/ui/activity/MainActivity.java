@@ -3,9 +3,7 @@ package pl.pola_app.ui.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,7 +33,6 @@ import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.SessionId;
 import pl.pola_app.helpers.SettingsPreference;
-import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
@@ -296,74 +293,9 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_about:
-                logger.logMenuItemOpened("O Aplikacji Pola", sessionId.get());
-                intent = new Intent(this, ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_ABOUT);
-                startActivity(intent);
-                return true;
-            case R.id.action_metodology:
-                logger.logMenuItemOpened("Instrukcja obsługi", sessionId.get());
-                intent = new Intent(this, ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_METHOD);
-                startActivity(intent);
-                return true;
-            case R.id.action_club:
-                logger.logMenuItemOpened("O Klubie Jagiellońskim", sessionId.get());
-                intent = new Intent(this, ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_KJ);
-                startActivity(intent);
-                return true;
-            case R.id.action_team:
-                logger.logMenuItemOpened("Zespół", sessionId.get());
-                intent = new Intent(this, ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_TEAM);
-                startActivity(intent);
-                return true;
-            case R.id.action_partners:
-                logger.logMenuItemOpened("Partnerzy", sessionId.get());
-                intent = new Intent(this, ActivityWebView.class);
-                intent.putExtra("url", Utils.URL_POLA_PARTNERS);
-                startActivity(intent);
-                return true;
-            case R.id.action_bug:
-                logger.logMenuItemOpened("Zgłoś błąd w danych", sessionId.get());
-                intent = new Intent(this, CreateReportActivity.class);
-                intent.setAction("product_report");
-                startActivity(intent);
-                return true;
-            case R.id.action_mail:
-                logger.logMenuItemOpened("Napisz do nas", sessionId.get());
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Utils.POLA_MAIL, null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pola");
-                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_picker)));
-                return true;
-            case R.id.action_rate:
-                logger.logMenuItemOpened("Oceń Polę", sessionId.get());
-                Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
-                }
-                return true;
-            case R.id.action_fb:
-                logger.logMenuItemOpened("Pola na Facebooku", sessionId.get());
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB));
-                startActivity(intent);
-                return true;
-            case R.id.action_twitter:
-                logger.logMenuItemOpened("Pola na Twitterze", sessionId.get());
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_TWITTER));
-                startActivity(intent);
-                return true;
+            case R.id.action_menu:
+                startActivity(new Intent(this, MenuActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }
