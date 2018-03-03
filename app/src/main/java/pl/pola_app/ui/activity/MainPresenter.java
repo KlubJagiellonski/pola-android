@@ -118,10 +118,10 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
         final SearchResult searchResult = response.body();
         currentSearchResult = searchResult;
-        logger.logContentView(searchResult.name + "",
+        logger.logContentView((searchResult.name != null) ? searchResult.name + "" : "empty",
                 "company_received",
                 String.valueOf(searchResult.product_id),
-                String.valueOf(searchResult.code),
+                (searchResult.code != null) ? searchResult.code : "empty",
                 sessionId.get(),
                 searchResult.askForPics());
         productList.addProduct(searchResult);

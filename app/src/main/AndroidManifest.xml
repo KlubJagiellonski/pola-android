@@ -19,13 +19,12 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".ui.activity.MainActivity"
-            android:label="@string/app_name"
+            android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,6 +32,13 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="6a4f6710db1c4c62907f73a43eb5e68675cd2c7a" />
+
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
+        </activity>
 
         <activity
             android:name=".ui.activity.CreateReportActivity"
