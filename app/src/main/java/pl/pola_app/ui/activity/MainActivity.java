@@ -24,7 +24,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     Bus eventBus;
     @Inject
     SettingsPreference settingsPreference;
-    @Bind(R.id.products_list)
+    @BindView(R.id.products_list)
     RecyclerView productsListView;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.open_keyboard_button)
+    @BindView(R.id.open_keyboard_button)
     FloatingActionButton openKeyboard;
-    @Bind(R.id.teach_pola_main_button)
+    @BindView(R.id.teach_pola_main_button)
     Button teachPolaButton;
 
     private ScannerFragment scannerFragment;
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
         setupActionBar();
+
+//        onBarcode("5904277719045", false);
 
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override

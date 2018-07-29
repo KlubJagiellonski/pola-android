@@ -27,26 +27,47 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/company_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center_vertical"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/heart_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="13dp"
+                android:layout_marginStart="13dp"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/ic_heart" />
+
+        </RelativeLayout>
+
 
         <ProgressBar
+            android:id="@+id/score_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:progressDrawable="@drawable/score_bar"
-            android:id="@+id/score_bar" />
+            android:progressDrawable="@drawable/score_bar" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

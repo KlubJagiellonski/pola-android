@@ -15,7 +15,7 @@ import android.widget.VideoView;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.R;
@@ -28,19 +28,19 @@ public class HelpMessageFragment extends Fragment {
     private HelpMessageFragmentDelegate delegate;
 
 
-    @Bind(R.id.do_not_show_this_screen_again)
+    @BindView(R.id.do_not_show_this_screen_again)
     CheckBox doNotShowAgain;
 
-    @Bind(R.id.ask_fro_pics_title)
+    @BindView(R.id.ask_fro_pics_title)
     TextView title;
 
-    @Bind(R.id.ask_fro_pics_text)
+    @BindView(R.id.ask_fro_pics_text)
     TextView messageText;
 
-    @Bind(R.id.make_movie_button)
+    @BindView(R.id.make_movie_button)
     TextView makeMovieButton;
 
-    @Bind(R.id.sample_video_view)
+    @BindView(R.id.sample_video_view)
     VideoView videoView;
 
     @Override
@@ -93,7 +93,6 @@ public class HelpMessageFragment extends Fragment {
     @Override
     public void onDestroy() {
         delegate = null;
-        ButterKnife.unbind(this);
         super.onDestroy();
     }
 

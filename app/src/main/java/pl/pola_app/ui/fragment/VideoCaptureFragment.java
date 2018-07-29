@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
@@ -50,14 +50,14 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
     @Inject
     VideoCapturePresenter videoCapturePresenter;
 
-    @Bind(R.id.video_capture_button)
+    @BindView(R.id.video_capture_button)
     Button videoCaptureButton;
 
-    @Bind(R.id.video_capture_timer)
+    @BindView(R.id.video_capture_timer)
     TextView timer;
 
 
-    @Bind(R.id.video_capture_surface_view)
+    @BindView(R.id.video_capture_surface_view)
     SurfaceView videoCaptureSurfaceView;
 
     ProgressDialog progressDialog;
@@ -150,7 +150,6 @@ public class VideoCaptureFragment extends Fragment implements VideoCaptureView, 
         cameraCompat.release();
         videoCapturePresenter.onDestroy();
         videoCapturePresenter = null;
-        ButterKnife.unbind(this);
         super.onDestroy();
     }
 

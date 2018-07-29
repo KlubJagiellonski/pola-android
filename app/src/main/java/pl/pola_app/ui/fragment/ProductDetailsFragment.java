@@ -3,6 +3,7 @@ package pl.pola_app.ui.fragment;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -22,65 +23,75 @@ import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.helpers.EventLogger;
+import pl.pola_app.helpers.SessionId;
+import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.SearchResult;
+import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
 public class ProductDetailsFragment extends DialogFragment {
 
-    @Bind(R.id.product_info_card)
+    @BindView(R.id.product_info_card)
     CardView productInfoCard;
 
-    @Bind(R.id.company_name)
+    @BindView(R.id.company_name)
     TextView tv_companyName;
 
-    @Bind(R.id.plscore_details_progressbar)
+    @BindView(R.id.plscore_details_progressbar)
     ProgressBar plScoreBar;
 
-    @Bind(R.id.plscore_details_text)
+    @BindView(R.id.plscore_details_text)
     TextView plScoreText;
 
-    @Bind(R.id.plcapital_details_progressbar)
+    @BindView(R.id.plcapital_details_progressbar)
     ProgressBar plCapitalBar;
 
-    @Bind(R.id.plcapital_details_text)
+    @BindView(R.id.plcapital_details_text)
     TextView plCapitalText;
 
-    @Bind(R.id.buttonWorkers)
+    @BindView(R.id.buttonWorkers)
     ImageButton buttonWorkers;
 
-    @Bind(R.id.buttonGlobent)
+    @BindView(R.id.buttonGlobent)
     ImageButton buttonGlobent;
 
-    @Bind(R.id.buttonRegistered)
+    @BindView(R.id.buttonRegistered)
     ImageButton buttonRegistered;
 
-    @Bind(R.id.buttonRnd)
+    @BindView(R.id.buttonRnd)
     ImageButton buttonRnd;
 
-    @Bind(R.id.message)
+    @BindView(R.id.message)
     TextView reportMessage;
 
-    @Bind(R.id.teach_pola_button)
+    @BindView(R.id.teach_pola_button)
     Button teachPolaButton;
 
-    @Bind(R.id.report_button)
+    @BindView(R.id.report_button)
     Button reportButton;
 
-    @Bind(R.id.tv_altText)
+    @BindView(R.id.tv_altText)
     TextView altText;
 
-    @Bind(R.id.tv_description)
+    @BindView(R.id.tv_description)
     TextView description;
 
-    @Bind(R.id.pl_data_layout)
+    @BindView(R.id.pl_data_layout)
     LinearLayout plDataLayout;
+
+    @BindView(R.id.isFriendLayout)
+    LinearLayout isFriendLayout;
+
+    @BindView(R.id.isFriendText)
+    TextView isFriendText;
 
     @Inject
     Bus eventBus;
@@ -91,6 +102,9 @@ public class ProductDetailsFragment extends DialogFragment {
     private SearchResult searchResult;
 
     private ProductDetailsFragmentDelegate delegate;
+
+    private EventLogger logger;
+    private SessionId sessionId;
 
     public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -120,6 +134,9 @@ public class ProductDetailsFragment extends DialogFragment {
         if (getArguments() != null) {
             searchResult = Parcels.unwrap(getArguments().getParcelable(SearchResult.class.getName()));
         }
+
+        sessionId = SessionId.create(getActivity());
+        logger = new EventLogger(getActivity());
     }
 
     @Override
@@ -209,6 +226,11 @@ public class ProductDetailsFragment extends DialogFragment {
             teachPolaButton.setVisibility(View.GONE);
         }
 
+        if(searchResult.is_friend) {
+            isFriendLayout.setVisibility(View.VISIBLE);
+            isFriendText.setText(searchResult.friend_text);
+        }
+
         productInfoCard.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -243,5 +265,13 @@ public class ProductDetailsFragment extends DialogFragment {
     @OnClick(R.id.report_button)
     public void report() {
         eventBus.post(new ReportButtonClickedEvent(searchResult));
+    }
+
+    @OnClick(R.id.isFriendLayout)
+    void onFriendsClick() {
+        logger.logMenuItemOpened("Przyjaciele Poli", sessionId.get());
+        Intent intent = new Intent(getActivity(), ActivityWebView.class);
+        intent.putExtra("url", Utils.URL_POLA_FRIENDS);
+        startActivity(intent);
     }
 }

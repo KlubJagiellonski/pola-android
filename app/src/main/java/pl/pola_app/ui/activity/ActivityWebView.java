@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
 import pl.pola_app.helpers.Utils;
 
 public class ActivityWebView extends AppCompatActivity {
-    @Bind(R.id.web_view)
+    @BindView(R.id.web_view)
     WebView webView;
 
     @Override

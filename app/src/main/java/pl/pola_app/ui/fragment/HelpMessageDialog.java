@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.R;
@@ -48,7 +48,6 @@ public class HelpMessageDialog extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
     }
 

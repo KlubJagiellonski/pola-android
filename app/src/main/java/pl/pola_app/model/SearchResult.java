@@ -15,12 +15,15 @@ public class SearchResult {
     public Integer plRnD;
     public Integer plRegistered;
     public Integer plNotGlobEnt;
+    public Boolean is_friend;
 
     public String description;
 
     public String report_text;
     public String report_button_text;
     public String report_button_type;
+
+    public String friend_text;
 
     public Ai ai;
 

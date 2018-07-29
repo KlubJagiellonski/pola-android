@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
@@ -43,7 +43,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Inject
     Bus eventBus;
 
-    @Bind(R.id.scanner_view)
+    @BindView(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
 
 
@@ -111,7 +111,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     public void resumeScanning() {

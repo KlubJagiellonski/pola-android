@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.MediaType;
@@ -60,9 +60,9 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private Call<ReportResult> reportResultCall;
     private SessionId sessionId;
 
-    @Bind(R.id.descripton_editText)
+    @BindView(R.id.descripton_editText)
     EditText descriptionEditText;
-    @Bind(R.id.linearImageViews)
+    @BindView(R.id.linearImageViews)
     LinearLayout linearImageViews;
     ArrayList<Bitmap> bitmaps = new ArrayList<>();
     ArrayList<String> bitmapsPaths = new ArrayList<>();//As we save file, it would be good to delete them after we send them

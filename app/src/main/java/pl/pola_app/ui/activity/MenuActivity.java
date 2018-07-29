@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.pola_app.BuildConfig;
@@ -22,7 +22,7 @@ import pl.pola_app.helpers.Utils;
 
 public class MenuActivity extends AppCompatActivity {
 
-    @Bind(R.id.app_build_tv) TextView appBuildTv;
+    @BindView(R.id.app_build_tv) TextView appBuildTv;
 
     private EventLogger logger;
     private SessionId sessionId;
@@ -84,6 +84,14 @@ public class MenuActivity extends AppCompatActivity {
         logger.logMenuItemOpened("Partnerzy", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_PARTNERS);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.activity_menu_friends_tv)
+    void onFriendsClick() {
+        logger.logMenuItemOpened("Przyjaciele Poli", sessionId.get());
+        Intent intent = new Intent(this, ActivityWebView.class);
+        intent.putExtra("url", Utils.URL_POLA_FRIENDS);
         startActivity(intent);
     }
 

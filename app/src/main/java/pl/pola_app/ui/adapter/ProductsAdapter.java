@@ -9,10 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
@@ -74,17 +75,20 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        @Bind(R.id.company_name)
+        @BindView(R.id.company_name)
         TextView companyName;
 
-        @Bind(R.id.score_bar)
+        @BindView(R.id.score_bar)
         ProgressBar plScore;
 
-        @Bind(R.id.view_product_item)
+        @BindView(R.id.view_product_item)
         CardView productCard;
 
-        @Bind(R.id.progressBar)
+        @BindView(R.id.progressBar)
         ProgressBar progress;
+
+        @BindView(R.id.heart_image)
+        ImageView heartIcon;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -110,6 +114,10 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
                 plScore.setProgress(searchResult.plScore);
             } else {
                 plScore.setProgress(0);
+            }
+
+            if(searchResult.is_friend) {
+                heartIcon.setVisibility(View.VISIBLE);
             }
         }
 
