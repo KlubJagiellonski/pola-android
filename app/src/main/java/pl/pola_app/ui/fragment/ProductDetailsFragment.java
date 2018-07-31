@@ -269,7 +269,11 @@ public class ProductDetailsFragment extends DialogFragment {
 
     @OnClick(R.id.isFriendLayout)
     void onFriendsClick() {
-        logger.logMenuItemOpened("Przyjaciele Poli", sessionId.get());
+        Bundle bundle = new Bundle();
+        bundle.putString("item", "Przyjaciele Poli");
+        bundle.putString("device_id", sessionId.get());
+        logger.logCustom("product_details_friend", bundle);
+
         Intent intent = new Intent(getActivity(), ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_FRIENDS);
         startActivity(intent);

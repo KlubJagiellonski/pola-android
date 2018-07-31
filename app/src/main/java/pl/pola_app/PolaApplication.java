@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,9 +65,9 @@ public class PolaApplication extends Application {
                 return;
             }
             if(BuildConfig.USE_FIREBASE) {
-                FirebaseCrash.logcat(priority, tag, message);
+                Crashlytics.log(priority, tag, message);
                 if(t != null) {
-                    FirebaseCrash.report(t);
+                    Crashlytics.logException(t);
                 }
             }
 

@@ -7,6 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -111,7 +112,7 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.11'
     implementation 'com.github.tajchert:nammu:1.2.1'
     implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-crash:16.0.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
     annotationProcessor 'org.parceler:parceler:1.1.11'

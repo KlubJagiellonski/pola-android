@@ -2,10 +2,9 @@ package pl.pola_app.helpers;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import pl.pola_app.BuildConfig;
 
@@ -29,13 +28,11 @@ public class EventLogger {
         FirebaseAnalytics.getInstance(c).logEvent("scan_code", bundle);
     }
 
-    public void logCustom(String eventName, Pair<String, String> attribute) {
+    public void logCustom(String eventName, Bundle bundle) {
         if (!BuildConfig.USE_FIREBASE) {
             return;
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putString(attribute.first, attribute.second);
         FirebaseAnalytics.getInstance(c).logEvent(eventName, bundle);
     }
 
@@ -59,7 +56,7 @@ public class EventLogger {
         }
 
         try {
-            FirebaseCrash.report(throwable);
+            Crashlytics.logException(throwable);
         } catch (Exception e) {
             e.printStackTrace();
         }
