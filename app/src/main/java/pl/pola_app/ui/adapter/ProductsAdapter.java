@@ -116,7 +116,7 @@ public class ProductsAdapter extends android.support.v7.widget.RecyclerView.Adap
                 plScore.setProgress(0);
             }
 
-            if(searchResult.is_friend) {
+            if(searchResult.is_friend != null && searchResult.is_friend) {
                 heartIcon.setVisibility(View.VISIBLE);
             }
         }
