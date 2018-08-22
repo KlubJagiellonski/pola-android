@@ -226,7 +226,7 @@ public class ProductDetailsFragment extends DialogFragment {
             teachPolaButton.setVisibility(View.GONE);
         }
 
-        if(searchResult.is_friend) {
+        if(searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
             isFriendLayout.setVisibility(View.VISIBLE);
             isFriendText.setText(searchResult.friend_text);
         }
