@@ -13,7 +13,7 @@ public class Utils {
     public static final String URL_POLA_TEAM = "https://www.pola-app.pl/m/team";
     public static final String URL_POLA_PARTNERS = "https://www.pola-app.pl/m/partners";
     public static final String URL_POLA_FRIENDS = "https://www.pola-app.pl/m/friends";
-    public static final String POLA_MAIL = "kontakt@pola-app.pl";
+    public static final String POLA_MAIL = "aplikacja.pola@gmail.com";
     public static final String URL_POLA_GOOGLEPLAY = "https://play.google.com/store/apps/details?id=pl.pola_app";
     public static final String URL_POLA_FB = "https://www.facebook.com/app.pola";
     public static final String URL_POLA_TWITTER = "https://twitter.com/pola_app";
