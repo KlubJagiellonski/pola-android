@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import pl.pola_app.TestApplication;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static pl.pola_app.testutil.SearchUtil.createSearchResult;
 
 @Config(application = TestApplication.class)
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ProductListTest {
     private ProductList productList;
 
