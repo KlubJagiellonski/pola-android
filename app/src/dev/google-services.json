@@ -6,7 +6,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "",
+        "mobilesdk_app_id": "1:123456789123:android:1234567890123456",
         "android_client_info": {
           "package_name": "pl.pola_app"
         }
