@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -59,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     Toolbar toolbar;
     @BindView(R.id.open_keyboard_button)
     FloatingActionButton openKeyboard;
-    @BindView(R.id.teach_pola_main_button)
-    Button teachPolaButton;
+    @BindView(R.id.support_pola_app)
+    Button supportPolaApp;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
@@ -114,10 +115,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @OnClick(R.id.flash_icon)
     public void onFlashIconClicked(View view) {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.scanner_fragment);
-        if(fragment != null && fragment instanceof FlashActionListener) {
+        if (fragment != null && fragment instanceof FlashActionListener) {
             final FlashActionListener flashActionListener = (FlashActionListener) fragment;
             flashActionListener.onFlashAction();
-            if(view != null && view instanceof ImageView) {
+            if (view != null && view instanceof ImageView) {
                 ((ImageView) view).setImageDrawable(ContextCompat.getDrawable(this,
                         flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_white_48dp : R.drawable.ic_flash_on_white_48dp));
             }
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
 
     }
+
     private void setupActionBar() {
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.app_name));
@@ -163,10 +165,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
         if (searchResult.askForPics()) {
-            teachPolaButton.setVisibility(View.VISIBLE);
-            teachPolaButton.setText(searchResult.askForPicsPreview());
+            supportPolaApp.setVisibility(View.VISIBLE);
+            supportPolaApp.setText(searchResult.donate.title);
         } else {
-            teachPolaButton.setVisibility(View.GONE);
+            supportPolaApp.setVisibility(View.GONE);
         }
         mainPresenter.setCurrentSearchResult(searchResult);
     }
@@ -201,9 +203,9 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         //settingsPreference.neverDisplayHelpMessageDialog();
     }
 
-    @OnClick(R.id.teach_pola_main_button)
-    public void onTeachPolaButtonClick() {
-        mainPresenter.onTeachPolaButtonClick();
+    @OnClick(R.id.support_pola_app)
+    public void onSupportPolaButtonClick() {
+        mainPresenter.onSupportPolaButtonClick();
     }
 
     @Override
@@ -212,18 +214,24 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     }
 
     @Override
-    public void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult) {
+    public void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult) {
         if (isVisible) {
-            teachPolaButton.setVisibility(View.VISIBLE);
-            teachPolaButton.setText(searchResult.askForPicsPreview());
+            supportPolaApp.setVisibility(View.VISIBLE);
+            supportPolaApp.setText(searchResult.askForPicsPreview());
             return;
         }
-        teachPolaButton.setVisibility(View.GONE);
+        supportPolaApp.setVisibility(View.GONE);
     }
 
     @Override
     public void displayVideoActivity(SearchResult searchResult, String deviceId) {
         startActivityForResult(VideoMessageActivity.IntentFactory.forStart(MainActivity.this, searchResult, deviceId), TEACH_POLA);
+    }
+
+    @Override
+    public void openWww(SearchResult searchResult, String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 
     public void onBarcode(String barcode, boolean fromCamera) {
@@ -234,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != RESULT_OK) {
+        if (resultCode != RESULT_OK) {
             return;
         }
         if (requestCode == TEACH_POLA) {

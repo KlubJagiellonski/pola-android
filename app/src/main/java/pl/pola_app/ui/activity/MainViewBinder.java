@@ -26,7 +26,9 @@ interface MainViewBinder {
 
     void displayVideoActivity(SearchResult searchResult, String deviceId);
 
-    void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult);
+    void openWww(SearchResult searchResult, String url);
+
+    void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult);
 
     int getDeviceYear();
 }

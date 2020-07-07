@@ -27,6 +27,8 @@ public class SearchResult {
 
     public Ai ai;
 
+    public Donate donate;
+
     public boolean askForPics() {
         return ai != null && ai.ask_for_pics;
     }
