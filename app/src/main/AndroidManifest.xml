@@ -46,12 +46,6 @@
             android:parentActivityName=".ui.activity.MenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeWeb" />
-        <activity
-            android:name=".ui.activity.VideoMessageActivity"
-            android:parentActivityName=".ui.activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:keepScreenOn="true"
-            android:theme="@style/AppThemeLight"/>
         <activity android:name=".ui.activity.MenuActivity"
             android:parentActivityName=".ui.activity.MainActivity"
             android:screenOrientation="portrait"/>

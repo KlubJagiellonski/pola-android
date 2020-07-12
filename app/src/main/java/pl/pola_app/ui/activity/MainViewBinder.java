@@ -22,10 +22,6 @@ interface MainViewBinder {
 
     void launchReportActivity(String productId, String code);
 
-    void displayHelpMessageDialog(SearchResult searchResult);
-
-    void displayVideoActivity(SearchResult searchResult, String deviceId);
-
     void openWww(SearchResult searchResult, String url);
 
     void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult);

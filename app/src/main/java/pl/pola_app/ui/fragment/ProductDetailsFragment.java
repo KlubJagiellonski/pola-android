@@ -215,12 +215,12 @@ public class ProductDetailsFragment extends DialogFragment {
             }
         }
 
-        if(searchResult.askForPics()) {
-            teachPolaButton.setText(searchResult.askForPicsPreview());
+        if(searchResult.askForSupport()) {
+            teachPolaButton.setText(searchResult.donate.title);
             teachPolaButton.setVisibility(View.VISIBLE);
             teachPolaButton.setOnClickListener((view) ->{
                 if(delegate != null)
-                delegate.onTeachPolaAction(searchResult);
+                delegate.onSupportPolaAction(searchResult);
             });
         }else {
             teachPolaButton.setVisibility(View.GONE);

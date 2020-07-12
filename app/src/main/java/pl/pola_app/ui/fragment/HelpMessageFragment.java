@@ -75,9 +75,9 @@ public class HelpMessageFragment extends Fragment {
             throw new IllegalArgumentException("Please pass SearchResult as fragment args");
         }
         SearchResult searchResult = Parcels.unwrap(arguments.getParcelable(SEARCH_RESULT));
-        title.setText(searchResult.askForPicsTitle());
-        messageText.setText(searchResult.askForPicsText());
-        makeMovieButton.setText(searchResult.askForPicsButtonStart());
+        title.setText(searchResult.donate.title);
+        messageText.setText(searchResult.donate.title);
+        makeMovieButton.setText(searchResult.donate.title);
     }
 
     private void prepareVideoView() {

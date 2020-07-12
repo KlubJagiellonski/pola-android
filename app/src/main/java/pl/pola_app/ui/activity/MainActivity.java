@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
-        if (searchResult.askForPics()) {
+        if (searchResult.askForSupport()) {
             supportPolaApp.setVisibility(View.VISIBLE);
             supportPolaApp.setText(searchResult.donate.title);
         } else {
@@ -190,42 +190,24 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         productsListView.setAdapter(adapter);
     }
 
-    @Override
-    public void displayHelpMessageDialog(SearchResult searchResult) {
-        if (!settingsPreference.shouldDisplayHelpMessageDialog()) {
-            //TODO in current implementation this dialog will never shown.
-            return;
-        }
-        final HelpMessageDialog helpMessageDialog = HelpMessageDialog.newInstance();
-        helpMessageDialog.setOnWantHelpButtonClickListener(() -> mainPresenter.onWantHelpClick(searchResult));
-        helpMessageDialog.show(getSupportFragmentManager(), HelpMessageDialog.class.getSimpleName());
-        //TODO uncomment before review
-        //settingsPreference.neverDisplayHelpMessageDialog();
-    }
-
     @OnClick(R.id.support_pola_app)
     public void onSupportPolaButtonClick() {
         mainPresenter.onSupportPolaButtonClick();
     }
 
     @Override
-    public void onTeachPolaAction(SearchResult searchResult) {
-        mainPresenter.onTeachPolaClick(searchResult);
+    public void onSupportPolaAction(SearchResult searchResult) {
+        mainPresenter.onSupportPolaButtonClick();
     }
 
     @Override
     public void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult) {
         if (isVisible) {
             supportPolaApp.setVisibility(View.VISIBLE);
-            supportPolaApp.setText(searchResult.askForPicsPreview());
+            supportPolaApp.setText(searchResult.donate.title);
             return;
         }
         supportPolaApp.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void displayVideoActivity(SearchResult searchResult, String deviceId) {
-        startActivityForResult(VideoMessageActivity.IntentFactory.forStart(MainActivity.this, searchResult, deviceId), TEACH_POLA);
     }
 
     @Override
@@ -246,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
             return;
         }
         if (requestCode == TEACH_POLA) {
-            mainPresenter.onTeachPolaFinished();
+            mainPresenter.onSupportPolaFinished();
         }
     }
 

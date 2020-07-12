@@ -36,7 +36,7 @@ public class EventLogger {
         FirebaseAnalytics.getInstance(c).logEvent(eventName, bundle);
     }
 
-    public void logContentView(String contentName, String contentType, String contentId, String code, String deviceId, boolean aiRequested) {
+    public void logContentView(String contentName, String contentType, String contentId, String code, String deviceId) {
         if (!BuildConfig.USE_FIREBASE) {
             return;
         }
@@ -46,7 +46,6 @@ public class EventLogger {
         bundle.putString("device_id", deviceId);
         bundle.putString("product_id", contentId);
         bundle.putString("code", code);
-        bundle.putBoolean("ai_requested", aiRequested);
         FirebaseAnalytics.getInstance(c).logEvent(contentType, bundle);
     }
 

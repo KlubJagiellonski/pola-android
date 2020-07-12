@@ -119,14 +119,10 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
                 "company_received",
                 String.valueOf(searchResult.product_id),
                 (searchResult.code != null) ? searchResult.code : "empty",
-                sessionId.get(),
-                searchResult.askForPics());
+                sessionId.get());
         productList.addProduct(searchResult);
         viewBinder.resumeScanning();
-        viewBinder.setSupportPolaAppButtonVisibility(searchResult.askForPics(), searchResult);
-        if(searchResult.askForPics()) {
-            viewBinder.displayHelpMessageDialog(searchResult);
-        }
+        viewBinder.setSupportPolaAppButtonVisibility(searchResult.askForSupport(), searchResult);
     }
 
     @Override
@@ -146,8 +142,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
                 "card_opened",
                 String.valueOf(searchResult.product_id),
                 searchResult.code,
-                sessionId.get(),
-                searchResult.askForPics());
+                sessionId.get());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
     }
@@ -174,20 +169,12 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         viewBinder.launchReportActivity(productId, code);
     }
 
-    public void onTeachPolaClick(SearchResult searchResult) {
-        viewBinder.displayVideoActivity(searchResult, sessionId.get());
-    }
-
-    public void onWantHelpClick(SearchResult searchResult) {
-        viewBinder.displayVideoActivity(searchResult, sessionId.get());
-    }
-
     public void setCurrentSearchResult(SearchResult currentSearchResult) {
         this.currentSearchResult = currentSearchResult;
     }
 
     public void onBackStackChange(boolean isNotBackStackEmpty){
-            viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForPics(), currentSearchResult);
+            viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
     }
 
     public void onSupportPolaButtonClick() {
@@ -196,9 +183,9 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         }
     }
 
-    public void onTeachPolaFinished() {
+    public void onSupportPolaFinished() {
         if (currentSearchResult != null) {
-            currentSearchResult.ai = null;
+            currentSearchResult.donate = null;
             viewBinder.setSupportPolaAppButtonVisibility(false, currentSearchResult);
 
         }
