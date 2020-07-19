@@ -16,22 +16,25 @@
         android:layout_alignParentTop="true"
         tools:layout="@layout/fragment_scanner" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent">
+    <ImageView
+        android:id="@+id/flash_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_margin="14dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_flash_on_white_48dp" />
 
-
-        <ImageView
-            android:id="@+id/flash_icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:layout_margin="14dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_flash_on_white_48dp" />
-    </android.support.v7.widget.Toolbar>
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="14dp"
+        android:src="@drawable/menu" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/products_list"

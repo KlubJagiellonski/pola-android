@@ -9,10 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +38,6 @@ import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.event.FlashActionListener;
 import pl.pola_app.ui.fragment.BarcodeListener;
-import pl.pola_app.ui.fragment.HelpMessageDialog;
 import pl.pola_app.ui.fragment.KeyboardFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
@@ -49,19 +46,19 @@ import pl.tajchert.nammu.Nammu;
 
 public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, ProductDetailsFragmentDelegate {
 
-    private static final int TEACH_POLA = 1000;
+    private static final int DONATE_POLA = 1000;
     @Inject
     Bus eventBus;
     @Inject
     SettingsPreference settingsPreference;
     @BindView(R.id.products_list)
     RecyclerView productsListView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.open_keyboard_button)
     FloatingActionButton openKeyboard;
     @BindView(R.id.support_pola_app)
     Button supportPolaApp;
+    @BindView(R.id.menu)
+    ImageView menu;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
@@ -94,21 +91,18 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
-        setupActionBar();
-
-//        onBarcode("5904277719045", false);
-
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
-                mainPresenter.onBackStackChange(isNotBackStackEmpty);
-                if (isNotBackStackEmpty) {
-                    openKeyboard.hide();
-                } else {
-                    openKeyboard.show();
-                }
+        getFragmentManager().addOnBackStackChangedListener(() -> {
+            final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
+            mainPresenter.onBackStackChange(isNotBackStackEmpty);
+            if (isNotBackStackEmpty) {
+                openKeyboard.hide();
+            } else {
+                openKeyboard.show();
             }
+        });
+
+        menu.setOnClickListener(view -> {
+            startActivity(new Intent(this, MenuActivity.class));
         });
     }
 
@@ -125,17 +119,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         }
 
 
-    }
-
-    private void setupActionBar() {
-        setSupportActionBar(toolbar);
-        setTitle(getString(R.string.app_name));
-        final ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setTitle("");
-            supportActionBar.setDisplayHomeAsUpEnabled(false);
-            supportActionBar.setHomeButtonEnabled(false);
-        }
     }
 
     @Override
@@ -227,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         if (resultCode != RESULT_OK) {
             return;
         }
-        if (requestCode == TEACH_POLA) {
+        if (requestCode == DONATE_POLA) {
             mainPresenter.onSupportPolaFinished();
         }
     }
