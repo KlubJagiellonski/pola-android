@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 
-import com.facebook.device.yearclass.YearClass;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +23,6 @@ import pl.pola_app.ui.fragment.BarcodeListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
@@ -122,14 +119,10 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
                 "company_received",
                 String.valueOf(searchResult.product_id),
                 (searchResult.code != null) ? searchResult.code : "empty",
-                sessionId.get(),
-                searchResult.askForPics());
+                sessionId.get());
         productList.addProduct(searchResult);
         viewBinder.resumeScanning();
-        viewBinder.setTeachPolaButtonVisibility(searchResult.askForPics(), searchResult);
-        if(searchResult.askForPics()) {
-            viewBinder.displayHelpMessageDialog(searchResult);
-        }
+        viewBinder.setSupportPolaAppButtonVisibility(searchResult.askForSupport(), searchResult);
     }
 
     @Override
@@ -149,8 +142,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
                 "card_opened",
                 String.valueOf(searchResult.product_id),
                 searchResult.code,
-                sessionId.get(),
-                searchResult.askForPics());
+                sessionId.get());
         viewBinder.turnOffTorch();
         viewBinder.openProductDetails(searchResult);
     }
@@ -177,32 +169,24 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         viewBinder.launchReportActivity(productId, code);
     }
 
-    public void onTeachPolaClick(SearchResult searchResult) {
-        viewBinder.displayVideoActivity(searchResult, sessionId.get());
-    }
-
-    public void onWantHelpClick(SearchResult searchResult) {
-        viewBinder.displayVideoActivity(searchResult, sessionId.get());
-    }
-
     public void setCurrentSearchResult(SearchResult currentSearchResult) {
         this.currentSearchResult = currentSearchResult;
     }
 
     public void onBackStackChange(boolean isNotBackStackEmpty){
-            viewBinder.setTeachPolaButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForPics(), currentSearchResult);
+            viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
     }
 
-    public void onTeachPolaButtonClick() {
+    public void onSupportPolaButtonClick() {
         if(currentSearchResult != null) {
-            viewBinder.displayVideoActivity(currentSearchResult, sessionId.get());
+            viewBinder.openWww(currentSearchResult, currentSearchResult.donate.url);
         }
     }
 
-    public void onTeachPolaFinished() {
+    public void onSupportPolaFinished() {
         if (currentSearchResult != null) {
-            currentSearchResult.ai = null;
-            viewBinder.setTeachPolaButtonVisibility(false, currentSearchResult);
+            currentSearchResult.donate = null;
+            viewBinder.setSupportPolaAppButtonVisibility(false, currentSearchResult);
 
         }
     }

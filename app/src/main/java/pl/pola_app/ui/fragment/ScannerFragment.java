@@ -3,10 +3,10 @@ package pl.pola_app.ui.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +29,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
-import pl.pola_app.ui.delegate.ScannerFragmentDelegate;
+import pl.pola_app.helpers.Utils;
+import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.event.FlashActionListener;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
@@ -46,6 +46,8 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @BindView(R.id.scanner_view)
     CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
 
+    @BindView(R.id.appIcon)
+    ImageView appIcon;
 
     private boolean isTorchOn = false;
 
@@ -66,11 +68,11 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-        barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width*0.9f), (int) (height*0.25f)));
+        barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width * 0.9f), (int) (height * 0.25f)));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(0, (int) (-1*(height*0.2)), 0, 0);
+        layoutParams.setMargins(0, (int) (-1 * (height * 0.2)), 0, 0);
         barcodeScanner.setLayoutParams(layoutParams);
 
         CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
@@ -84,6 +86,12 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         barcodeScanner.setTorchOff();
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
 
+        appIcon.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), ActivityWebView.class);
+            intent.putExtra("url", Utils.URL_POLA_FRIENDS);
+            startActivity(intent);
+        });
+
         return scannerView;
     }
 
@@ -91,18 +99,17 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     public void onResume() {
         super.onResume();
         eventBus.register(this);
-        if(barcodeScanner != null) {
+        if (barcodeScanner != null) {
             barcodeScanner.resume();
         }
     }
-
 
 
     @Override
     public void onPause() {
         super.onPause();
         eventBus.unregister(this);
-        if(barcodeScanner != null) {
+        if (barcodeScanner != null) {
             barcodeScanner.setTorchOff();
             barcodeScanner.pause();
         }
@@ -114,7 +121,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     }
 
     public void resumeScanning() {
-        if(barcodeScanner != null) {
+        if (barcodeScanner != null) {
             barcodeScanner.decodeContinuous(callback);
         }
     }
@@ -136,7 +143,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         @Override
         public void barcodeResult(final BarcodeResult result) {
             if (result.getText() != null) {
-                if(barcodeScanner != null) {
+                if (barcodeScanner != null) {
                     barcodeScanner.getBarcodeView().stopDecoding();
                     barcodeScanner.setStatusText("");
                 }
@@ -173,7 +180,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
     @Override
     public void onFlashAction() {
-        if(isTorchOn) {
+        if (isTorchOn) {
             barcodeScanner.setTorchOff();
         } else {
             barcodeScanner.setTorchOn();
@@ -191,7 +198,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     }
 
     public void setTorchOff() {
-        if(isTorchOn) {
+        if (isTorchOn) {
             barcodeScanner.setTorchOff();
         }
     }

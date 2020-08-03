@@ -22,11 +22,9 @@ interface MainViewBinder {
 
     void launchReportActivity(String productId, String code);
 
-    void displayHelpMessageDialog(SearchResult searchResult);
+    void openWww(SearchResult searchResult, String url);
 
-    void displayVideoActivity(SearchResult searchResult, String deviceId);
-
-    void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult);
+    void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult);
 
     int getDeviceYear();
 }

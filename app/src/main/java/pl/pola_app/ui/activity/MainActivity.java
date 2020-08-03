@@ -4,14 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +38,6 @@ import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.event.FlashActionListener;
 import pl.pola_app.ui.fragment.BarcodeListener;
-import pl.pola_app.ui.fragment.HelpMessageDialog;
 import pl.pola_app.ui.fragment.KeyboardFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
@@ -48,19 +46,19 @@ import pl.tajchert.nammu.Nammu;
 
 public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, ProductDetailsFragmentDelegate {
 
-    private static final int TEACH_POLA = 1000;
+    private static final int DONATE_POLA = 1000;
     @Inject
     Bus eventBus;
     @Inject
     SettingsPreference settingsPreference;
     @BindView(R.id.products_list)
     RecyclerView productsListView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.open_keyboard_button)
     FloatingActionButton openKeyboard;
-    @BindView(R.id.teach_pola_main_button)
-    Button teachPolaButton;
+    @BindView(R.id.support_pola_app)
+    Button supportPolaApp;
+    @BindView(R.id.menu)
+    ImageView menu;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
@@ -93,47 +91,34 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
-        setupActionBar();
-
-//        onBarcode("5904277719045", false);
-
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
-                mainPresenter.onBackStackChange(isNotBackStackEmpty);
-                if (isNotBackStackEmpty) {
-                    openKeyboard.hide();
-                } else {
-                    openKeyboard.show();
-                }
+        getFragmentManager().addOnBackStackChangedListener(() -> {
+            final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
+            mainPresenter.onBackStackChange(isNotBackStackEmpty);
+            if (isNotBackStackEmpty) {
+                openKeyboard.hide();
+            } else {
+                openKeyboard.show();
             }
+        });
+
+        menu.setOnClickListener(view -> {
+            startActivity(new Intent(this, MenuActivity.class));
         });
     }
 
     @OnClick(R.id.flash_icon)
     public void onFlashIconClicked(View view) {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.scanner_fragment);
-        if(fragment != null && fragment instanceof FlashActionListener) {
+        if (fragment != null && fragment instanceof FlashActionListener) {
             final FlashActionListener flashActionListener = (FlashActionListener) fragment;
             flashActionListener.onFlashAction();
-            if(view != null && view instanceof ImageView) {
+            if (view != null && view instanceof ImageView) {
                 ((ImageView) view).setImageDrawable(ContextCompat.getDrawable(this,
                         flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_white_48dp : R.drawable.ic_flash_on_white_48dp));
             }
         }
 
 
-    }
-    private void setupActionBar() {
-        setSupportActionBar(toolbar);
-        setTitle(getString(R.string.app_name));
-        final ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setTitle("");
-            supportActionBar.setDisplayHomeAsUpEnabled(false);
-            supportActionBar.setHomeButtonEnabled(false);
-        }
     }
 
     @Override
@@ -162,11 +147,11 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
         ft.addToBackStack(ProductDetailsFragment.class.getName());
         ft.commitAllowingStateLoss();
-        if (searchResult.askForPics()) {
-            teachPolaButton.setVisibility(View.VISIBLE);
-            teachPolaButton.setText(searchResult.askForPicsPreview());
+        if (searchResult.askForSupport()) {
+            supportPolaApp.setVisibility(View.VISIBLE);
+            supportPolaApp.setText(searchResult.donate.title);
         } else {
-            teachPolaButton.setVisibility(View.GONE);
+            supportPolaApp.setVisibility(View.GONE);
         }
         mainPresenter.setCurrentSearchResult(searchResult);
     }
@@ -188,42 +173,30 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         productsListView.setAdapter(adapter);
     }
 
-    @Override
-    public void displayHelpMessageDialog(SearchResult searchResult) {
-        if (!settingsPreference.shouldDisplayHelpMessageDialog()) {
-            //TODO in current implementation this dialog will never shown.
-            return;
-        }
-        final HelpMessageDialog helpMessageDialog = HelpMessageDialog.newInstance();
-        helpMessageDialog.setOnWantHelpButtonClickListener(() -> mainPresenter.onWantHelpClick(searchResult));
-        helpMessageDialog.show(getSupportFragmentManager(), HelpMessageDialog.class.getSimpleName());
-        //TODO uncomment before review
-        //settingsPreference.neverDisplayHelpMessageDialog();
-    }
-
-    @OnClick(R.id.teach_pola_main_button)
-    public void onTeachPolaButtonClick() {
-        mainPresenter.onTeachPolaButtonClick();
+    @OnClick(R.id.support_pola_app)
+    public void onSupportPolaButtonClick() {
+        mainPresenter.onSupportPolaButtonClick();
     }
 
     @Override
-    public void onTeachPolaAction(SearchResult searchResult) {
-        mainPresenter.onTeachPolaClick(searchResult);
+    public void onSupportPolaAction(SearchResult searchResult) {
+        mainPresenter.onSupportPolaButtonClick();
     }
 
     @Override
-    public void setTeachPolaButtonVisibility(boolean isVisible, SearchResult searchResult) {
+    public void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult) {
         if (isVisible) {
-            teachPolaButton.setVisibility(View.VISIBLE);
-            teachPolaButton.setText(searchResult.askForPicsPreview());
+            supportPolaApp.setVisibility(View.VISIBLE);
+            supportPolaApp.setText(searchResult.donate.title);
             return;
         }
-        teachPolaButton.setVisibility(View.GONE);
+        supportPolaApp.setVisibility(View.GONE);
     }
 
     @Override
-    public void displayVideoActivity(SearchResult searchResult, String deviceId) {
-        startActivityForResult(VideoMessageActivity.IntentFactory.forStart(MainActivity.this, searchResult, deviceId), TEACH_POLA);
+    public void openWww(SearchResult searchResult, String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 
     public void onBarcode(String barcode, boolean fromCamera) {
@@ -234,11 +207,11 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != RESULT_OK) {
+        if (resultCode != RESULT_OK) {
             return;
         }
-        if (requestCode == TEACH_POLA) {
-            mainPresenter.onTeachPolaFinished();
+        if (requestCode == DONATE_POLA) {
+            mainPresenter.onSupportPolaFinished();
         }
     }
 
