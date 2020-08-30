@@ -88,7 +88,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
         appIcon.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), ActivityWebView.class);
-            intent.putExtra("url", Utils.URL_POLA_FRIENDS);
+            intent.putExtra("url", Utils.URL_POLA_ABOUT);
             startActivity(intent);
         });
 
