@@ -179,8 +179,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     }
 
     @Override
-    public void onSupportPolaAction(SearchResult searchResult) {
-        mainPresenter.onSupportPolaButtonClick();
+    public void onsSeePolaFriendsAction() {
+        Intent intent = new Intent(this, ActivityWebView.class);
+        intent.putExtra("url", pl.pola_app.helpers.Utils.URL_POLA_FRIENDS);
+        startActivity(intent);
     }
 
     @Override

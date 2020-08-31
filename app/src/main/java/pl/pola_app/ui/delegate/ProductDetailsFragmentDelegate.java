@@ -5,5 +5,5 @@ import pl.pola_app.model.SearchResult;
 
 public interface ProductDetailsFragmentDelegate {
 
-    void onSupportPolaAction(SearchResult searchResult);
+    void onsSeePolaFriendsAction();
 }

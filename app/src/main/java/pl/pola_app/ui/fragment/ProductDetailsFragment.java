@@ -72,8 +72,8 @@ public class ProductDetailsFragment extends DialogFragment {
     @BindView(R.id.message)
     TextView reportMessage;
 
-    @BindView(R.id.teach_pola_button)
-    Button teachPolaButton;
+    @BindView(R.id.seePolaFriends)
+    Button seePolaFriendsButton;
 
     @BindView(R.id.report_button)
     Button reportButton;
@@ -216,14 +216,13 @@ public class ProductDetailsFragment extends DialogFragment {
         }
 
         if(searchResult.askForSupport()) {
-            teachPolaButton.setText(searchResult.donate.title);
-            teachPolaButton.setVisibility(View.VISIBLE);
-            teachPolaButton.setOnClickListener((view) ->{
+            seePolaFriendsButton.setVisibility(View.VISIBLE);
+            seePolaFriendsButton.setOnClickListener((view) ->{
                 if(delegate != null)
-                delegate.onSupportPolaAction(searchResult);
+                delegate.onsSeePolaFriendsAction();
             });
         }else {
-            teachPolaButton.setVisibility(View.GONE);
+            seePolaFriendsButton.setVisibility(View.GONE);
         }
 
         if(searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
