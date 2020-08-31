@@ -4,8 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -60,14 +62,14 @@ public class PolaApplication extends Application {
     }
 
     private static class CrashReportingTree extends Timber.Tree {
-        @Override protected void log(int priority, String tag, String message, Throwable t) {
+        @Override protected void log(int priority, String tag, @NotNull String message, Throwable t) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
             if(BuildConfig.USE_FIREBASE) {
-                Crashlytics.log(priority, tag, message);
+                FirebaseCrashlytics.getInstance().log("E/" + tag + ":" + message);
                 if(t != null) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                 }
             }
 

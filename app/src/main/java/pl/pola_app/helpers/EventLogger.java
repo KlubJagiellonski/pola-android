@@ -3,7 +3,7 @@ package pl.pola_app.helpers;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import pl.pola_app.BuildConfig;
@@ -55,7 +55,7 @@ public class EventLogger {
         }
 
         try {
-            Crashlytics.logException(throwable);
+            FirebaseCrashlytics.getInstance().recordException(throwable);
         } catch (Exception e) {
             e.printStackTrace();
         }

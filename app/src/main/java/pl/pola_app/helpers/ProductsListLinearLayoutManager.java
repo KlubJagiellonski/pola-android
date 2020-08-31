@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 
-public class ProductsListLinearLayoutManager extends android.support.v7.widget.LinearLayoutManager {
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+public class ProductsListLinearLayoutManager extends LinearLayoutManager {
 
     private static final double HEIGHT_LIMIT = 0.45; //45% of the screen
 

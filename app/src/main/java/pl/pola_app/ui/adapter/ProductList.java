@@ -1,15 +1,14 @@
 package pl.pola_app.ui.adapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.model.SearchResult;
 
 public class ProductList {
