@@ -118,7 +118,7 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:3.5.7'
+    testImplementation 'org.mockito:mockito-core:1.+'
     testImplementation 'org.robolectric:robolectric:4.1'
 }
 
