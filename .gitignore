@@ -44,6 +44,14 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
+.gradle
+.idea
+app/app.iml
+/build
+/local.properties
+app/fabric.properties
+.DS_Store
+
 # Android Studio 3 in .gitignore file.
 .idea/caches
 .idea/modules.xml
@@ -86,3 +94,8 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+
+#Additional options
+pola-android-release-key.keystore
+keystore.properties
+app/google-services.json
