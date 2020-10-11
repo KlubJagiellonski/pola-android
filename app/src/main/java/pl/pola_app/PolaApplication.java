@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -21,7 +23,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-public class PolaApplication extends Application {
+public class PolaApplication extends MultiDexApplication {
 
     private PolaComponent component;
     public static Retrofit retrofit;
