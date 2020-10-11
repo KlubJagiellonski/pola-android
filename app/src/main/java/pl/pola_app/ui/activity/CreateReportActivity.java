@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.aprilapps.easyphotopicker.MediaFile;
+import pl.aprilapps.easyphotopicker.MediaSource;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.EventLogger;
@@ -60,6 +64,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private Call<ReportResult> reportResultCall;
     private SessionId sessionId;
 
+    private EasyImage mEasyImage;
+
     @BindView(R.id.descripton_editText)
     EditText descriptionEditText;
     @BindView(R.id.linearImageViews)
@@ -75,6 +81,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         ButterKnife.bind(this);
         sessionId = SessionId.create(this);
 
+        mEasyImage = new EasyImage.Builder(this)
+                .setCopyImagesToPublicGalleryFolder(false)
+                .allowMultiple(false)
+                .build();
+
         if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
             code = getIntent().getStringExtra("code");
@@ -82,7 +93,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         setImageView(bitmaps);
         Nammu.init(this);
 
-        if(logger == null) {
+        if (logger == null) {
             logger = new EventLogger(this);
         }
         logger.logLevelStart("report", code, sessionId.get());
@@ -166,7 +177,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void launchCamera() {
-        String permissions[] = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        String permissions[] = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
         Nammu.askForPermission(CreateReportActivity.this, permissions, permissionCallback);
     }
 
@@ -205,11 +216,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Log.d(TAG, "onResponse: ");
         if (response.isSuccessful()) {
             if (response.body() != null &&
-                    response.body().signed_requests !=null &&
+                    response.body().signed_requests != null &&
                     response.body().signed_requests.size() == bitmapsPaths.size()) {
                 if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
                     numberOfImages = 0;
-                    for (int i=0; i<bitmapsPaths.size(); i++) {
+                    for (int i = 0; i < bitmapsPaths.size(); i++) {
                         String path = bitmapsPaths.get(i);
                         String url = response.body().signed_requests.get(i).get(0);
                         sendImage(path, url);
@@ -245,7 +256,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
-        Timber.e(t,"Problem with photo report sending - this throwable cached and it is not fatal but app works wrong.");
+        Timber.e(t, "Problem with photo report sending - this throwable cached and it is not fatal but app works wrong.");
         Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
     }
 
@@ -290,14 +301,15 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+        mEasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
-            public void onImagePicked(File file, EasyImage.ImageSource imageSource, int type) {
-                onPhotoReturned(file);
+            public void onMediaFilesPicked(@NotNull MediaFile[] mediaFiles, @NotNull MediaSource mediaSource) {
+                onPhotoReturned(mediaFiles[0].getFile());
             }
 
             @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+            public void onImagePickerError(@NotNull Throwable error, @NotNull MediaSource source) {
+                super.onImagePickerError(error, source);
                 Toast.makeText(CreateReportActivity.this, getString(R.string.toast_raport_error_no_photo), Toast.LENGTH_SHORT).show();
             }
         });
@@ -375,7 +387,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     final PermissionCallback permissionCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {
-            EasyImage.openCamera(CreateReportActivity.this, 0);
+            mEasyImage.openCameraForImage(CreateReportActivity.this);
         }
 
         @Override
