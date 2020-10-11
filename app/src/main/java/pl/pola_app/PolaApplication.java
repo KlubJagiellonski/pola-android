@@ -1,13 +1,12 @@
 package pl.pola_app;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +27,12 @@ public class PolaApplication extends MultiDexApplication {
     private PolaComponent component;
     public static Retrofit retrofit;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
 
         component = PolaComponent.Initializer.init(this);
-        if(BuildConfig.USE_FIREBASE) {
+        if (BuildConfig.USE_FIREBASE) {
             FirebaseAnalytics.getInstance(this);
         }
         ButterKnife.setDebug(BuildConfig.DEBUG);
@@ -64,13 +64,14 @@ public class PolaApplication extends MultiDexApplication {
     }
 
     private static class CrashReportingTree extends Timber.Tree {
-        @Override protected void log(int priority, String tag, @NotNull String message, Throwable t) {
+        @Override
+        protected void log(int priority, String tag, @NotNull String message, Throwable t) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-            if(BuildConfig.USE_FIREBASE) {
+            if (BuildConfig.USE_FIREBASE) {
                 FirebaseCrashlytics.getInstance().log("E/" + tag + ":" + message);
-                if(t != null) {
+                if (t != null) {
                     FirebaseCrashlytics.getInstance().recordException(t);
                 }
             }
