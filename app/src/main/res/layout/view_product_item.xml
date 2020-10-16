@@ -57,7 +57,7 @@
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
                 android:visibility="gone"
-                card_view:srcCompat="@drawable/ic_heart" />
+                card_view:srcCompat="@drawable/ic_heart_24" />
 
         </RelativeLayout>
 

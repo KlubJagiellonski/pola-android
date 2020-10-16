@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:weightSum="100">
 
@@ -253,7 +254,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:background="@android:color/transparent"
                                 android:scaleType="fitXY"
-                                android:src="@drawable/ic_heart" />
+                                app:srcCompat="@drawable/ic_heart_24" />
 
                             <TextView
                                 android:id="@+id/isFriendText"
