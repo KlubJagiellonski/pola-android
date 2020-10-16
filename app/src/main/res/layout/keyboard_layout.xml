@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/pola_gray"
@@ -100,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/backspace_content_description"
-                android:src="@drawable/ic_backspace_white_36dp"/>
+                app:srcCompat="@drawable/ic_backspace_36"/>
 
             <pl.pola_app.ui.keyboard.KeyboardButton style="@style/key_border"/>
         </FrameLayout>
