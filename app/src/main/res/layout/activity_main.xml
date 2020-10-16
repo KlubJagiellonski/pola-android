@@ -34,7 +34,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="14dp"
-        android:src="@drawable/menu" />
+        app:srcCompat="@drawable/ic_menu_24" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/products_list"
