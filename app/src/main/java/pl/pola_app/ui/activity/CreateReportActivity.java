@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
+
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -135,7 +137,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
                     launchCamera();
                 }
             });
-            imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_black_24dp));
+            imageView.setImageResource(R.drawable.ic_add_24);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             linearImageViews.addView(imageView);
         }
