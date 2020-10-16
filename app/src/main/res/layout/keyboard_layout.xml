@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/done_content_description"
-                android:src="@drawable/ic_done_white_36dp"/>
+                app:srcCompat="@drawable/ic_done_36"/>
 
             <pl.pola_app.ui.keyboard.KeyboardButton style="@style/key_border"/>
         </FrameLayout>

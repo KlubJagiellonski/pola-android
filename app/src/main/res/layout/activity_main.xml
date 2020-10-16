@@ -24,7 +24,7 @@
         android:layout_gravity="center"
         android:layout_margin="14dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_flash_on_white_48dp" />
+        app:srcCompat="@drawable/ic_flash_on_48" />
 
     <ImageView
         android:id="@+id/menu"
@@ -67,7 +67,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_dialpad_white_36dp"
+            app:srcCompat="@drawable/ic_dialpad_36"
             app:backgroundTint="@color/pola_red"
             app:elevation="4dp"
             app:rippleColor="@android:color/white"

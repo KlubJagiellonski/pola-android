@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.content.ContextCompat;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
@@ -113,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
             final FlashActionListener flashActionListener = (FlashActionListener) fragment;
             flashActionListener.onFlashAction();
             if (view != null && view instanceof ImageView) {
-                ((ImageView) view).setImageDrawable(ContextCompat.getDrawable(this,
-                        flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_white_48dp : R.drawable.ic_flash_on_white_48dp));
+                ((ImageView) view).setImageResource(flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_48 : R.drawable.ic_flash_on_48);
             }
         }
 
