@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="barcode"
+            type="String" />
+
+        <variable
+            name="listener"
+            type="pl.pola_app.feature.common.ClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/pola_red"
+        android:layout_height="100dp">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

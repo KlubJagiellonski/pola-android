@@ -1,90 +1,90 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:zxing_view="http://schemas.android.com/apk/res-auto">
 
-    <fragment
-        android:id="@+id/scanner_fragment"
-        android:name="pl.pola_app.ui.fragment.ScannerFragment"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="pl.pola_app.feature.main.MainViewModel" />
+
+        <variable
+            name="listAdapter"
+            type="pl.pola_app.feature.main.BarcodeAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        tools:layout="@layout/fragment_scanner" />
+        android:animateLayoutChanges="true">
 
-    <ImageView
-        android:id="@+id/flash_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_margin="14dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_flash_on_white_48dp" />
+        <com.journeyapps.barcodescanner.CompoundBarcodeView
+            android:id="@+id/scanner_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:keepScreenOn="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            zxing_view:zxing_scanner_layout="@layout/custom_barcode_scanner"
+            zxing_view:zxing_use_texture_view="true" />
 
-    <ImageView
-        android:id="@+id/menu"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="14dp"
-        android:src="@drawable/menu" />
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/products_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:overScrollMode="never"
-        android:scrollbars="vertical" />
+        <ImageView
+            android:id="@+id/flash_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="fitXY"
+            android:src="@{ viewModel.torchOn ? @drawable/ic_flash_off_white_48dp : @drawable/ic_flash_on_white_48dp }"
+            app:layout_constraintBottom_toBottomOf="@+id/logo"
+            app:layout_constraintEnd_toStartOf="@+id/menu"
+            app:layout_constraintStart_toEndOf="@+id/logo"
+            app:layout_constraintTop_toTopOf="@+id/logo" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/products_list"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/menu"
+            app:layout_constraintBottom_toBottomOf="@+id/flash_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/flash_icon" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/open_keyboard_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:src="@drawable/ic_dialpad_white_36dp"
             app:backgroundTint="@color/pola_red"
-            app:elevation="4dp"
-            app:rippleColor="@android:color/white"
-            app:useCompatPadding="true" />
+            app:layout_constraintBottom_toTopOf="@+id/list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/white" />
 
-        <Button
-            android:id="@+id/support_pola_app"
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="8dp"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            app:backgroundTint="@color/pola_red" />
-    </LinearLayout>
-</RelativeLayout>
+            app:adapter="@{ listAdapter }"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

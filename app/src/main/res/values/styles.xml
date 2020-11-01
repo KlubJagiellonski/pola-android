@@ -1,28 +1,11 @@
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppThemeWeb" parent="@style/Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/theme_web_primary</item>
-        <item name="colorPrimaryDark">@color/theme_web_primarydark</item>
-        <item name="colorAccent">@color/theme_web_accent</item>
-
-    </style>
-
-    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-    </style>
-
-    <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-    </style>
-    <style name="key_border">
-        <item name="android:background">@drawable/key_border</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">36sp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:layout_width">@dimen/keyboard_button</item>
-        <item name="android:layout_height">@dimen/keyboard_button</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">#000000</item>
     </style>
 
     <style name="TextViewAppBuild">
@@ -35,17 +18,18 @@
         <item name="android:layout_marginTop">@dimen/menu_margin</item>
         <item name="android:layout_marginLeft">@dimen/menu_margin</item>
         <item name="android:layout_marginRight">@dimen/menu_margin</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
+
 
     <style name="MenuTextView" parent="TextViewAppBuild">
         <item name="android:background">@android:color/white</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="MenuTextViewSmall" parent="MenuTextView">
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>
+
 
 </resources>

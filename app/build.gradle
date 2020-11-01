@@ -1,125 +1,119 @@
-import java.util.logging.Level
-import java.util.logging.Logger
-
-buildscript {
-    repositories {
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    }
-}
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.crashlytics'
-
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "pl.pola_app"
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 28
-        versionName "1.8"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            File keystore = file("../keystore.properties")
-            if (keystore.exists()) {
-                Properties keyProps = new Properties()
-                keyProps.load(new FileInputStream(keystore))
-                storeFile file(keyProps["store"])
-                keyAlias keyProps["alias"]
-                storePassword keyProps["storePass"]
-                keyPassword keyProps["pass"]
-            } else {
-                Logger.getLogger("pl.pola_app").log(Level.WARNING, "SIGNING: 'keystore.properties' file does not exist!")
-            }
-        }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "USE_FIREBASE", "true"
-        }
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "USE_FIREBASE", "true"
-        }
-        dev {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "USE_FIREBASE", "false"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/LICENSE.txt'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
 
-def build_param = "${build}"
+    flavorDimensions "env"
 
-if (build_param != "dev") {
-    //exclude dev builkd
-    android.variantFilter { variant ->
-        if (variant.buildType.name == 'dev') {
-            variant.setIgnore(true)
-        }
-    }
-} else {
-    //exclude all except dev
-    android.variantFilter { variant ->
-        if (variant.buildType.name != 'dev') {
-            variant.setIgnore(true)
+    productFlavors {
+        prod {
+            dimension "env"
+            buildConfigField "String", "BASE_URL", '"http://data.fixer.io/api/"'
+            buildConfigField "String", "API_KEY", '"3c403db85ab43884bb9d97799e54cb66"'
+
+
+            buildConfigField "String", "URL_POLA_ABOUT", '"https://www.pola-app.pl/m/about"'
+            buildConfigField "String", "URL_POLA_METHOD", '"https://www.pola-app.pl/m/method"'
+            buildConfigField "String", "URL_POLA_KJ", '"https://www.pola-app.pl/m/kj"'
+            buildConfigField "String", "URL_POLA_TEAM", '"https://www.pola-app.pl/m/team"'
+            buildConfigField "String", "URL_POLA_PARTNERS", '"https://www.pola-app.pl/m/partners"'
+            buildConfigField "String", "URL_POLA_FRIENDS", '"https://www.pola-app.pl/m/friends"'
+            buildConfigField "String", "POLA_MAIL", '"aplikacja.pola@gmail.com"'
+            buildConfigField "String", "URL_POLA_GOOGLEPLAY", '"https://play.google.com/store/apps/details?id=pl.pola_app"'
+            buildConfigField "String", "URL_POLA_FB", '"https://www.facebook.com/app.pola"'
+            buildConfigField "String", "URL_POLA_TWITTER", '"https://twitter.com/pola_app"'
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0'
-    implementation 'com.github.jkwiecien:EasyImage:1.3.1'
-    implementation 'com.facebook.device.yearclass:yearclass:2.0.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
-    implementation 'io.reactivex:rxjava:1.3.0'
-    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'com.google.dagger:dagger:2.28.3'
-    implementation 'com.squareup:otto:1.3.8'
-    implementation 'org.parceler:parceler-api:1.1.13'
-    implementation 'com.github.tajchert:nammu:1.2.1'
-    implementation 'com.google.firebase:firebase-core:17.5.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
-    annotationProcessor 'org.parceler:parceler:1.1.13'
-    compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:1.+'
-    testImplementation 'org.robolectric:robolectric:4.1'
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
+    implementation "androidx.fragment:fragment-ktx:1.3.0-alpha08"
+
+    //UI
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'com.google.android.material:material:1.2.1'
+
+    // ARCHITECTURE COMPONENTS
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0"
+
+    // BARCDOE
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+
+    // DAGGER - DEPENDENCY INJECTION
+    implementation "com.google.dagger:dagger:2.28.1"
+    implementation "com.google.dagger:dagger-android-support:2.28.1"
+    kapt "com.google.dagger:dagger-compiler:2.23.2"
+    kapt "com.google.dagger:dagger-android-processor:2.23.2"
+    kaptAndroidTest "com.google.dagger:dagger-android-processor:2.23.2"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:2.23.2"
+
+    //PERMISSION
+    implementation 'com.karumi:dexter:6.0.2'
+
+    // ThreeTen
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+
+    // NETWORKING - RETROFIT, OKHTTP
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.okio:okio:2.7.0"
+    implementation "com.squareup.okhttp3:okhttp:4.7.2"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.7.2"
+
+    // RX
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+    implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    implementation "com.github.vicpinm:krealmextensions:2.5.0"
+
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
-
-apply plugin: 'com.google.gms.google-services'
