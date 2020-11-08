@@ -11,7 +11,10 @@ fun View.fullscreen(fullscreen: Boolean) {
     }
 }
 
-
+@BindingAdapter("visible")
+fun setVisible(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
 
 @BindingAdapter(
     "paddingLeftSystemWindowInsets",

@@ -3,6 +3,7 @@ package pl.pola_app.repository
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.Serializable
 
 interface PolaApi {
 
@@ -34,10 +35,10 @@ data class SearchResult(
     var report_button_type: String? = "",
     var friend_text: String? = "",
     var donate: Donate?
-)
+) : Serializable
 
 data class Donate(
     var show_button: Boolean = false,
     var url: String = "",
     var title: String = ""
-)
+) : Serializable

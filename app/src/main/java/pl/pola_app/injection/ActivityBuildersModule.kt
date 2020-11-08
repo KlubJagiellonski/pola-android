@@ -3,6 +3,7 @@ package pl.pola_app.injection
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import pl.pola_app.feature.browser.BrowserActivity
+import pl.pola_app.feature.details.DetailsActivity
 import pl.pola_app.feature.digit.DigitActivity
 import pl.pola_app.feature.main.MainActivity
 import pl.pola_app.feature.menu.MenuActivity
@@ -25,5 +26,8 @@ abstract class ActivityBuildersModule {
 
     @ContributesAndroidInjector(modules = [ViewModelBuilder::class])
     abstract fun contributeDigitActivity(): DigitActivity
+
+    @ContributesAndroidInjector(modules = [ViewModelBuilder::class])
+    abstract fun contributeDetailsActivity(): DetailsActivity
 
 }

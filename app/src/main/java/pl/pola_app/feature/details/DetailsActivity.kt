@@ -1,16 +1,16 @@
-package pl.pola_app.feature.menu
+package pl.pola_app.feature.details
 
 import android.app.Activity
 import android.content.Intent
 import androidx.activity.viewModels
-import pl.pola_app.BuildConfig
 import pl.pola_app.R
-import pl.pola_app.databinding.ActivityMenuBinding
+import pl.pola_app.databinding.ActivityDetailsBinding
 import pl.pola_app.feature.base.BaseActivity
+import pl.pola_app.repository.SearchResult
 
-class MenuActivity : BaseActivity<ActivityMenuBinding>(R.layout.activity_menu) {
+class DetailsActivity : BaseActivity<ActivityDetailsBinding>(R.layout.activity_details) {
 
-    override val viewModel by viewModels<MenuViewModel> { viewModelFactory }
+    override val viewModel by viewModels<DetailsViewModel> { viewModelFactory }
 
     override fun initObservers() {
 
@@ -31,11 +31,6 @@ class MenuActivity : BaseActivity<ActivityMenuBinding>(R.layout.activity_menu) {
             setHomeAsUpIndicator(R.drawable.ic_close)
         }
 
-        binding.appBuildTv.text = getString(
-            R.string.pola_application,
-            BuildConfig.VERSION_NAME,
-            BuildConfig.VERSION_CODE
-        )
     }
 
     override fun finish() {
@@ -49,8 +44,11 @@ class MenuActivity : BaseActivity<ActivityMenuBinding>(R.layout.activity_menu) {
     }
 
     companion object {
-        fun start(activity: Activity) {
-            val intent = Intent(activity, MenuActivity::class.java)
+        private const val SEARCH_RESULT = "SEARCH_RESULT"
+
+        fun start(activity: Activity, searchResult: SearchResult) {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra(SEARCH_RESULT, searchResult)
             activity.startActivity(intent)
             activity.overridePendingTransition(R.anim.slide_in, R.anim.nothing)
         }

@@ -17,10 +17,12 @@ import pl.pola_app.databinding.ActivityMainBinding
 import pl.pola_app.feature.base.BaseActivity
 import pl.pola_app.feature.browser.BrowserActivity
 import pl.pola_app.feature.common.ClickListener
+import pl.pola_app.feature.details.DetailsActivity
 import pl.pola_app.feature.digit.DigitActivity
 import pl.pola_app.feature.menu.MenuActivity
 import pl.pola_app.repository.PermissionHandler
 import pl.pola_app.repository.PermissionType
+import pl.pola_app.repository.SearchResult
 import pl.pola_app.utils.dpToPx
 import javax.inject.Inject
 
@@ -41,7 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
             }
         })
 
-        viewModel.barcodeList.observe(this, {
+        viewModel.searchResultList.observe(this, {
             if (it.isNotEmpty()) {
                 vibrate()
 
@@ -78,11 +80,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
     override fun initView() {
         binding.viewModel = viewModel
 
-        binding.listAdapter = BarcodeAdapter(listOf(), object : ClickListener<String> {
-            override fun onClick(item: String) {
-
+        binding.listAdapter = BarcodeAdapter(listOf(), object : ClickListener<SearchResult> {
+            override fun onClick(item: SearchResult) {
+                DetailsActivity.start(this@MainActivity, item)
             }
         }
+
         ).apply {
             setHasStableIds(true)
         }

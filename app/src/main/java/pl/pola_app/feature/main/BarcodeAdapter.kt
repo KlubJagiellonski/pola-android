@@ -6,10 +6,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import pl.pola_app.databinding.ItemBarcodeBinding
 import pl.pola_app.feature.common.ClickListener
+import pl.pola_app.repository.SearchResult
 
 class BarcodeAdapter(
-    var list: List<String>,
-    var clickListener: ClickListener<String>
+    var list: List<SearchResult>,
+    var clickListener: ClickListener<SearchResult>
 ) : RecyclerView.Adapter<BarcodeAdapter.ViewHolder>() {
 
     override fun getItemCount() = list.size
@@ -30,7 +31,7 @@ class BarcodeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         (holder.binding as? ItemBarcodeBinding)?.apply {
-            this.barcode = list[position]
+            this.searchResult = list[position]
             this.listener = clickListener
         }
     }

@@ -43,7 +43,7 @@ android {
     productFlavors {
         prod {
             dimension "env"
-            buildConfigField "String", "BASE_URL", '"http://data.fixer.io/api/"'
+            buildConfigField "String", "BASE_URL", '"https://www.pola-app.pl/"'
             buildConfigField "String", "API_KEY", '"3c403db85ab43884bb9d97799e54cb66"'
 
 
