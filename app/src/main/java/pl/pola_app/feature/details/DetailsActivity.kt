@@ -17,7 +17,12 @@ class DetailsActivity : BaseActivity<ActivityDetailsBinding>(R.layout.activity_d
     }
 
     override fun initBaseData() {
-
+        intent.getSerializableExtra(SEARCH_RESULT)?.let {
+            (it as? SearchResult)?.let {
+                viewModel.searchResult.value = it
+                supportActionBar?.title = it.name
+            }
+        }
     }
 
     override fun initListeners() {
@@ -30,7 +35,6 @@ class DetailsActivity : BaseActivity<ActivityDetailsBinding>(R.layout.activity_d
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_close)
         }
-
     }
 
     override fun finish() {
