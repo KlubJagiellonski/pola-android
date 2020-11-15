@@ -2,6 +2,7 @@ package pl.pola_app.feature.details
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.viewModels
 import pl.pola_app.R
 import pl.pola_app.databinding.ActivityDetailsBinding

@@ -23,5 +23,112 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/polisCapital"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:text="Udział polskiego kapitału"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <CheckBox
+            android:id="@+id/productionInPoland"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="fitXY"
+            android:clickable="false"
+            android:background="@android:color/transparent"
+            android:checked="@{ viewModel.searchResult.plWorkers != null &amp;&amp; viewModel.searchResult.plWorkers != 0 }"
+            android:src="@drawable/button_three_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/polisCapital" />
+
+        <TextView
+            android:id="@+id/productionInPolandLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Produkuje w Polsce"
+            app:layout_constraintBottom_toBottomOf="@+id/productionInPoland"
+            app:layout_constraintStart_toEndOf="@+id/productionInPoland"
+            app:layout_constraintTop_toTopOf="@+id/productionInPoland" />
+
+        <CheckBox
+            android:id="@+id/randdInPoland"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="fitXY"
+            android:clickable="false"
+            android:background="@android:color/transparent"
+            android:checked="@{ viewModel.searchResult.plRnD != null &amp;&amp; viewModel.searchResult.plRnD != 0 }"
+            android:src="@drawable/button_three_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/productionInPoland" />
+
+        <TextView
+            android:id="@+id/randdInPolandLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Prowadzi badania i rozwój w Polsce"
+            app:layout_constraintBottom_toBottomOf="@+id/randdInPoland"
+            app:layout_constraintStart_toEndOf="@+id/randdInPoland"
+            app:layout_constraintTop_toTopOf="@+id/randdInPoland" />
+
+        <CheckBox
+            android:id="@+id/registredInPoland"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="fitXY"
+            android:clickable="false"
+            android:background="@android:color/transparent"
+            android:checked="@{ viewModel.searchResult.plRegistered > 0 }"
+            android:src="@drawable/button_three_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/randdInPoland" />
+
+        <TextView
+            android:id="@+id/registredInPolandLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Zarejestrowana w Polsce"
+            app:layout_constraintBottom_toBottomOf="@+id/registredInPoland"
+            app:layout_constraintStart_toEndOf="@+id/registredInPoland"
+            app:layout_constraintTop_toTopOf="@+id/registredInPoland" />
+
+        <CheckBox
+            android:id="@+id/partAnotherCapital"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="fitXY"
+            android:clickable="false"
+            android:background="@android:color/transparent"
+            android:checked="@{ viewModel.searchResult.plNotGlobEnt > 0 }"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/registredInPoland" />
+
+        <TextView
+            android:id="@+id/partAnotherCapitalLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nie jest cześćią zagranicznego koncernu"
+            app:layout_constraintBottom_toBottomOf="@+id/partAnotherCapital"
+            app:layout_constraintStart_toEndOf="@+id/partAnotherCapital"
+            app:layout_constraintTop_toTopOf="@+id/partAnotherCapital" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
