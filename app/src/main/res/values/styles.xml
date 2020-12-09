@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppThemeWeb" parent="@style/Theme.AppCompat.Light">
@@ -10,6 +10,7 @@
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBar">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
