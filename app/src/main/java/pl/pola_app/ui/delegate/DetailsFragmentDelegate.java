@@ -1,6 +1,6 @@
 package pl.pola_app.ui.delegate;
 
-public interface ProductDetailsFragmentDelegate {
+public interface DetailsFragmentDelegate {
 
     void onsSeePolaFriendsAction();
 }

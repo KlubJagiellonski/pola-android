@@ -5,12 +5,14 @@ import javax.inject.Singleton;
 import dagger.Component;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.ui.activity.MainActivity;
+import pl.pola_app.ui.fragment.DetailsFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 
 @Singleton
 @Component(modules = {OttoModule.class, WidgetModule.class, SharedPrefsModule.class})
 public interface PolaComponent {
+
 
     final class Initializer {
 
@@ -26,6 +28,8 @@ public interface PolaComponent {
     void inject(MainActivity mainActivity);
 
     void inject(ScannerFragment scannerFragment);
+
+    void inject(DetailsFragment detailsFragment);
 
     void inject(ProductDetailsFragment productDetailsFragment);
 }

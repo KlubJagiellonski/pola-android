@@ -75,7 +75,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        @BindView(R.id.company_name)
+        @BindView(R.id.main_company_name)
         TextView companyName;
 
         @BindView(R.id.score_bar)
@@ -108,15 +108,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             progress.setVisibility(View.GONE);
 
             applyStyle(searchResult.card_type);
-            companyName.setText(searchResult.name);
+            companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
-            if (searchResult.plScore != null) {
-                plScore.setProgress(searchResult.plScore);
+            if (searchResult.companies != null && searchResult.companies.get(0).plScore != null) {
+                plScore.setProgress(searchResult.companies.get(0).plScore);
             } else {
                 plScore.setProgress(0);
             }
 
-            if(searchResult.is_friend != null && searchResult.is_friend) {
+            if(searchResult.companies != null && searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend) {
                 heartIcon.setVisibility(View.VISIBLE);
             } else {
                 heartIcon.setVisibility(View.GONE);
