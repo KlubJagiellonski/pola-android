@@ -53,14 +53,20 @@ public abstract class DetailsFragment extends DialogFragment {
     @BindView(R.id.plcapital_details_progressbar_1)
     ProgressBar plCapitalBar1;
 
-    @BindView(R.id.plcapital_details_text_1)
+    @BindView(R.id.company_plCapital_percent_1)
     TextView plCapitalText1;
+
+    @BindView(R.id.plcapital_details_text_1)
+    TextView plCapitalScoreText1;
 
     @BindView(R.id.plcapital_details_progressbar_2)
     ProgressBar plCapitalBar2;
 
-    @BindView(R.id.plcapital_details_text_2)
+    @BindView(R.id.company_plCapital_percent2)
     TextView plCapitalText2;
+
+    @BindView(R.id.plcapital_details_text_2)
+    TextView plCapitalScoreText2;
 
     @BindView(R.id.buttonWorkers)
     ImageButton buttonWorkers;

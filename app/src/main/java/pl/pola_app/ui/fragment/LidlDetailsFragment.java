@@ -34,25 +34,27 @@ public class LidlDetailsFragment extends DetailsFragment {
         reportButton.setText(searchResult.report_button_text);
 
         tv_companyName.setText(searchResult.name + " / " + "<second company>");
+        plCapitalText1.setText(searchResult.name);
+        plCapitalText2.setText("<second company>");
+
 
         plScoreBar.setProgress(0);
         plScoreText.setText("?");
 
         if (searchResult.plScore != null) {
-            plCapitalBar1.setProgress(50);
-            plCapitalText1.setText(searchResult.plScore + " pkt");
+            plCapitalBar1.setProgress(searchResult.plScore);
+            plCapitalScoreText1.setText(searchResult.plScore + " pkt");
         } else {
             plCapitalBar1.setProgress(0);
-            plCapitalText1.setText("?");
+            plCapitalScoreText1.setText("?");
         }
 
-        //Progress bar dedicated for second company!
         if (searchResult.plScore != null) {
-            plCapitalBar2.setProgress(searchResult.plScore);
-            plCapitalText2.setText(searchResult.plScore + " pkt");
+            plCapitalBar2.setProgress(0);
+            plCapitalScoreText2.setText("<second company score>" + " pkt");
         } else {
             plCapitalBar2.setProgress(0);
-            plCapitalText2.setText("?");
+            plCapitalScoreText2.setText("?");
         }
 
         if (searchResult.altText != null) {

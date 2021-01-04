@@ -42,10 +42,10 @@ public class ProductDetailsFragment extends DetailsFragment {
 
         if(searchResult.plCapital != null) {
             plCapitalBar1.setProgress(searchResult.plCapital);
-            plCapitalText1.setText(searchResult.plCapital + "%");
+            plCapitalScoreText1.setText(searchResult.plCapital + "%");
         } else {
             plCapitalBar1.setProgress(0);
-            plCapitalText1.setText("?");
+            plCapitalScoreText1.setText("?");
         }
 
         if(searchResult.altText != null) {
