@@ -3,7 +3,7 @@ package pl.pola_app.ui.delegate;
 
 import pl.pola_app.model.SearchResult;
 
-public interface ProductDetailsFragmentDelegate {
+public interface DetailsFragmentDelegate {
 
     void onsSeePolaFriendsAction();
 }

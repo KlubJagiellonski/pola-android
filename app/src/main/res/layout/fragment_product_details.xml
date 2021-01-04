@@ -18,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
         android:layout_weight="90"
         card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="4dp"
@@ -43,8 +43,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/unknown_company"
@@ -81,14 +81,15 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
+                        android:id="@+id/tv_altText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="16dp"
-                        android:id="@+id/tv_altText"
-                        android:visibility="gone"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:visibility="gone" />
                 </ScrollView>
 
                 <ScrollView
@@ -101,178 +102,242 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/company_plCapital_percent"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="12dp"
-                            android:text="@string/pl_capital_percent"
-                            android:textColor="@android:color/black" />
+                            android:orientation="vertical">
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <ProgressBar
-                                android:id="@+id/plcapital_details_progressbar"
-                                style="?android:attr/progressBarStyleHorizontal"
+                            <TextView
+                                android:id="@+id/company_plCapital_percent_1"
                                 android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center_horizontal"
+                                android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
+                                android:layout_marginTop="12dp"
                                 android:layout_marginRight="10dp"
-                                android:layout_marginTop="8dp"
-                                android:progressDrawable="@drawable/capital_bar" />
-
-                            <TextView
-                                android:id="@+id/plcapital_details_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:layout_alignBottom="@+id/plcapital_details_progressbar"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="16dp"
-                                android:gravity="center_vertical"
-                                android:text="0%"
-                                android:textColor="@android:color/white"
-                                android:textSize="12sp" />
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
-
-                            <ImageButton
-                                android:id="@+id/buttonWorkers"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@android:color/transparent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/button_three_selector" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="4dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/pl_workers_text"
+                                android:text="@string/pl_capital_percent"
                                 android:textColor="@android:color/black" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <ProgressBar
+                                    android:id="@+id/plcapital_details_progressbar_1"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginRight="10dp"
+                                    android:progressDrawable="@drawable/capital_bar" />
+
+                                <TextView
+                                    android:id="@+id/plcapital_details_text_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_alignBottom="@+id/plcapital_details_progressbar_1"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="16dp"
+                                    android:gravity="center_vertical"
+                                    android:text="0%"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/company_plCapital_info2"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="6dp"
-                            android:orientation="horizontal">
-
-                            <ImageButton
-                                android:id="@+id/buttonRnd"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@android:color/transparent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/button_three_selector" />
+                            android:orientation="vertical"
+                            android:visibility="visible">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="4dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/pl_rnd_text"
+                                android:id="@+id/company_plCapital_percent2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/pl_capital_percent"
                                 android:textColor="@android:color/black" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <ProgressBar
+                                    android:id="@+id/plcapital_details_progressbar_2"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginRight="10dp"
+                                    android:progressDrawable="@drawable/capital_bar" />
+
+                                <TextView
+                                    android:id="@+id/plcapital_details_text_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_alignBottom="@+id/plcapital_details_progressbar_2"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="16dp"
+                                    android:gravity="center_vertical"
+                                    android:text="0%"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/companyButtons"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="6dp"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
-                            <ImageButton
-                                android:id="@+id/buttonRegistered"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@android:color/transparent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/button_three_selector" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="4dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/pl_registered_text"
-                                android:textColor="@android:color/black" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="6dp"
-                            android:orientation="horizontal">
-
-                            <ImageButton
-                                android:id="@+id/buttonGlobent"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@android:color/transparent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/button_three_selector" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="4dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/pl_globent_text"
-                                android:textColor="@android:color/black" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/isFriendLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="16dp"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <ImageView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="8dp"
-                                android:background="@android:color/transparent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/ic_heart" />
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/isFriendText"
+                                <ImageButton
+                                    android:id="@+id/buttonWorkers"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/button_three_selector" />
+
+                                <TextView
+                                    android:id="@+id/textViewWorkers"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_marginLeft="4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/pl_workers_text"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="32dp"
-                                android:layout_marginLeft="12dp"
-                                android:gravity="center_vertical"
-                                android:text=""
-                                android:textColor="@color/pola_red"
-                                android:textStyle="bold" />
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="6dp"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/buttonRnd"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/button_three_selector" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_marginLeft="4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/pl_rnd_text"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="6dp"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/buttonRegistered"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/button_three_selector" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_marginLeft="4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/pl_registered_text"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="6dp"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/buttonGlobent"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/button_three_selector" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_marginLeft="4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/pl_globent_text"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/isFriendLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="16dp"
+                                android:baselineAligned="false"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="8dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/ic_heart" />
+
+                                <TextView
+                                    android:id="@+id/isFriendText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_marginLeft="12dp"
+                                    android:gravity="center_vertical"
+                                    android:text=""
+                                    android:textColor="@color/pola_red"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
                         </LinearLayout>
+
 
                         <TextView
                             android:id="@+id/tv_description"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:textColor="@android:color/black"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -311,8 +376,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="12dp"
+                    android:layout_marginRight="10dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
@@ -321,10 +386,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="33dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/button_border"
                     android:textColor="#D8002F" />
 

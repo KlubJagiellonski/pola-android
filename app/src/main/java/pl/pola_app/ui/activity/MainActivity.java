@@ -35,16 +35,17 @@ import pl.pola_app.helpers.SettingsPreference;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
-import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
+import pl.pola_app.ui.delegate.DetailsFragmentDelegate;
 import pl.pola_app.ui.event.FlashActionListener;
 import pl.pola_app.ui.fragment.BarcodeListener;
 import pl.pola_app.ui.fragment.KeyboardFragment;
+import pl.pola_app.ui.fragment.LidlDetailsFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
 
 
-public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, ProductDetailsFragmentDelegate {
+public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, DetailsFragmentDelegate {
 
     private static final int DONATE_POLA = 1000;
     @Inject
@@ -143,9 +144,19 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     public void openProductDetails(@NonNull final SearchResult searchResult) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
-        ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(searchResult);
-        ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
-        ft.addToBackStack(ProductDetailsFragment.class.getName());
+
+        boolean isLidl = true;
+        if (isLidl){
+            // lidl
+            LidlDetailsFragment newFragment = LidlDetailsFragment.newInstance(searchResult);
+            ft.add(R.id.container, newFragment, LidlDetailsFragment.class.getName());
+            ft.addToBackStack(LidlDetailsFragment.class.getName());
+        } else {
+            ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(searchResult);
+            ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
+            ft.addToBackStack(ProductDetailsFragment.class.getName());
+        }
+
         ft.commitAllowingStateLoss();
         if (searchResult.askForSupport()) {
             supportPolaApp.setVisibility(View.VISIBLE);
