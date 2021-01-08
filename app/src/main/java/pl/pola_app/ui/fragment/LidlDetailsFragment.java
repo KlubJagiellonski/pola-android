@@ -57,6 +57,9 @@ public class LidlDetailsFragment extends DetailsFragment {
             plCapitalScoreText2.setText("?");
         }
 
+
+        /////////////////
+
         if (searchResult.altText != null) {
             plDataLayout.setVisibility(View.GONE);
             altText.setVisibility(View.VISIBLE);
