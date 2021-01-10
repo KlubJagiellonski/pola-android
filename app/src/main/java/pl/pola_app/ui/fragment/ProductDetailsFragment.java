@@ -6,6 +6,7 @@ import android.view.View;
 
 import org.parceler.Parcels;
 
+import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
@@ -32,15 +33,15 @@ public class ProductDetailsFragment extends DetailsFragment {
 
         tv_companyName.setText(searchResult.name);
 
-        if(searchResult.plScore != null) {
+        if (searchResult.plScore != null) {
             plScoreBar.setProgress(searchResult.plScore);
-            plScoreText.setText(searchResult.plScore + " pkt");
+            plScoreText.setText(searchResult.plScore + getString(R.string.pt));
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
         }
 
-        if(searchResult.plCapital != null) {
+        if (searchResult.plCapital != null) {
             plCapitalBar1.setProgress(searchResult.plCapital);
             plCapitalScoreText1.setText(searchResult.plCapital + "%");
         } else {
@@ -48,7 +49,7 @@ public class ProductDetailsFragment extends DetailsFragment {
             plCapitalScoreText1.setText("?");
         }
 
-        if(searchResult.altText != null) {
+        if (searchResult.altText != null) {
             plDataLayout.setVisibility(View.GONE);
             altText.setVisibility(View.VISIBLE);
             altText.setText(searchResult.altText);
@@ -80,7 +81,7 @@ public class ProductDetailsFragment extends DetailsFragment {
                 buttonGlobent.setEnabled(false);
             }
 
-            if(searchResult.description != null) {
+            if (searchResult.description != null) {
                 description.setVisibility(View.VISIBLE);
                 description.setText(searchResult.description);
             } else {
@@ -88,17 +89,17 @@ public class ProductDetailsFragment extends DetailsFragment {
             }
         }
 
-        if(searchResult.askForSupport()) {
+        if (searchResult.askForSupport()) {
             seePolaFriendsButton.setVisibility(View.VISIBLE);
-            seePolaFriendsButton.setOnClickListener((view) ->{
-                if(delegate != null)
+            seePolaFriendsButton.setOnClickListener((view) -> {
+                if (delegate != null)
                     delegate.onsSeePolaFriendsAction();
             });
-        }else {
+        } else {
             seePolaFriendsButton.setVisibility(View.GONE);
         }
 
-        if(searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
+        if (searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
             isFriendLayout.setVisibility(View.VISIBLE);
             isFriendText.setText(searchResult.friend_text);
         }

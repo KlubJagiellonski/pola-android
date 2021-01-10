@@ -5,6 +5,7 @@ import android.view.View;
 
 import org.parceler.Parcels;
 
+import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
@@ -43,7 +44,7 @@ public class LidlDetailsFragment extends DetailsFragment {
 
         if (searchResult.plScore != null) {
             plCapitalBar1.setProgress(searchResult.plScore);
-            plCapitalScoreText1.setText(searchResult.plScore + " pkt");
+            plCapitalScoreText1.setText(searchResult.plScore + getString(R.string.pt));
         } else {
             plCapitalBar1.setProgress(0);
             plCapitalScoreText1.setText("?");
@@ -51,7 +52,7 @@ public class LidlDetailsFragment extends DetailsFragment {
 
         if (searchResult.plScore != null) {
             plCapitalBar2.setProgress(0);
-            plCapitalScoreText2.setText("<second company score>" + " pkt");
+            plCapitalScoreText2.setText("<second company score>" + getString(R.string.pt));
         } else {
             plCapitalBar2.setProgress(0);
             plCapitalScoreText2.setText("?");

@@ -190,7 +190,7 @@ public abstract class DetailsFragment extends DialogFragment {
     @OnClick(R.id.isFriendLayout)
     void onFriendsClick() {
         Bundle bundle = new Bundle();
-        bundle.putString("item", "Przyjaciele Poli");
+        bundle.putString("item", getString(R.string.polas_friends));
         bundle.putString("device_id", sessionId.get());
         logger.logCustom("product_details_friend", bundle);
 
