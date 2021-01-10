@@ -50,23 +50,23 @@ public abstract class DetailsFragment extends DialogFragment {
     @BindView(R.id.plscore_details_text)
     TextView plScoreText;
 
-    @BindView(R.id.plcapital_details_progressbar_1)
+    @BindView(R.id.plcapital_details_progressbar)
     ProgressBar plCapitalBar1;
 
-    @BindView(R.id.company_plCapital_percent_1)
+    @BindView(R.id.company_plCapital_percent)
     TextView plCapitalText1;
 
-    @BindView(R.id.plcapital_details_text_1)
+    @BindView(R.id.plcapital_details_text)
     TextView plCapitalScoreText1;
 
-    @BindView(R.id.plcapital_details_progressbar_2)
-    ProgressBar plCapitalBar2;
-
-    @BindView(R.id.company_plCapital_percent2)
-    TextView plCapitalText2;
-
-    @BindView(R.id.plcapital_details_text_2)
-    TextView plCapitalScoreText2;
+//    @BindView(R.id.plcapital_details_progressbar_2)
+//    ProgressBar plCapitalBar2;
+//
+//    @BindView(R.id.company_plCapital_percent2)
+//    TextView plCapitalText2;
+//
+//    @BindView(R.id.plcapital_details_text_2)
+//    TextView plCapitalScoreText2;
 
     @BindView(R.id.buttonWorkers)
     ImageButton buttonWorkers;
@@ -101,11 +101,10 @@ public abstract class DetailsFragment extends DialogFragment {
     @BindView(R.id.isFriendLayout)
     LinearLayout isFriendLayout;
 
-    @BindView(R.id.company_plCapital_info2)
-    LinearLayout companyCapitalInfo2;
 
-    @BindView(R.id.companyButtons)
-    LinearLayout companyButtons;
+
+//    @BindView(R.id.companyButtons)
+//    LinearLayout companyButtons;
 
     @BindView(R.id.isFriendText)
     TextView isFriendText;

@@ -11,6 +11,18 @@ import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
 public class LidlDetailsFragment extends DetailsFragment {
 
+//    @BindView(R.id.plcapital_details_progressbar_2)
+//    ProgressBar plCapitalBar2;
+//
+//    @BindView(R.id.company_plCapital_percent2)
+//    TextView plCapitalText2;
+//
+//    @BindView(R.id.plcapital_details_text_2)
+//    TextView plCapitalScoreText2;
+//
+//    @BindView(R.id.company_plCapital_info2)
+//    LinearLayout companyCapitalInfo2;
+
     public static LidlDetailsFragment newInstance(SearchResult searchResult) {
         LidlDetailsFragment fragment = new LidlDetailsFragment();
         Bundle args = new Bundle();
@@ -27,8 +39,8 @@ public class LidlDetailsFragment extends DetailsFragment {
         super.onActivityCreated(savedInstanceState);
 
 
-        companyCapitalInfo2.setVisibility(View.VISIBLE);
-        companyButtons.setVisibility(View.GONE);
+//        companyCapitalInfo2.setVisibility(View.VISIBLE);
+//        companyButtons.setVisibility(View.GONE);
 
         applyStyle(searchResult.card_type, searchResult.report_button_type);
         reportMessage.setText(searchResult.report_text);
@@ -36,7 +48,7 @@ public class LidlDetailsFragment extends DetailsFragment {
 
         tv_companyName.setText(searchResult.name + " / " + "<second company>");
         plCapitalText1.setText(searchResult.name);
-        plCapitalText2.setText("<second company>");
+//        plCapitalText2.setText("<second company>");
 
 
         plScoreBar.setProgress(0);
@@ -50,13 +62,13 @@ public class LidlDetailsFragment extends DetailsFragment {
             plCapitalScoreText1.setText("?");
         }
 
-        if (searchResult.plScore != null) {
-            plCapitalBar2.setProgress(0);
-            plCapitalScoreText2.setText("<second company score>" + getString(R.string.pt));
-        } else {
-            plCapitalBar2.setProgress(0);
-            plCapitalScoreText2.setText("?");
-        }
+//        if (searchResult.plScore != null) {
+//            plCapitalBar2.setProgress(0);
+//            plCapitalScoreText2.setText("<second company score>" + getString(R.string.pt));
+//        } else {
+//            plCapitalBar2.setProgress(0);
+//            plCapitalScoreText2.setText("?");
+//        }
 
 
         /////////////////

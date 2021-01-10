@@ -24,9 +24,6 @@ public class ProductDetailsFragment extends DetailsFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Hide LIDL elements:
-        companyCapitalInfo2.setVisibility(View.GONE);
-
         applyStyle(searchResult.card_type, searchResult.report_button_type);
         reportMessage.setText(searchResult.report_text);
         reportButton.setText(searchResult.report_button_text);
