@@ -59,27 +59,6 @@ public abstract class DetailsFragment extends DialogFragment {
     @BindView(R.id.plcapital_details_text)
     TextView plCapitalScoreText1;
 
-//    @BindView(R.id.plcapital_details_progressbar_2)
-//    ProgressBar plCapitalBar2;
-//
-//    @BindView(R.id.company_plCapital_percent2)
-//    TextView plCapitalText2;
-//
-//    @BindView(R.id.plcapital_details_text_2)
-//    TextView plCapitalScoreText2;
-
-    @BindView(R.id.buttonWorkers)
-    ImageButton buttonWorkers;
-
-    @BindView(R.id.buttonGlobent)
-    ImageButton buttonGlobent;
-
-    @BindView(R.id.buttonRegistered)
-    ImageButton buttonRegistered;
-
-    @BindView(R.id.buttonRnd)
-    ImageButton buttonRnd;
-
     @BindView(R.id.message)
     TextView reportMessage;
 
@@ -100,11 +79,6 @@ public abstract class DetailsFragment extends DialogFragment {
 
     @BindView(R.id.isFriendLayout)
     LinearLayout isFriendLayout;
-
-
-
-//    @BindView(R.id.companyButtons)
-//    LinearLayout companyButtons;
 
     @BindView(R.id.isFriendText)
     TextView isFriendText;
@@ -148,15 +122,15 @@ public abstract class DetailsFragment extends DialogFragment {
         logger = new EventLogger(getActivity());
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
-        PolaApplication.component(getActivity()).inject(this);
-        ButterKnife.bind(this, view);
-        return view;
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
+//        PolaApplication.component(getActivity()).inject(this);
+//        ButterKnife.bind(this, view);
+//        return view;
+//    }
 
 
     @Override

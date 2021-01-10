@@ -11,6 +11,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -145,13 +147,13 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
 
-        boolean isLidl = false;
-        if (isLidl){
+        if (searchResult.name.contains("Lidl Polska")){
             // lidl
             LidlDetailsFragment newFragment = LidlDetailsFragment.newInstance(searchResult);
             ft.add(R.id.container, newFragment, LidlDetailsFragment.class.getName());
             ft.addToBackStack(LidlDetailsFragment.class.getName());
         } else {
+            // not lidl
             ProductDetailsFragment newFragment = ProductDetailsFragment.newInstance(searchResult);
             ft.add(R.id.container, newFragment, ProductDetailsFragment.class.getName());
             ft.addToBackStack(ProductDetailsFragment.class.getName());

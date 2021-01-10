@@ -2,15 +2,33 @@ package pl.pola_app.ui.fragment;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import org.parceler.Parcels;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
 public class ProductDetailsFragment extends DetailsFragment {
+
+    @BindView(R.id.buttonWorkers)
+    ImageButton buttonWorkers;
+
+    @BindView(R.id.buttonGlobent)
+    ImageButton buttonGlobent;
+
+    @BindView(R.id.buttonRegistered)
+    ImageButton buttonRegistered;
+
+    @BindView(R.id.buttonRnd)
+    ImageButton buttonRnd;
 
     public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -18,6 +36,16 @@ public class ProductDetailsFragment extends DetailsFragment {
         args.putParcelable(SearchResult.class.getName(), Parcels.wrap(searchResult));
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
+        PolaApplication.component(getActivity()).inject(this);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
