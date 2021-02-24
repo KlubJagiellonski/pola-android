@@ -244,7 +244,8 @@
                             android:layout_marginTop="16dp"
                             android:baselineAligned="false"
                             android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            tools:visibility="visible">
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -262,6 +263,7 @@
                                 android:layout_marginLeft="12dp"
                                 android:gravity="center_vertical"
                                 android:text=""
+                                tools:text="To jest przyjaciel Poli"
                                 android:textColor="@color/pola_red"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -274,7 +276,8 @@
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="10dp"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            tools:text="Opis firmy."/>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>

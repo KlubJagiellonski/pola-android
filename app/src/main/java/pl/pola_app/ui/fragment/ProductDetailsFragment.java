@@ -52,23 +52,23 @@ public class ProductDetailsFragment extends DetailsFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        applyStyle(searchResult.card_type, searchResult.report_button_type);
-        reportMessage.setText(searchResult.report_text);
-        reportButton.setText(searchResult.report_button_text);
+        applyStyle(searchResult.card_type, searchResult.report.button_type);
+        reportMessage.setText(searchResult.report.text);
+        reportButton.setText(searchResult.report.button_text);
 
-        tv_companyName.setText(searchResult.name);
+        tv_companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
-        if (searchResult.plScore != null) {
-            plScoreBar.setProgress(searchResult.plScore);
-            plScoreText.setText(searchResult.plScore + getString(R.string.pt));
+        if (searchResult.companies.get(0).plScore != null) {
+            plScoreBar.setProgress(searchResult.companies.get(0).plScore);
+            plScoreText.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
         } else {
             plScoreBar.setProgress(0);
             plScoreText.setText("?");
         }
 
-        if (searchResult.plCapital != null) {
-            plCapitalBar1.setProgress(searchResult.plCapital);
-            plCapitalScoreText1.setText(searchResult.plCapital + "%");
+        if (searchResult.companies.get(0).plCapital != null) {
+            plCapitalBar1.setProgress(searchResult.companies.get(0).plCapital);
+            plCapitalScoreText1.setText(searchResult.companies.get(0).plCapital + "%");
         } else {
             plCapitalBar1.setProgress(0);
             plCapitalScoreText1.setText("?");
@@ -82,33 +82,33 @@ public class ProductDetailsFragment extends DetailsFragment {
             altText.setVisibility(View.GONE);
             plDataLayout.setVisibility(View.VISIBLE);
 
-            if (searchResult.plWorkers != null && searchResult.plWorkers != 0) {
+            if (searchResult.companies.get(0).plWorkers != null && searchResult.companies.get(0).plWorkers != 0) {
                 buttonWorkers.setSelected(true);
-            } else if (searchResult.plWorkers == null) {
+            } else if (searchResult.companies.get(0).plWorkers == null) {
                 buttonWorkers.setEnabled(false);
             }
 
-            if (searchResult.plRnD != null && searchResult.plRnD != 0) {
+            if (searchResult.companies.get(0).plRnD != null && searchResult.companies.get(0).plRnD != 0) {
                 buttonRnd.setSelected(true);
-            } else if (searchResult.plRnD == null) {
+            } else if (searchResult.companies.get(0).plRnD == null) {
                 buttonRnd.setEnabled(false);
             }
 
-            if (searchResult.plRegistered != null && searchResult.plRegistered != 0) {
+            if (searchResult.companies.get(0).plRegistered != null && searchResult.companies.get(0).plRegistered != 0) {
                 buttonRegistered.setSelected(true);
-            } else if (searchResult.plRegistered == null) {
+            } else if (searchResult.companies.get(0).plRegistered == null) {
                 buttonRegistered.setEnabled(false);
             }
 
-            if (searchResult.plNotGlobEnt != null && searchResult.plNotGlobEnt != 0) {
+            if (searchResult.companies.get(0).plNotGlobEnt != null && searchResult.companies.get(0).plNotGlobEnt != 0) {
                 buttonGlobent.setSelected(true);
-            } else if (searchResult.plNotGlobEnt == null) {
+            } else if (searchResult.companies.get(0).plNotGlobEnt == null) {
                 buttonGlobent.setEnabled(false);
             }
 
-            if (searchResult.description != null) {
+            if (searchResult.companies.get(0).description != null) {
                 description.setVisibility(View.VISIBLE);
-                description.setText(searchResult.description);
+                description.setText(searchResult.companies.get(0).description);
             } else {
                 description.setVisibility(View.GONE);
             }
@@ -124,7 +124,7 @@ public class ProductDetailsFragment extends DetailsFragment {
             seePolaFriendsButton.setVisibility(View.GONE);
         }
 
-        if (searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
+        if (searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend && searchResult.friend_text != null) {
             isFriendLayout.setVisibility(View.VISIBLE);
             isFriendText.setText(searchResult.friend_text);
         }

@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.slide_in, 0, 0, R.animator.slide_out);
 
-        if (searchResult.name.contains("Lidl Polska")){
+        if (searchResult.companies.size() > 1){
             // lidl
             LidlDetailsFragment newFragment = LidlDetailsFragment.newInstance(searchResult);
             ft.add(R.id.container, newFragment, LidlDetailsFragment.class.getName());

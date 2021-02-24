@@ -60,33 +60,33 @@ public class LidlDetailsFragment extends DetailsFragment {
 //        companyCapitalInfo2.setVisibility(View.VISIBLE);
 //        companyButtons.setVisibility(View.GONE);
 
-        applyStyle(searchResult.card_type, searchResult.report_button_type);
-        reportMessage.setText(searchResult.report_text);
-        reportButton.setText(searchResult.report_button_text);
+        applyStyle(searchResult.card_type, searchResult.report.button_type);
+        reportMessage.setText(searchResult.report.text);
+        reportButton.setText(searchResult.report.button_text);
 
-        tv_companyName.setText(searchResult.name + " / " + "<second company>");
-        plCapitalText1.setText(searchResult.name);
-//        plCapitalText2.setText("<second company>");
+        tv_companyName.setText(searchResult.companies.get(1).name + " / " + searchResult.companies.get(0).name );
+        plCapitalText1.setText(searchResult.companies.get(1).name);
+        plCapitalText2.setText(searchResult.companies.get(0).name );
 
 
         plScoreBar.setProgress(0);
         plScoreText.setText("?");
 
-        if (searchResult.plScore != null) {
-            plCapitalBar1.setProgress(searchResult.plScore);
-            plCapitalScoreText1.setText(searchResult.plScore + getString(R.string.pt));
+        if (searchResult.companies.get(1).plScore != null) {
+            plCapitalBar1.setProgress(searchResult.companies.get(1).plScore);
+            plCapitalScoreText1.setText(searchResult.companies.get(1).plScore + getString(R.string.pt));
         } else {
             plCapitalBar1.setProgress(0);
             plCapitalScoreText1.setText("?");
         }
 
-//        if (searchResult.plScore != null) {
-//            plCapitalBar2.setProgress(0);
-//            plCapitalScoreText2.setText("<second company score>" + getString(R.string.pt));
-//        } else {
-//            plCapitalBar2.setProgress(0);
-//            plCapitalScoreText2.setText("?");
-//        }
+        if (searchResult.companies.get(0).plScore != null) {
+            plCapitalBar2.setProgress(searchResult.companies.get(0).plScore);
+            plCapitalScoreText2.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
+        } else {
+            plCapitalBar2.setProgress(0);
+            plCapitalScoreText2.setText("?");
+        }
 
 
         /////////////////
@@ -99,9 +99,9 @@ public class LidlDetailsFragment extends DetailsFragment {
             altText.setVisibility(View.GONE);
             plDataLayout.setVisibility(View.VISIBLE);
 
-            if (searchResult.description != null) {
+            if (searchResult.companies.get(0).description != null) {
                 description.setVisibility(View.VISIBLE);
-                description.setText(searchResult.description);
+                description.setText(searchResult.companies.get(0).description);
             } else {
                 description.setVisibility(View.GONE);
             }
@@ -117,7 +117,7 @@ public class LidlDetailsFragment extends DetailsFragment {
             seePolaFriendsButton.setVisibility(View.GONE);
         }
 
-        if (searchResult.is_friend != null && searchResult.is_friend && searchResult.friend_text != null) {
+        if (searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend && searchResult.friend_text != null) {
             isFriendLayout.setVisibility(View.VISIBLE);
             isFriendText.setText(searchResult.friend_text);
         }
