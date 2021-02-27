@@ -3,6 +3,7 @@ package pl.pola_app.ui.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -30,7 +31,8 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private final ProductList productList;
     private final Handler handlerScanner = new Handler();
     private final EventLogger logger;
-    @Nullable private Call<SearchResult> reportResultCall;
+    @Nullable
+    private Call<SearchResult> reportResultCall;
     private final Runnable runnableResumeScan = new Runnable() {
         @Override
         public void run() {
@@ -105,7 +107,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
 
             reportResultCall =
                     viewBinder.getDeviceYear() < 2010
-                            ? api.getByCode(barcode, sessionId.get(),true)
+                            ? api.getByCode(barcode, sessionId.get(), true)
                             : api.getByCode(barcode, sessionId.get());
             reportResultCall.enqueue(this);
         }
@@ -114,6 +116,9 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     @Override
     public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
         final SearchResult searchResult = response.body();
+        if (searchResult == null) {
+            return;
+        }
         currentSearchResult = searchResult;
         logger.logContentView((searchResult.name != null) ? searchResult.name + "" : "empty",
                 "company_received",
@@ -173,12 +178,12 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         this.currentSearchResult = currentSearchResult;
     }
 
-    public void onBackStackChange(boolean isNotBackStackEmpty){
-            viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
+    public void onBackStackChange(boolean isNotBackStackEmpty) {
+        viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
     }
 
     public void onSupportPolaButtonClick() {
-        if(currentSearchResult != null) {
+        if (currentSearchResult != null) {
             viewBinder.openWww(currentSearchResult, currentSearchResult.donate.url);
         }
     }
