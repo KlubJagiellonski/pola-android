@@ -82,7 +82,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         setImageView(bitmaps);
         Nammu.init(this);
 
-        if(logger == null) {
+        if (logger == null) {
             logger = new EventLogger(this);
         }
         logger.logLevelStart("report", code, sessionId.get());
@@ -166,7 +166,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     private void launchCamera() {
-        String permissions[] = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        String permissions[] = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
         Nammu.askForPermission(CreateReportActivity.this, permissions, permissionCallback);
     }
 
@@ -205,11 +205,11 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         Log.d(TAG, "onResponse: ");
         if (response.isSuccessful()) {
             if (response.body() != null &&
-                    response.body().signed_requests !=null &&
+                    response.body().signed_requests != null &&
                     response.body().signed_requests.size() == bitmapsPaths.size()) {
                 if (bitmapsPaths != null && bitmapsPaths.size() > 0) {
                     numberOfImages = 0;
-                    for (int i=0; i<bitmapsPaths.size(); i++) {
+                    for (int i = 0; i < bitmapsPaths.size(); i++) {
                         String path = bitmapsPaths.get(i);
                         String url = response.body().signed_requests.get(i).get(0);
                         sendImage(path, url);
@@ -245,7 +245,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
-        Timber.e(t,"Problem with photo report sending - this throwable cached and it is not fatal but app works wrong.");
+        Timber.e(t, "Problem with photo report sending - this throwable cached and it is not fatal but app works wrong.");
         Toast.makeText(CreateReportActivity.this, getString(R.string.toast_send_raport_error), Toast.LENGTH_LONG).show();
     }
 

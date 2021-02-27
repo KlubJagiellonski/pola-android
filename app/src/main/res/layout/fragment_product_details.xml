@@ -11,17 +11,15 @@
         android:layout_height="0dp"
         android:layout_weight="5" />
 
-    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-
+    <androidx.cardview.widget.CardView
         android:id="@+id/product_info_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
         android:layout_weight="90"
         card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="4dp"
@@ -43,8 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/unknown_company"
@@ -81,14 +79,15 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
+                        android:id="@+id/tv_altText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="16dp"
-                        android:id="@+id/tv_altText"
-                        android:visibility="gone"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:visibility="gone" />
                 </ScrollView>
 
                 <ScrollView
@@ -106,8 +105,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginTop="12dp"
+                            android:layout_marginRight="10dp"
                             android:text="@string/pl_capital_percent"
                             android:textColor="@android:color/black" />
 
@@ -122,8 +121,8 @@
                                 android:layout_height="20dp"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:layout_marginTop="8dp"
+                                android:layout_marginRight="10dp"
                                 android:progressDrawable="@drawable/capital_bar" />
 
                             <TextView
@@ -151,17 +150,17 @@
                                 android:id="@+id/buttonWorkers"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:background="@android:color/transparent"
                                 android:layout_gravity="center_vertical"
+                                android:background="@android:color/transparent"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/button_three_selector" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="4dp"
                                 android:gravity="center_vertical"
-                                android:layout_gravity="center_vertical"
                                 android:text="@string/pl_workers_text"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
@@ -185,9 +184,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="4dp"
                                 android:gravity="center_vertical"
-                                android:layout_gravity="center_vertical"
                                 android:text="@string/pl_rnd_text"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
@@ -211,9 +210,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="4dp"
                                 android:gravity="center_vertical"
-                                android:layout_gravity="center_vertical"
                                 android:text="@string/pl_registered_text"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
@@ -229,17 +228,17 @@
                                 android:id="@+id/buttonGlobent"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:background="@android:color/transparent"
                                 android:layout_gravity="center_vertical"
+                                android:background="@android:color/transparent"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/button_three_selector" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="4dp"
                                 android:gravity="center_vertical"
-                                android:layout_gravity="center_vertical"
                                 android:text="@string/pl_globent_text"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>
@@ -279,8 +278,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:textColor="@android:color/black"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -311,29 +310,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/button_border"
-                    android:text="Zobacz przyjaciół poli"
-                    android:textColor="#D8002F" />
-
-                <TextView
-                    android:id="@+id/message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="12dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/report_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="33dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/button_border"
+                    android:text="@string/see_pola_friends"
                     android:textColor="#D8002F" />
 
             </LinearLayout>

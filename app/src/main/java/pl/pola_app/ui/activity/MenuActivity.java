@@ -4,8 +4,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,13 +17,10 @@ import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
 import pl.pola_app.helpers.Utils;
 
-/**
- * Created by Rafał Gawlik on 30.08.17.
- */
-
 public class MenuActivity extends AppCompatActivity {
 
-    @BindView(R.id.app_build_tv) TextView appBuildTv;
+    @BindView(R.id.app_build_tv)
+    TextView appBuildTv;
 
     private EventLogger logger;
     private SessionId sessionId;
@@ -43,7 +41,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.menu_back_iv)
-    void onMenuBackClick(){
+    void onMenuBackClick() {
         finish();
     }
 
@@ -122,7 +120,7 @@ public class MenuActivity extends AppCompatActivity {
     @OnClick(R.id.activity_facebook_tv)
     void onFacebookClick() {
         logger.logMenuItemOpened("Pola na Facebooku", sessionId.get());
-        startActivity( new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB)));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB)));
 
     }
 

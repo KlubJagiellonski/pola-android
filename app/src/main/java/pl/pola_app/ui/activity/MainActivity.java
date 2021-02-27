@@ -6,11 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +13,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.facebook.device.yearclass.YearClass;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -240,15 +241,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @Override
     public void showErrorMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void launchReportActivity(String productId, String code) {
-        Intent intent = new Intent(this, CreateReportActivity.class);
-        intent.setAction("product_report");
-        intent.putExtra("productId", productId);
-        intent.putExtra("code", code);
-        startActivity(intent);
     }
 
     @Override

@@ -19,7 +19,6 @@ import pl.pola_app.ui.adapter.OnProductListChanged;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
-import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.BarcodeListener;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,18 +159,6 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     @SuppressWarnings("WeakerAccess")
     public void productDetailsFragmentDismissed(@SuppressWarnings("UnusedParameters") ProductDetailsFragmentDismissedEvent event) {
         viewBinder.dismissProductDetailsView();
-    }
-
-    @Subscribe
-    @SuppressWarnings("WeakerAccess")
-    public void reportButtonClicked(ReportButtonClickedEvent event) {
-        String productId = null;
-        String code = null;
-        if (event.searchResult.product_id != null) {
-            productId = Integer.toString(event.searchResult.product_id);
-            code = event.searchResult.code;
-        }
-        viewBinder.launchReportActivity(productId, code);
     }
 
     public void setCurrentSearchResult(SearchResult currentSearchResult) {
