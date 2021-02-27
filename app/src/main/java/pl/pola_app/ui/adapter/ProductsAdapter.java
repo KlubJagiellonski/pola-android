@@ -118,6 +118,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
             if(searchResult.is_friend != null && searchResult.is_friend) {
                 heartIcon.setVisibility(View.VISIBLE);
+            } else {
+                heartIcon.setVisibility(View.GONE);
             }
         }
 
