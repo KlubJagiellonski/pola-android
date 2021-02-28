@@ -58,7 +58,7 @@ public class ProductDetailsFragment extends DetailsFragment {
 
         tv_companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
-        if (searchResult.companies.get(0).plScore != null) {
+        if (searchResult.companies != null && searchResult.companies.get(0).plScore != null) {
             plScoreBar.setProgress(searchResult.companies.get(0).plScore);
             plScoreText.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
         } else {
@@ -66,7 +66,7 @@ public class ProductDetailsFragment extends DetailsFragment {
             plScoreText.setText("?");
         }
 
-        if (searchResult.companies.get(0).plCapital != null) {
+        if (searchResult.companies != null && searchResult.companies.get(0).plCapital != null) {
             plCapitalBar1.setProgress(searchResult.companies.get(0).plCapital);
             plCapitalScoreText1.setText(searchResult.companies.get(0).plCapital + "%");
         } else {
@@ -124,7 +124,7 @@ public class ProductDetailsFragment extends DetailsFragment {
             seePolaFriendsButton.setVisibility(View.GONE);
         }
 
-        if (searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend && searchResult.friend_text != null) {
+        if (searchResult.companies != null && searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend && searchResult.friend_text != null) {
             isFriendLayout.setVisibility(View.VISIBLE);
             isFriendText.setText(searchResult.friend_text);
         }
