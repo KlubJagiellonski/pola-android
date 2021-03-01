@@ -13,7 +13,7 @@ public class SearchResult {
     public String altText;
     public ArrayList<Company> companies;
 
-    public ReportV4 report; //TODO jak to nazwać :O
+    public ReportV4 report; 
 
     public String friend_text;
 
