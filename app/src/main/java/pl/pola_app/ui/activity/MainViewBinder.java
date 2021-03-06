@@ -20,8 +20,6 @@ interface MainViewBinder {
 
     void dismissProductDetailsView();
 
-    void launchReportActivity(String productId, String code);
-
     void openWww(SearchResult searchResult, String url);
 
     void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult);

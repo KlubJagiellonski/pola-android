@@ -1,6 +1,5 @@
 package pl.pola_app.ui.fragment;
 
-
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;

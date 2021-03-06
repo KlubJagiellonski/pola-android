@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import pl.pola_app.R;
 
-
 public class SplashActivity extends AppCompatActivity {
     private static final long SPLASH_DELAY = 1500;
 

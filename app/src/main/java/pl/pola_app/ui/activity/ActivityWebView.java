@@ -1,9 +1,10 @@
 package pl.pola_app.ui.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ public class ActivityWebView extends AppCompatActivity {
         ButterKnife.bind(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        if(getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("url")) {
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("url")) {
             webView.loadUrl(getIntent().getExtras().getString("url"));
         } else {
             webView.loadUrl(Utils.URL_POLA_ABOUT);

@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.jetbrains.annotations.NotNull;
 

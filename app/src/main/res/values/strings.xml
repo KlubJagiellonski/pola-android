@@ -5,8 +5,6 @@
 
     <string name="scanner_status_text">Umieść kod kreskowy produktu w prostokącie powyżej aby dowiedzieć się więcej o firmie, która go wyprodukowała.</string>
     <string name="unknown_company">Pomóż Poli zdobyć dane</string>
-    <string name="unknown_score">\?</string>
-    <string name="ask_for_company_property_name">ask_for_company</string>
     <string name="title_activity_create_report">CreateReportActivity</string>
     <string name="send">Wyślij</string>
     <string name="report_text">Zgłoś</string>
@@ -14,7 +12,6 @@
     <string name="report_description">Zrób zdjęcie kodu kreskowego i etykiety z danymi producenta.</string>
     <string name="description_report">opis (opcjonalny):</string>
     <string name="description_hint">Dodatkowe informacje</string>
-    <string name="description_empty">Opis jest wymagany</string>
     <string name="sending_image_dialog">Wysyłanie…</string>
     <string name="toast_send_raport">Raport przesłany, dziękujemy</string>
     <string name="toast_send_raport_error">Problem z wysyłaniem, spróbuj później.</string>
@@ -28,25 +25,20 @@
     <string name="pl_rnd_text">prowadzi badania i rozwój w Polsce</string>
     <string name="pl_registered_text">zarejestrowana w Polsce</string>
     <string name="pl_globent_text">nie jest częścią zagranicznego koncernu</string>
-    <string name="send_report">Wyślij</string>
     <string name="toast_no_connection">Problem z połączeniem internetowym.</string>
     <string name="toast_no_camera_access">Brak dostępu do kamery</string>
     <string name="action_about">O aplikacji Pola</string>
-    <string name="title_activity_activity_about">O aplikacji</string>
     <string name="action_bug">Zgłoś błąd w danych</string>
     <string name="action_metodology">Instrukcja obsługi</string>
     <string name="action_club">O Klubie Jagiellońskim</string>
     <string name="action_team">Zespół</string>
     <string name="action_partners">Partnerzy</string>
     <string name="action_friends">Przyjaciele Poli</string>
-    <string name="action_mail">Napisz do nas</string>
     <string name="action_rate">Oceń Polę</string>
     <string name="action_fb">Facebook</string>
     <string name="action_twitter">Twitter</string>
-    <string name="send_email_picker">Wyślij email…</string>
     <string name="type_grey">type_grey</string>
     <string name="type_white">type_white</string>
-    <string name="type_red">type_red</string>
     <string name="toast_raport_error_no_photo">Brak zdjęcia</string>
     <string name="button_1">1</string>
     <string name="button_2">2</string>
@@ -61,22 +53,12 @@
     <string name="backspace_content_description">Usuń</string>
     <string name="done_content_description">Zatwierdź</string>
     <string name="keyboard_input_hint">Wpisz kod</string>
-    <string name="teach_pola">Naucz Pole tego produktu</string>
     <string name="help_dialog_title">Pola będzie rozpoznawała produkty po wyglądzie!</string>
     <string name="help_dialog_msg">Pomóż nam nauczyć Polę jak wygląda zeskanowany przez Ciebie produkt. Zajmie to 6 sekund.</string>
     <string name="want_to_help_button_label">Chętnie pomogę</string>
     <string name="next_time_button_label">Może innym razem…</string>
-    <string name="help_us_to_teach_pola_how_to_look_title">Naucz Polę</string>
-    <string name="help_us_to_teach_pola_how_to_look_msg">Nakreć film obracając produkt producenta %s w dłoni tak jak na przykładzie poniżej. Postaraj się nie zasłaniać produktu.</string>
-    <string name="do_not_show_this_screen_again">Nie pokazuj tego ekranu wiecej</string>
-    <string name="make_move">Nakręć film</string>
-    <string name="video_capture_start">START</string>
-    <string name="video_capture_stop">STOP</string>
-    <string name="seconds_left">sekund</string>
-    <string name="seconds_y">y</string>
-    <string name="seconds_a">a</string>
     <!-- TODO to jest tekst nie zatwierdzony przez nikogo -->
-    <string name="thank_you_for_teaching">Dziękujemy!</string>
     <string name="informations">Informacje</string>
     <string name="pola_application">Aplikacja Pola\nwersja %1$s (%2$d)\n© Klub Jagielloński</string>
+    <string name="see_pola_friends">Zobacz przyjaciół poli</string>
 </resources>
