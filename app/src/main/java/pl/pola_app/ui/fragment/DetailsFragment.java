@@ -81,11 +81,6 @@ public abstract class DetailsFragment extends DialogFragment {
     private EventLogger logger;
     private SessionId sessionId;
 
-
-    public DetailsFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

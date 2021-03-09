@@ -44,9 +44,6 @@ public class LidlDetailsFragment extends DetailsFragment {
         return fragment;
     }
 
-    public LidlDetailsFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
