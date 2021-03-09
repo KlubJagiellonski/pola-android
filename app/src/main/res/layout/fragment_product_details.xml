@@ -39,7 +39,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/company_name"
+                    android:id="@+id/main_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content">
 
                     <ProgressBar
-                        android:id="@+id/plscore_details_progressbar"
+                        android:id="@+id/main_plscore_details_progressbar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="26dp"
@@ -65,10 +65,10 @@
                         android:progressDrawable="@drawable/score_bar" />
 
                     <TextView
-                        android:id="@+id/plscore_details_text"
+                        android:id="@+id/main_plscore_details_text"
                         android:layout_width="wrap_content"
                         android:layout_height="26dp"
-                        android:layout_alignBottom="@+id/plscore_details_progressbar"
+                        android:layout_alignBottom="@+id/main_plscore_details_progressbar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
@@ -102,7 +102,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/company_plCapital_percent"
+                            android:id="@+id/plCapital_percent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"

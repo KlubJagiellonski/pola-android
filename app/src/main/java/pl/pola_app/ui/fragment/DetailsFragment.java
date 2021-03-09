@@ -35,23 +35,14 @@ public abstract class DetailsFragment extends DialogFragment {
     @BindView(R.id.product_info_card)
     CardView productInfoCard;
 
-    @BindView(R.id.company_name)
+    @BindView(R.id.main_company_name)
     TextView tv_companyName;
 
-    @BindView(R.id.plscore_details_progressbar)
+    @BindView(R.id.main_plscore_details_progressbar)
     ProgressBar plScoreBar;
 
-    @BindView(R.id.plscore_details_text)
+    @BindView(R.id.main_plscore_details_text)
     TextView plScoreText;
-
-    @BindView(R.id.plcapital_details_progressbar)
-    ProgressBar plCapitalBar1;
-
-    @BindView(R.id.company_plCapital_percent)
-    TextView plCapitalText1;
-
-    @BindView(R.id.plcapital_details_text)
-    TextView plCapitalScoreText1;
 
     @BindView(R.id.message)
     TextView reportMessage;

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.parceler.Parcels;
 
@@ -29,6 +31,12 @@ public class ProductDetailsFragment extends DetailsFragment {
 
     @BindView(R.id.buttonRnd)
     ImageButton buttonRnd;
+
+    @BindView(R.id.plcapital_details_progressbar)
+    ProgressBar plCapitalBar;
+
+    @BindView(R.id.plcapital_details_text)
+    TextView plCapitalScoreText;
 
     public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -67,11 +75,11 @@ public class ProductDetailsFragment extends DetailsFragment {
         }
 
         if (searchResult.companies != null && searchResult.companies.get(0).plCapital != null) {
-            plCapitalBar1.setProgress(searchResult.companies.get(0).plCapital);
-            plCapitalScoreText1.setText(searchResult.companies.get(0).plCapital + "%");
+            plCapitalBar.setProgress(searchResult.companies.get(0).plCapital);
+            plCapitalScoreText.setText(searchResult.companies.get(0).plCapital + "%");
         } else {
-            plCapitalBar1.setProgress(0);
-            plCapitalScoreText1.setText("?");
+            plCapitalBar.setProgress(0);
+            plCapitalScoreText.setText("?");
         }
 
         if (searchResult.altText != null) {

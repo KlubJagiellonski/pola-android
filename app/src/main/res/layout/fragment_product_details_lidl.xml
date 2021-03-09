@@ -11,8 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="5" />
 
-    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.cardview.widget.CardView
 
         android:id="@+id/product_info_card"
         android:layout_width="match_parent"
@@ -39,7 +38,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/company_name"
+                    android:id="@+id/main_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -56,7 +55,7 @@
                     android:layout_height="wrap_content">
 
                     <ProgressBar
-                        android:id="@+id/plscore_details_progressbar"
+                        android:id="@+id/main_plscore_details_progressbar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="26dp"
@@ -65,15 +64,15 @@
                         android:progressDrawable="@drawable/score_bar" />
 
                     <TextView
-                        android:id="@+id/plscore_details_text"
+                        android:id="@+id/main_plscore_details_text"
                         android:layout_width="wrap_content"
                         android:layout_height="26dp"
-                        android:layout_alignBottom="@+id/plscore_details_progressbar"
+                        android:layout_alignBottom="@+id/main_plscore_details_progressbar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
                         android:gravity="center_vertical"
-                        android:text=" ?"
+                        tools:text=" ?"
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />
                 </RelativeLayout>
@@ -108,13 +107,13 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/company_plCapital_percent"
+                                android:id="@+id/first_company_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginRight="10dp"
-                                android:text="Lidl Polska"
+                                tools:text="Lidl Polska"
                                 android:textColor="@android:color/black" />
 
                             <RelativeLayout
@@ -122,7 +121,7 @@
                                 android:layout_height="wrap_content">
 
                                 <ProgressBar
-                                    android:id="@+id/plcapital_details_progressbar"
+                                    android:id="@+id/first_company_progressbar"
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="20dp"
@@ -133,43 +132,42 @@
                                     android:progressDrawable="@drawable/score_bar" />
 
                                 <TextView
-                                    android:id="@+id/plcapital_details_text"
+                                    android:id="@+id/first_company_details_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:layout_alignBottom="@+id/plcapital_details_progressbar"
+                                    android:layout_alignBottom="@+id/first_company_progressbar"
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="16dp"
                                     android:gravity="center_vertical"
-                                    android:text="0pkt"
                                     android:textColor="@android:color/white"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"
+                                    tools:text="0pkt" />
                             </RelativeLayout>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/company_plCapital_info2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:visibility="visible">
 
                             <TextView
-                                android:id="@+id/company_plCapital_percent2"
+                                android:id="@+id/second_company_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginRight="10dp"
-                                android:text="Producent marki własnej Lidl"
-                                android:textColor="@android:color/black" />
+                                android:textColor="@android:color/black"
+                                tools:text="Producent marki własnej Lidl" />
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
                                 <ProgressBar
-                                    android:id="@+id/plcapital_details_progressbar_2"
+                                    android:id="@+id/second_company_progressbar"
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="20dp"
@@ -180,17 +178,17 @@
                                     android:progressDrawable="@drawable/score_bar" />
 
                                 <TextView
-                                    android:id="@+id/plcapital_details_text_2"
+                                    android:id="@+id/second_company_details_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:layout_alignBottom="@+id/plcapital_details_progressbar_2"
+                                    android:layout_alignBottom="@+id/second_company_progressbar"
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="16dp"
                                     android:gravity="center_vertical"
-                                    android:text="0pkt"
                                     android:textColor="@android:color/white"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"
+                                    tools:text="0pkt" />
                             </RelativeLayout>
                         </LinearLayout>
 
@@ -228,9 +226,9 @@
                                     android:layout_marginLeft="12dp"
                                     android:gravity="center_vertical"
                                     android:text=""
-                                    tools:text="To jest przyjaciel Poli"
                                     android:textColor="@color/pola_red"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    tools:text="To jest przyjaciel Poli" />
                             </LinearLayout>
 
                         </LinearLayout>

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,17 +18,23 @@ import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
 public class LidlDetailsFragment extends DetailsFragment {
 
-    @BindView(R.id.plcapital_details_progressbar_2)
-    ProgressBar plCapitalBar2;
+    @BindView(R.id.first_company_name)
+    TextView firstCompanyName;
 
-    @BindView(R.id.company_plCapital_percent2)
-    TextView plCapitalText2;
+    @BindView(R.id.first_company_progressbar)
+    ProgressBar fistCompanyProgressbar;
 
-    @BindView(R.id.plcapital_details_text_2)
-    TextView plCapitalScoreText2;
+    @BindView(R.id.first_company_details_text)
+    TextView firstCompanyScoreText;
 
-    @BindView(R.id.company_plCapital_info2)
-    LinearLayout companyCapitalInfo2;
+    @BindView(R.id.second_company_name)
+    TextView secondCompanyName;
+
+    @BindView(R.id.second_company_progressbar)
+    ProgressBar secondCompanyProgressbar;
+
+    @BindView(R.id.second_company_details_text)
+    TextView secondCompanyScoreText;
 
     public static LidlDetailsFragment newInstance(SearchResult searchResult) {
         LidlDetailsFragment fragment = new LidlDetailsFragment();
@@ -61,27 +66,27 @@ public class LidlDetailsFragment extends DetailsFragment {
         reportButton.setText(searchResult.report.button_text);
 
         tv_companyName.setText(searchResult.companies.get(1).name + " / " + searchResult.companies.get(0).name);
-        plCapitalText1.setText(searchResult.companies.get(1).name);
-        plCapitalText2.setText(searchResult.companies.get(0).name);
+        firstCompanyName.setText(searchResult.companies.get(1).name);
+        secondCompanyName.setText(searchResult.companies.get(0).name);
 
 
         plScoreBar.setProgress(0);
         plScoreText.setText("?");
 
         if (searchResult.companies.get(1).plScore != null) {
-            plCapitalBar1.setProgress(searchResult.companies.get(1).plScore);
-            plCapitalScoreText1.setText(searchResult.companies.get(1).plScore + getString(R.string.pt));
+            fistCompanyProgressbar.setProgress(searchResult.companies.get(1).plScore);
+            firstCompanyScoreText.setText(searchResult.companies.get(1).plScore + getString(R.string.pt));
         } else {
-            plCapitalBar1.setProgress(0);
-            plCapitalScoreText1.setText("?");
+            fistCompanyProgressbar.setProgress(0);
+            firstCompanyScoreText.setText("?");
         }
 
         if (searchResult.companies.get(0).plScore != null) {
-            plCapitalBar2.setProgress(searchResult.companies.get(0).plScore);
-            plCapitalScoreText2.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
+            secondCompanyProgressbar.setProgress(searchResult.companies.get(0).plScore);
+            secondCompanyScoreText.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
         } else {
-            plCapitalBar2.setProgress(0);
-            plCapitalScoreText2.setText("?");
+            secondCompanyProgressbar.setProgress(0);
+            secondCompanyScoreText.setText("?");
         }
 
         if (searchResult.altText != null) {

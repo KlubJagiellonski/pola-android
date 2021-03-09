@@ -75,7 +75,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        @BindView(R.id.company_name)
+        @BindView(R.id.main_company_name)
         TextView companyName;
 
         @BindView(R.id.score_bar)
