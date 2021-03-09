@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,9 +20,7 @@ import org.parceler.Parcels;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
@@ -104,7 +98,7 @@ public abstract class DetailsFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof DetailsFragmentDelegate) {
+        if (context instanceof DetailsFragmentDelegate) {
             delegate = (DetailsFragmentDelegate) context;
             return;
         }
@@ -122,17 +116,6 @@ public abstract class DetailsFragment extends DialogFragment {
         logger = new EventLogger(getActivity());
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
-//        PolaApplication.component(getActivity()).inject(this);
-//        ButterKnife.bind(this, view);
-//        return view;
-//    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -146,7 +129,7 @@ public abstract class DetailsFragment extends DialogFragment {
             productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
         }
 
-        if(reportType.equals(resources.getString(R.string.type_red))) {
+        if (reportType.equals(resources.getString(R.string.type_red))) {
             reportButton.setBackgroundColor(resources.getColor(R.color.card_type_red_report_bt_bk));
             reportButton.setTextColor(resources.getColor(R.color.card_type_red_report_bt_text));
         } else {

@@ -56,17 +56,13 @@ public class LidlDetailsFragment extends DetailsFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
-//        companyCapitalInfo2.setVisibility(View.VISIBLE);
-//        companyButtons.setVisibility(View.GONE);
-
         applyStyle(searchResult.card_type, searchResult.report.button_type);
         reportMessage.setText(searchResult.report.text);
         reportButton.setText(searchResult.report.button_text);
 
-        tv_companyName.setText(searchResult.companies.get(1).name + " / " + searchResult.companies.get(0).name );
+        tv_companyName.setText(searchResult.companies.get(1).name + " / " + searchResult.companies.get(0).name);
         plCapitalText1.setText(searchResult.companies.get(1).name);
-        plCapitalText2.setText(searchResult.companies.get(0).name );
+        plCapitalText2.setText(searchResult.companies.get(0).name);
 
 
         plScoreBar.setProgress(0);
@@ -87,9 +83,6 @@ public class LidlDetailsFragment extends DetailsFragment {
             plCapitalBar2.setProgress(0);
             plCapitalScoreText2.setText("?");
         }
-
-
-        /////////////////
 
         if (searchResult.altText != null) {
             plDataLayout.setVisibility(View.GONE);
