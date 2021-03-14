@@ -9,7 +9,7 @@ import java.util.*
  * Creates GUID.
  * It's stored in app's shared preferences so it's recreated when data are cleared.
  */
-class SessionId(context: Context) {
+open class SessionId(context: Context) {
     private val sessionId: String = init(context)
     fun get(): String {
         return sessionId

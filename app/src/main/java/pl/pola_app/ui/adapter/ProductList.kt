@@ -5,7 +5,7 @@ import org.parceler.Parcels
 import pl.pola_app.model.SearchResult
 import java.util.*
 
-class ProductList private constructor(private val searchResults: MutableList<SearchResult?>) {
+open class ProductList private constructor(private val searchResults: MutableList<SearchResult?>?) {
     private var onProductListChanged: OnProductListChanged? = null
     fun setOnProductListChanged(onProductListChanged: () -> Unit) {
         this.onProductListChanged = object : OnProductListChanged{
@@ -25,34 +25,40 @@ class ProductList private constructor(private val searchResults: MutableList<Sea
     }
 
     fun addProduct(searchResult: SearchResult?) {
-        if (searchResults.size > 0 && searchResults[0] == null) {
-            searchResults[0] = searchResult
-        } else {
-            searchResults.add(0, searchResult)
+        if (searchResults != null) {
+            if (searchResults.size > 0 && searchResults.get(0) == null) {
+                searchResults[0] = searchResult
+            } else {
+                searchResults.add(0, searchResult)
+            }
         }
         notifyOnChanged()
     }
 
     fun createProductPlaceholder() {
-        searchResults.add(0, null)
+        searchResults?.add(0, null)
         notifyOnChanged()
     }
 
     fun removeProductPlaceholder() {
-        if (searchResults.size > 0 && searchResults[0] == null) {
-            searchResults.removeAt(0)
-            notifyOnChanged()
+        if (searchResults != null) {
+            if (searchResults.size > 0 && searchResults[0] == null) {
+                searchResults.removeAt(0)
+                notifyOnChanged()
+            }
         }
     }
 
     fun itemExists(code: String): Boolean {
-        for (p in searchResults) {
-            if (p != null) {
-                if (p.code == code) {
-                    searchResults.remove(p)
-                    searchResults.add(0, p)
-                    notifyOnChanged()
-                    return true
+        if (searchResults != null) {
+            for (p in searchResults) {
+                if (p != null) {
+                    if (p.code == code) {
+                        searchResults.remove(p)
+                        searchResults.add(0, p)
+                        notifyOnChanged()
+                        return true
+                    }
                 }
             }
         }
@@ -60,11 +66,11 @@ class ProductList private constructor(private val searchResults: MutableList<Sea
     }
 
     fun size(): Int {
-        return searchResults.size
+        return searchResults?.size ?: 0
     }
 
     operator fun get(position: Int): SearchResult? {
-        return searchResults[position]
+        return searchResults?.get(position)
     }
 
     private fun notifyOnChanged() {

@@ -18,11 +18,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-internal class MainPresenter(
+internal open class MainPresenter(
     private val viewBinder: MainViewBinder,
     private val productList: ProductList,
     private val api: Api,
-    private val logger: EventLogger,
+    private val logger: EventLogger?,
     private val sessionId: SessionId,
     private val eventBus: Bus
 ) : Callback<SearchResult?>, BarcodeListener {
@@ -40,7 +40,7 @@ internal class MainPresenter(
     }
 
     override fun onBarcode(barcode: String, fromCamera: Boolean) {
-        logger.logSearch(barcode, sessionId.get(), if (fromCamera) "camera" else "keyboard")
+        logger?.logSearch(barcode, sessionId.get(), if (fromCamera) "camera" else "keyboard")
         if (productList.itemExists(barcode)) {
             handlerScanner.removeCallbacks(runnableResumeScan)
             handlerScanner.postDelayed(runnableResumeScan, millisecondsBetweenExisting.toLong())
@@ -55,11 +55,10 @@ internal class MainPresenter(
         }
     }
 
-    override fun onResponse(call: Call<SearchResult?>, response: Response<SearchResult?>) {
+    override fun onResponse(call: Call<SearchResult?>?, response: Response<SearchResult?>) {
         val searchResult = response.body() ?: return
         currentSearchResult = searchResult
-        searchResult.code
-        logger.logContentView(
+        logger?.logContentView(
             searchResult.name + "",
             "company_received", searchResult.product_id.toString(),
             searchResult.code,
@@ -70,7 +69,7 @@ internal class MainPresenter(
         viewBinder.setSupportPolaAppButtonVisibility(searchResult.askForSupport(), searchResult)
     }
 
-    override fun onFailure(call: Call<SearchResult?>, t: Throwable) {
+    override fun onFailure(call: Call<SearchResult?>?, t: Throwable) {
         if ("Unable to resolve host \"www.pola-app.pl\": No address associated with hostname" == t.localizedMessage) { //TODO this is awefull
             viewBinder.showNoConnectionMessage()
         } else {
@@ -82,7 +81,7 @@ internal class MainPresenter(
     }
 
     fun onItemClicked(searchResult: SearchResult) {
-        logger.logContentView(
+        logger?.logContentView(
             searchResult.name + "",
             "card_opened", searchResult.product_id.toString(),
             searchResult.code,

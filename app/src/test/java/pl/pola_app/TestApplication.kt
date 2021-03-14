@@ -1,6 +1,5 @@
-package pl.pola_app;
+package pl.pola_app
 
-import android.app.Application;
+import android.app.Application
 
-public class TestApplication extends Application {
-}
+class TestApplication : Application()

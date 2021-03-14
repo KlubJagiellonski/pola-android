@@ -1,115 +1,113 @@
-package pl.pola_app.ui.adapter;
+package pl.pola_app.ui.adapter
 
-import android.os.Bundle;
+import android.os.Bundle
+import com.nhaarman.mockitokotlin2.verify
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import pl.pola_app.TestApplication
+import pl.pola_app.model.SearchResult
+import pl.pola_app.testutil.SearchUtil
+import java.lang.Exception
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import pl.pola_app.TestApplication;
-import pl.pola_app.model.SearchResult;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static pl.pola_app.testutil.SearchUtil.createSearchResult;
-
-@Config(application = TestApplication.class)
-@RunWith(RobolectricTestRunner.class)
-public class ProductListTest {
-    private ProductList productList;
-
-    @org.junit.Before
-    public void setUp() throws Exception {
-        productList = ProductList.create(null);
+@Config(application = TestApplication::class)
+@RunWith(
+    RobolectricTestRunner::class
+)
+class ProductListTest {
+    private lateinit var productList: ProductList
+    @Before
+    @Throws(Exception::class)
+    fun setUp() {
+        productList = ProductList.create(null)
     }
 
     @Test
-    public void testCreate() throws Exception {
-        productList.addProduct(createSearchResult(1));
-        productList.addProduct(createSearchResult(2));
-        productList.addProduct(createSearchResult(3));
-
-        final Bundle bundle = new Bundle();
-        productList.writeToBundle(bundle);
-
-        final ProductList productListNew = ProductList.create(bundle);
-
-        assertEquals(this.productList.get(0), productListNew.get(0));
-        assertEquals(this.productList.get(1), productListNew.get(1));
-        assertEquals(this.productList.get(2), productListNew.get(2));
+    @Throws(Exception::class)
+    fun testCreate() {
+        productList.addProduct(SearchUtil.createSearchResult(1))
+        productList.addProduct(SearchUtil.createSearchResult(2))
+        productList.addProduct(SearchUtil.createSearchResult(3))
+        val bundle = Bundle()
+        productList.writeToBundle(bundle)
+        val productListNew = ProductList.create(bundle)
+        Assert.assertEquals(productList[0], productListNew[0])
+        Assert.assertEquals(productList[1], productListNew[1])
+        Assert.assertEquals(productList[2], productListNew[2])
     }
 
     @Test
-    public void testSize() throws Exception {
-        assertEquals(0, productList.size());
-        productList.addProduct(createSearchResult(1));
-        assertEquals(1, productList.size());
-        productList.addProduct(createSearchResult(2));
-        assertEquals(2, productList.size());
-        productList.addProduct(createSearchResult(3));
-        productList.addProduct(createSearchResult(4));
-        productList.addProduct(createSearchResult(5));
-        productList.addProduct(createSearchResult(6));
-        productList.addProduct(createSearchResult(6));
-        assertEquals(7, productList.size());
+    @Throws(Exception::class)
+    fun testSize() {
+        Assert.assertEquals(0, productList.size().toLong())
+        productList.addProduct(SearchUtil.createSearchResult(1))
+        Assert.assertEquals(1, productList.size().toLong())
+        productList.addProduct(SearchUtil.createSearchResult(2))
+        Assert.assertEquals(2, productList.size().toLong())
+        productList.addProduct(SearchUtil.createSearchResult(3))
+        productList.addProduct(SearchUtil.createSearchResult(4))
+        productList.addProduct(SearchUtil.createSearchResult(5))
+        productList.addProduct(SearchUtil.createSearchResult(6))
+        productList.addProduct(SearchUtil.createSearchResult(6))
+        Assert.assertEquals(7, productList.size().toLong())
     }
 
     @Test
-    public void testProductAdded() throws Exception {
-        SearchResult searchResult = createSearchResult(1);
-        productList.addProduct(searchResult);
-
-        assertEquals(searchResult, productList.get(0));
+    @Throws(Exception::class)
+    fun testProductAdded() {
+        val searchResult: SearchResult = SearchUtil.createSearchResult(1)
+        productList.addProduct(searchResult)
+        Assert.assertEquals(searchResult, productList[0])
     }
 
     @Test
-    public void testProductAddedToFrontOfList() throws Exception {
-        final SearchResult searchResultA = createSearchResult(1);
-        final SearchResult searchResultB = createSearchResult(2);
-
-        productList.addProduct(searchResultA);
-        productList.addProduct(searchResultB);
-
-        assertEquals(2, productList.size());
-        assertEquals(searchResultA, productList.get(1));
-        assertEquals(searchResultB, productList.get(0));
-        assertNotEquals(searchResultA, productList.get(0));
-        assertNotEquals(searchResultB, productList.get(1));
+    @Throws(Exception::class)
+    fun testProductAddedToFrontOfList() {
+        val searchResultA: SearchResult = SearchUtil.createSearchResult(1)
+        val searchResultB: SearchResult = SearchUtil.createSearchResult(2)
+        productList.addProduct(searchResultA)
+        productList.addProduct(searchResultB)
+        Assert.assertEquals(2, productList.size().toLong())
+        Assert.assertEquals(searchResultA, productList[1])
+        Assert.assertEquals(searchResultB, productList[0])
+        Assert.assertNotEquals(searchResultA, productList[0])
+        Assert.assertNotEquals(searchResultB, productList[1])
     }
 
     @Test
-    public void testNotifyChangedOnAdd() throws Exception {
-        final OnProductListChanged onProductListChanged = mock(OnProductListChanged.class);
-        productList.setOnProductListChanged(onProductListChanged);
-        productList.addProduct(createSearchResult(1));
-
-        verify(onProductListChanged).onChanged();
+    @Throws(Exception::class)
+    fun testNotifyChangedOnAdd() {
+        val onProductListChanged: OnProductListChanged = Mockito.mock<OnProductListChanged>(
+            OnProductListChanged::class.java
+        )
+        productList.setOnProductListChanged { onProductListChanged.onChanged() }
+        productList.addProduct(SearchUtil.createSearchResult(1))
+        verify<OnProductListChanged>(onProductListChanged).onChanged()
     }
 
     @Test
-    public void testItemDoesNotExistForEmptyList() throws Exception {
-        assertFalse(productList.itemExists("code"));
+    @Throws(Exception::class)
+    fun testItemDoesNotExistForEmptyList() {
+        Assert.assertFalse(productList.itemExists("code"))
     }
 
     @Test
-    public void testItemDoesNotExist() throws Exception {
-        productList.addProduct(createSearchResult(1));
-
-        assertFalse(productList.itemExists("code"));
+    @Throws(Exception::class)
+    fun testItemDoesNotExist() {
+        productList.addProduct(SearchUtil.createSearchResult(1))
+        Assert.assertFalse(productList.itemExists("code"))
     }
 
     @Test
-    public void testItemExists() throws Exception {
-        final SearchResult searchResult = createSearchResult(1);
-        final String code = searchResult.code;
-        productList.addProduct(searchResult);
-
-        assertTrue(productList.itemExists(code));
+    @Throws(Exception::class)
+    fun testItemExists() {
+        val searchResult: SearchResult = SearchUtil.createSearchResult(1)
+        val code = searchResult.code
+        productList.addProduct(searchResult)
+        Assert.assertTrue(productList.itemExists(code))
     }
-
 }

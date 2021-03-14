@@ -6,14 +6,17 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import pl.pola_app.BuildConfig
 
-class EventLogger(private val c: Context) {
-    fun logSearch(result: String, deviceId: String, source: String) {
+open class EventLogger(private val c: Context) {
+    fun logSearch(result: String, deviceId: String?, source: String) {
         if (!BuildConfig.USE_FIREBASE) {
             return
         }
         val bundle = Bundle()
         bundle.putString("code", result)
-        bundle.putString("device_id", deviceId)
+        deviceId?.run {
+            bundle.putString("device_id", this)
+        }
+
         bundle.putString("source", source)
         FirebaseAnalytics.getInstance(c).logEvent("scan_code", bundle)
     }
@@ -30,16 +33,20 @@ class EventLogger(private val c: Context) {
         contentType: String,
         contentId: String,
         code: String?,
-        deviceId: String
+        deviceId: String?
     ) {
         if (!BuildConfig.USE_FIREBASE) {
             return
         }
         val bundle = Bundle()
         bundle.putString("company", contentName)
-        bundle.putString("device_id", deviceId)
+        deviceId?.run {
+            bundle.putString("device_id", this)
+        }
         bundle.putString("product_id", contentId)
-        bundle.putString("code", code)
+        code?.run {
+            bundle.putString("code", this)
+        }
         FirebaseAnalytics.getInstance(c).logEvent(contentType, bundle)
     }
 

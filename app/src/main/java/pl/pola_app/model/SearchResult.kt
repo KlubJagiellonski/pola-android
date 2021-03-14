@@ -6,7 +6,7 @@ import pl.pola_app.model.Donate
 
 
 @Parcel
-data class SearchResult @ParcelConstructor constructor(val product_id: Int,
+data class SearchResult @ParcelConstructor constructor(val product_id: Int?,
                                                        val code: String,
                                                        val name: String,
                                                        val card_type: String,
