@@ -15,13 +15,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "pl.pola_app"
         minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 28
+        targetSdkVersion 30
+        versionCode 29
         versionName "1.8"
     }
 
