@@ -110,7 +110,7 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.13'
     implementation 'com.github.tajchert:nammu:1.2.1'
     implementation 'com.google.firebase:firebase-core:17.5.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
