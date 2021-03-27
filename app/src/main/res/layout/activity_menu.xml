@@ -90,13 +90,6 @@
                 android:text="@string/action_friends" />
 
             <TextView
-                android:id="@+id/activity_found_bug_tv"
-                style="@style/MenuTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_bug" />
-
-            <TextView
                 android:id="@+id/activity_rate_tv"
                 style="@style/MenuTextView"
                 android:layout_width="match_parent"
