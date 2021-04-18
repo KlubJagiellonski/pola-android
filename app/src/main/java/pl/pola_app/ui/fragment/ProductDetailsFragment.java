@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
+
 import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +35,6 @@ import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.delegate.ProductDetailsFragmentDelegate;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
-import pl.pola_app.ui.event.ReportButtonClickedEvent;
 
 public class ProductDetailsFragment extends DialogFragment {
 
@@ -69,14 +68,8 @@ public class ProductDetailsFragment extends DialogFragment {
     @BindView(R.id.buttonRnd)
     ImageButton buttonRnd;
 
-    @BindView(R.id.message)
-    TextView reportMessage;
-
     @BindView(R.id.seePolaFriends)
     Button seePolaFriendsButton;
-
-    @BindView(R.id.report_button)
-    Button reportButton;
 
     @BindView(R.id.tv_altText)
     TextView altText;
@@ -154,8 +147,6 @@ public class ProductDetailsFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
 
         applyStyle(searchResult.card_type, searchResult.report_button_type);
-        reportMessage.setText(searchResult.report_text);
-        reportButton.setText(searchResult.report_button_text);
 
         tv_companyName.setText(searchResult.name);
 
@@ -251,19 +242,6 @@ public class ProductDetailsFragment extends DialogFragment {
         } else {
             productInfoCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
         }
-
-        if(reportType.equals(resources.getString(R.string.type_red))) {
-            reportButton.setBackgroundColor(resources.getColor(R.color.card_type_red_report_bt_bk));
-            reportButton.setTextColor(resources.getColor(R.color.card_type_red_report_bt_text));
-        } else {
-            reportButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.button_border));
-            reportButton.setTextColor(resources.getColor(R.color.card_type_white_report_bt_text));
-        }
-    }
-
-    @OnClick(R.id.report_button)
-    public void report() {
-        eventBus.post(new ReportButtonClickedEvent(searchResult));
     }
 
     @OnClick(R.id.isFriendLayout)

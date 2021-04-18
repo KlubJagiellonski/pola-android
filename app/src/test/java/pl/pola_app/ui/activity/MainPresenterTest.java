@@ -20,7 +20,6 @@ import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.testutil.SearchUtil;
 import pl.pola_app.ui.adapter.ProductList;
-import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -36,13 +35,20 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class MainPresenterTest {
 
-    @Mock private MainViewBinder viewBinder;
-    @Mock private ProductList productList;
-    @Mock private Api api;
-    @Mock private Bus eventBus;
-    @Mock private EventLogger logger;
-    @Mock private SessionId sessionId;
-    @Mock private Call<SearchResult> mockCall;
+    @Mock
+    private MainViewBinder viewBinder;
+    @Mock
+    private ProductList productList;
+    @Mock
+    private Api api;
+    @Mock
+    private Bus eventBus;
+    @Mock
+    private EventLogger logger;
+    @Mock
+    private SessionId sessionId;
+    @Mock
+    private Call<SearchResult> mockCall;
     private MainPresenter presenter;
 
     @Before
@@ -178,16 +184,6 @@ public class MainPresenterTest {
         presenter.productDetailsFragmentDismissed(null);
 
         verify(viewBinder).dismissProductDetailsView();
-    }
-
-    @Test
-    public void testLaunchReportActivity() throws Exception {
-        final SearchResult searchResult = SearchUtil.createSearchResult(1);
-        searchResult.product_id = 123;
-        searchResult.code = "12345678";
-        presenter.reportButtonClicked(new ReportButtonClickedEvent(searchResult));
-
-        verify(viewBinder).launchReportActivity("123", "12345678");
     }
 
     @Test

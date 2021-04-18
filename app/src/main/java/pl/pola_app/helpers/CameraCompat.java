@@ -11,6 +11,7 @@ public abstract class CameraCompat {
     }
 
     public abstract void open();
+
     public abstract void openPreview(SurfaceHolder surfaceholder);
 
     public abstract void closePreview();

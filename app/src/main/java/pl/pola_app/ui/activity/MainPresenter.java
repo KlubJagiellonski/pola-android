@@ -3,6 +3,7 @@ package pl.pola_app.ui.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -18,7 +19,6 @@ import pl.pola_app.ui.adapter.OnProductListChanged;
 import pl.pola_app.ui.adapter.ProductList;
 import pl.pola_app.ui.adapter.ProductsAdapter;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
-import pl.pola_app.ui.event.ReportButtonClickedEvent;
 import pl.pola_app.ui.fragment.BarcodeListener;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +30,8 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private final ProductList productList;
     private final Handler handlerScanner = new Handler();
     private final EventLogger logger;
-    @Nullable private Call<SearchResult> reportResultCall;
+    @Nullable
+    private Call<SearchResult> reportResultCall;
     private final Runnable runnableResumeScan = new Runnable() {
         @Override
         public void run() {
@@ -105,7 +106,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
 
             reportResultCall =
                     viewBinder.getDeviceYear() < 2010
-                            ? api.getByCode(barcode, sessionId.get(),true)
+                            ? api.getByCode(barcode, sessionId.get(), true)
                             : api.getByCode(barcode, sessionId.get());
             reportResultCall.enqueue(this);
         }
@@ -114,6 +115,9 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     @Override
     public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
         final SearchResult searchResult = response.body();
+        if (searchResult == null) {
+            return;
+        }
         currentSearchResult = searchResult;
         logger.logContentView((searchResult.name != null) ? searchResult.name + "" : "empty",
                 "company_received",
@@ -157,28 +161,16 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         viewBinder.dismissProductDetailsView();
     }
 
-    @Subscribe
-    @SuppressWarnings("WeakerAccess")
-    public void reportButtonClicked(ReportButtonClickedEvent event) {
-        String productId = null;
-        String code = null;
-        if (event.searchResult.product_id != null) {
-            productId = Integer.toString(event.searchResult.product_id);
-            code = event.searchResult.code;
-        }
-        viewBinder.launchReportActivity(productId, code);
-    }
-
     public void setCurrentSearchResult(SearchResult currentSearchResult) {
         this.currentSearchResult = currentSearchResult;
     }
 
-    public void onBackStackChange(boolean isNotBackStackEmpty){
-            viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
+    public void onBackStackChange(boolean isNotBackStackEmpty) {
+        viewBinder.setSupportPolaAppButtonVisibility(!isNotBackStackEmpty && currentSearchResult != null && currentSearchResult.askForSupport(), currentSearchResult);
     }
 
     public void onSupportPolaButtonClick() {
-        if(currentSearchResult != null) {
+        if (currentSearchResult != null) {
             viewBinder.openWww(currentSearchResult, currentSearchResult.donate.url);
         }
     }
