@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/company_name"
+                    android:id="@+id/main_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content">
 
                     <ProgressBar
-                        android:id="@+id/plscore_details_progressbar"
+                        android:id="@+id/main_plscore_details_progressbar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="26dp"
@@ -63,10 +63,10 @@
                         android:progressDrawable="@drawable/score_bar" />
 
                     <TextView
-                        android:id="@+id/plscore_details_text"
+                        android:id="@+id/main_plscore_details_text"
                         android:layout_width="wrap_content"
                         android:layout_height="26dp"
-                        android:layout_alignBottom="@+id/plscore_details_progressbar"
+                        android:layout_alignBottom="@+id/main_plscore_details_progressbar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
@@ -101,7 +101,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/company_plCapital_percent"
+                            android:id="@+id/plCapital_percent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -251,7 +251,8 @@
                             android:layout_marginTop="16dp"
                             android:baselineAligned="false"
                             android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            tools:visibility="visible">
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -269,6 +270,7 @@
                                 android:layout_marginLeft="12dp"
                                 android:gravity="center_vertical"
                                 android:text=""
+                                tools:text="To jest przyjaciel Poli"
                                 android:textColor="@color/pola_red"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -281,7 +283,8 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            tools:text="Opis firmy."/>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>

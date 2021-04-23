@@ -16,10 +16,10 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 public interface Api {
-    @GET("a/v3/get_by_code")
+    @GET("a/v4/get_by_code")
     Call<SearchResult> getByCode(@Query("code") String barcode, @Query("device_id") String deviceId, @Query("noai") Boolean noai);
 
-    @GET("a/v3/get_by_code")
+    @GET("a/v4/get_by_code")
     Call<SearchResult> getByCode(@Query("code") String barcode, @Query("device_id") String deviceId);
 
     @Headers("Content-Encoding: gzip")
