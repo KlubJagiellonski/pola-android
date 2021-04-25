@@ -5,7 +5,9 @@
               android:layout_height="match_parent"
               android:background="@color/pola_gray"
               android:gravity="center"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:clickable="true"
+              android:focusable="true">
 
     <EditText
         android:id="@+id/keyboard_input"
