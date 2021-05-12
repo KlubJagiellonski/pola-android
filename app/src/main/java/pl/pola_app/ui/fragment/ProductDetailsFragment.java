@@ -135,13 +135,7 @@ public class ProductDetailsFragment extends DetailsFragment {
             isFriendText.setText(searchResult.friend_text);
         }
 
-        productInfoCard.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                eventBus.post(new ProductDetailsFragmentDismissedEvent());
-            }
-        });
+        productInfoCard.setOnClickListener(v -> eventBus.post(new ProductDetailsFragmentDismissedEvent()));
     }
 
     @Override
