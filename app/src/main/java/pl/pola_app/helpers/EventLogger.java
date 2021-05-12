@@ -93,4 +93,14 @@ public class EventLogger {
         bundle.putString("device_id", deviceId);
         FirebaseAnalytics.getInstance(c).logEvent("menu_item_opened", bundle);
     }
+
+    public void logSupportPolaButtonClick(String deviceId) {
+        if(!BuildConfig.USE_FIREBASE) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("device_id", deviceId);
+        FirebaseAnalytics.getInstance(c).logEvent("donate_opened", bundle);
+    }
 }

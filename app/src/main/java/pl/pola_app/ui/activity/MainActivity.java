@@ -83,12 +83,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
         logger = new EventLogger(this);
 
-        openKeyboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openKeyboard();
-            }
-        });
+        openKeyboard.setOnClickListener(v -> openKeyboard());
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
 
         productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
@@ -119,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
                         flashActionListener.isTorchOn() ? R.drawable.ic_flash_off_white_48dp : R.drawable.ic_flash_on_white_48dp));
             }
         }
-
-
     }
 
     @Override
@@ -161,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ft.commitAllowingStateLoss();
         if (searchResult.askForSupport()) {
             supportPolaApp.setVisibility(View.VISIBLE);
-            supportPolaApp.setText(searchResult.donate.title);
+            supportPolaApp.setText(R.string.we_neet_1_pln);
         } else {
             supportPolaApp.setVisibility(View.GONE);
         }
@@ -187,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @OnClick(R.id.support_pola_app)
     public void onSupportPolaButtonClick() {
+        logger.logSupportPolaButtonClick(sessionId.get());
         mainPresenter.onSupportPolaButtonClick();
     }
 
