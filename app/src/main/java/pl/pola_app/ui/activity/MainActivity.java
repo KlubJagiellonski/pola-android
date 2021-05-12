@@ -152,12 +152,6 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         }
 
         ft.commitAllowingStateLoss();
-        if (searchResult.askForSupport()) {
-            supportPolaApp.setVisibility(View.VISIBLE);
-            supportPolaApp.setText(R.string.we_neet_1_pln);
-        } else {
-            supportPolaApp.setVisibility(View.GONE);
-        }
         mainPresenter.setCurrentSearchResult(searchResult);
     }
 
@@ -274,5 +268,4 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
