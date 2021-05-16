@@ -74,14 +74,6 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void testCallCanceledOnUnregister() throws Exception {
-        presenter.onBarcode("code", true);
-        presenter.unregister();
-
-        verify(mockCall).cancel();
-    }
-
-    @Test
     public void testDontAddExistingProduct() throws Exception {
         when(productList.itemExists("itemA")).thenReturn(true);
         presenter.onBarcode("itemA", true);
