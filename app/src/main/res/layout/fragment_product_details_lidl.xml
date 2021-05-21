@@ -270,7 +270,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/button_border"
-                    android:text="@string/zobacz_przyjaci_poli"
+                    android:text="@string/see_pola_friends"
                     android:textColor="#D8002F" />
 
             </LinearLayout>
