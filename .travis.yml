@@ -1,12 +1,9 @@
 language: android
 
-jdk:
- - oraclejdk8
-
 android:
   components:
     - platform-tools
-    - tools
+    - tools 
     - build-tools-30.0.3
     - android-30
     - extra-android-support
@@ -19,7 +16,8 @@ script:
 notifications:
   email: false
 
-sudo: false
+before_install:
+  - yes | sdkmanager "platforms;android-30"
 
 cache:
   directories:
