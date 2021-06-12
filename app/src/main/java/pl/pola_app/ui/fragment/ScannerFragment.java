@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -81,8 +82,12 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         cameraSettings.setContinuousFocusEnabled(true);
         cameraSettings.setAutoFocusEnabled(true);
         barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
-
         barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        FrameLayout.LayoutParams statusTextLayoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        statusTextLayoutParams.setMargins(0, (int) (height * 0.34), 0, 0);
+        barcodeScanner.getStatusView().setLayoutParams(statusTextLayoutParams);
+
         barcodeScanner.setTorchListener(this);
         barcodeScanner.setTorchOff();
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
