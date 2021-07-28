@@ -118,7 +118,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.38'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.38.1'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
