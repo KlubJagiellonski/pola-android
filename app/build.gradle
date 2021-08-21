@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.github.tajchert:nammu:1.2.1'
     implementation 'com.google.firebase:firebase-core:19.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.38.1'
