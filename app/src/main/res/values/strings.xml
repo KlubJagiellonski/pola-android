@@ -10,8 +10,8 @@
     <string name="report_text">Zgłoś</string>
     <string name="photos_report">zdjęcia:</string>
     <string name="report_description">Zrób zdjęcie kodu kreskowego i etykiety z danymi producenta.</string>
-    <string name="description_report">opis (opcjonalny):</string>
-    <string name="description_hint">Dodatkowe informacje</string>
+    <string name="description_report">Opis:</string>
+    <string name="description_hint">Opis błędu</string>
     <string name="sending_image_dialog">Wysyłanie…</string>
     <string name="toast_send_raport">Raport przesłany, dziękujemy</string>
     <string name="toast_send_raport_error">Problem z wysyłaniem, spróbuj później.</string>

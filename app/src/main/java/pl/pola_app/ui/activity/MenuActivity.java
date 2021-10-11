@@ -93,6 +93,14 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.activity_found_bug_tv)
+    void onFoundBuglick() {
+        logger.logMenuItemOpened("Zgłoś błąd w danych", sessionId.get());
+        Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.setAction("product_report");
+        startActivity(intent);
+    }
+
     @OnClick(R.id.activity_rate_tv)
     void onRateClick() {
         logger.logMenuItemOpened("Pola na Twitterze", sessionId.get());
