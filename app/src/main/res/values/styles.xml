@@ -1,19 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppThemeWeb" parent="@style/Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/theme_web_primary</item>
-        <item name="colorPrimaryDark">@color/theme_web_primarydark</item>
-        <item name="colorAccent">@color/theme_web_accent</item>
+    <style name="AppThemeWeb" parent="@style/Theme.AppCompat.DayNight"/>
 
-    </style>
-
-    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowActionBar">false</item>
-        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
-    <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeLight" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowActionBar">false</item>
     </style>
     <style name="key_border">
