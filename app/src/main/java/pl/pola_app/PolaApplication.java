@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.pola_app.helpers.Utils;
@@ -33,7 +32,6 @@ public class PolaApplication extends Application {
         if(BuildConfig.USE_FIREBASE) {
             FirebaseAnalytics.getInstance(this);
         }
-        ButterKnife.setDebug(BuildConfig.DEBUG);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -29,10 +28,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.databinding.FragmentScannerBinding;
 import pl.pola_app.helpers.Utils;
 import pl.pola_app.ui.activity.ActivityWebView;
 import pl.pola_app.ui.event.FlashActionListener;
@@ -45,13 +43,8 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Inject
     Bus eventBus;
 
-    @BindView(R.id.scanner_view)
-    CompoundBarcodeView barcodeScanner;//ZXING this or mPreview should be used
-
-    @BindView(R.id.appIcon)
-    ImageView appIcon;
-
     private boolean isTorchOn = false;
+    private FragmentScannerBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,77 +52,89 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         super.onCreate(savedInstanceState);
     }
 
+    //ZXING barcode result
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(final BarcodeResult result) {
+            if (result.getText() != null) {
+                binding.barcodeScanner.getBarcodeView().stopDecoding();
+                binding.barcodeScanner.setStatusText("");
+                ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onBarcode(result.getText());
+                    }
+                });
+
+                Timber.d(result.getText());
+                Timber.d(result.getBarcodeFormat().toString());
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View scannerView = inflater.inflate(R.layout.fragment_scanner, container, false);
-        ButterKnife.bind(this, scannerView);
+            Bundle savedInstanceState) {
+        binding = FragmentScannerBinding.inflate(inflater, container, false);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-        barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width * 0.9f), (int) (height * 0.25f)));
+        binding.barcodeScanner.getBarcodeView().setFramingRectSize(new Size((int) (width * 0.9f), (int) (height * 0.25f)));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         layoutParams.setMargins(0, (int) (-1 * (height * 0.2)), 0, 0);
-        barcodeScanner.setLayoutParams(layoutParams);
+        binding.barcodeScanner.setLayoutParams(layoutParams);
 
-        CameraSettings cameraSettings = barcodeScanner.getBarcodeView().getCameraSettings();
-        //cameraSettings.setBarcodeSceneModeEnabled(true);
+        CameraSettings cameraSettings = binding.barcodeScanner.getBarcodeView().getCameraSettings();
         cameraSettings.setContinuousFocusEnabled(true);
         cameraSettings.setAutoFocusEnabled(true);
-        barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
-        barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
+        binding.barcodeScanner.getBarcodeView().setCameraSettings(cameraSettings);
+        binding.barcodeScanner.setStatusText(getActivity().getString(R.string.scanner_status_text));
         FrameLayout.LayoutParams statusTextLayoutParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         statusTextLayoutParams.setMargins(0, (int) (height * 0.34), 0, 0);
-        barcodeScanner.getStatusView().setLayoutParams(statusTextLayoutParams);
+        binding.barcodeScanner.getStatusView().setLayoutParams(statusTextLayoutParams);
 
-        barcodeScanner.setTorchListener(this);
-        barcodeScanner.setTorchOff();
+        binding.barcodeScanner.setTorchListener(this);
+        binding.barcodeScanner.setTorchOff();
         Nammu.askForPermission(getActivity(), android.Manifest.permission.CAMERA, permissionCameraCallback);
 
-        appIcon.setOnClickListener(view -> {
+        binding.appIcon.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), ActivityWebView.class);
             intent.putExtra("url", Utils.URL_POLA_ABOUT);
             startActivity(intent);
         });
 
-        return scannerView;
+        return binding.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         eventBus.register(this);
-        if (barcodeScanner != null) {
-            barcodeScanner.resume();
-        }
+        binding.barcodeScanner.resume();
     }
-
 
     @Override
     public void onPause() {
         super.onPause();
         eventBus.unregister(this);
-        if (barcodeScanner != null) {
-            barcodeScanner.setTorchOff();
-            barcodeScanner.pause();
-        }
+        binding.barcodeScanner.setTorchOff();
+        binding.barcodeScanner.pause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    public void resumeScanning() {
-        if (barcodeScanner != null) {
-            barcodeScanner.decodeContinuous(callback);
-        }
+        binding = null;
     }
 
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
@@ -144,33 +149,9 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         }
     };
 
-    //ZXING barcode result
-    private BarcodeCallback callback = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(final BarcodeResult result) {
-            if (result.getText() != null) {
-                if (barcodeScanner != null) {
-                    barcodeScanner.getBarcodeView().stopDecoding();
-                    barcodeScanner.setStatusText("");
-                }
-                ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onBarcode(result.getText());
-                    }
-                });
-
-                Timber.d(result.getText());
-                Timber.d(result.getBarcodeFormat().toString());
-
-            }
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
+    public void resumeScanning() {
+        binding.barcodeScanner.decodeContinuous(callback);
+    }
 
     private void onBarcode(String barcode) {
         final Activity activity = getActivity();
@@ -187,9 +168,9 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
     @Override
     public void onFlashAction() {
         if (isTorchOn) {
-            barcodeScanner.setTorchOff();
+            binding.barcodeScanner.setTorchOff();
         } else {
-            barcodeScanner.setTorchOn();
+            binding.barcodeScanner.setTorchOn();
         }
     }
 
@@ -205,7 +186,7 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
 
     public void setTorchOff() {
         if (isTorchOn) {
-            barcodeScanner.setTorchOff();
+            binding.barcodeScanner.setTorchOff();
         }
     }
 }

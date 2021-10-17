@@ -4,23 +4,20 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.BuildConfig;
 import pl.pola_app.R;
+import pl.pola_app.databinding.ActivityMenuBinding;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
 import pl.pola_app.helpers.Utils;
 
 public class MenuActivity extends AppCompatActivity {
 
-    @BindView(R.id.app_build_tv)
-    TextView appBuildTv;
+    private ActivityMenuBinding binding;
 
     private EventLogger logger;
     private SessionId sessionId;
@@ -28,81 +25,83 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
-        ButterKnife.bind(this, this);
+        binding = ActivityMenuBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         logger = new EventLogger(this);
         sessionId = SessionId.create(this);
         setupView();
+        binding.menuBackIv.setOnClickListener(this::onMenuBackClick);
+        binding.activityMenuAboutAppTv.setOnClickListener(this::onAboutAppClick);
+        binding.activityMenuUserManualTv.setOnClickListener(this::onUserManualClick);
+        binding.activityMenuAboutKjTv.setOnClickListener(this::onAboutKJClick);
+        binding.activityMenuTeamTv.setOnClickListener(this::onTeamClick);
+        binding.activityMenuPartnersTv.setOnClickListener(this::onPartnersClick);
+        binding.activityMenuFriendsTv.setOnClickListener(this::onFriendsClick);
+        binding.activityFoundBugTv.setOnClickListener(this::onFoundBugClick);
+        binding.activityRateTv.setOnClickListener(this::onRateClick);
+        binding.activityFacebookTv.setOnClickListener(this::onFacebookClick);
+        binding.activityTwitterTv.setOnClickListener(this::onTwitterClick);
     }
 
     private void setupView() {
-        appBuildTv.setText(getString(R.string.pola_application, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        binding.appBuildTv.setText(getString(R.string.pola_application, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
     }
 
-    @OnClick(R.id.menu_back_iv)
-    void onMenuBackClick() {
+    void onMenuBackClick(View view) {
         finish();
     }
 
-    @OnClick(R.id.activity_menu_about_app_tv)
-    void onAboutAppClick() {
+    void onAboutAppClick(View view) {
         logger.logMenuItemOpened("O Aplikacji Pola", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_ABOUT);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_menu_user_manual_tv)
-    void onUserManualClick() {
+    void onUserManualClick(View view) {
         logger.logMenuItemOpened("Instrukcja obsługi", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_METHOD);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_menu_about_kj_tv)
-    void onAboutKJClick() {
+    void onAboutKJClick(View view) {
         logger.logMenuItemOpened("O Klubie Jagiellońskim", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_KJ);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_menu_team_tv)
-    void onTeamClick() {
+    void onTeamClick(View view) {
         logger.logMenuItemOpened("Zespół", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_TEAM);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_menu_partners_tv)
-    void onPartnersClick() {
+    void onPartnersClick(View view) {
         logger.logMenuItemOpened("Partnerzy", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_PARTNERS);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_menu_friends_tv)
-    void onFriendsClick() {
+    void onFriendsClick(View view) {
         logger.logMenuItemOpened("Przyjaciele Poli", sessionId.get());
         Intent intent = new Intent(this, ActivityWebView.class);
         intent.putExtra("url", Utils.URL_POLA_FRIENDS);
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_found_bug_tv)
-    void onFoundBuglick() {
+    void onFoundBugClick(View view) {
         logger.logMenuItemOpened("Zgłoś błąd w danych", sessionId.get());
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.setAction("product_report");
         startActivity(intent);
     }
 
-    @OnClick(R.id.activity_rate_tv)
-    void onRateClick() {
+    void onRateClick(View view) {
         logger.logMenuItemOpened("Pola na Twitterze", sessionId.get());
         Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -117,15 +116,12 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.activity_facebook_tv)
-    void onFacebookClick() {
+    void onFacebookClick(View view) {
         logger.logMenuItemOpened("Pola na Facebooku", sessionId.get());
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_FB)));
-
     }
 
-    @OnClick(R.id.activity_twitter_tv)
-    void onTwitterClick() {
+    void onTwitterClick(View view) {
         logger.logMenuItemOpened("Pola na Twitterze", sessionId.get());
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_TWITTER)));
     }

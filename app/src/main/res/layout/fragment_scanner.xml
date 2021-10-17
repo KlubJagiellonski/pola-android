@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
-        android:id="@+id/scanner_view"
+        android:id="@+id/barcode_scanner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:keepScreenOn="true"

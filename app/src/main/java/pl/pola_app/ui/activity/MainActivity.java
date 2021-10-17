@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,16 +18,13 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.device.yearclass.YearClass;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.databinding.ActivityMainBinding;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.ProductsListLinearLayoutManager;
 import pl.pola_app.helpers.SessionId;
@@ -53,26 +49,19 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     Bus eventBus;
     @Inject
     SettingsPreference settingsPreference;
-    @BindView(R.id.products_list)
-    RecyclerView productsListView;
-    @BindView(R.id.open_keyboard_button)
-    FloatingActionButton openKeyboard;
-    @BindView(R.id.support_pola_app)
-    Button supportPolaApp;
-    @BindView(R.id.menu)
-    ImageView menu;
 
     private ScannerFragment scannerFragment;
     private MainPresenter mainPresenter;
     private EventLogger logger;
     private SessionId sessionId;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ButterKnife.bind(this, this);
         PolaApplication.component(this).inject(this);
         Nammu.init(this);
 
@@ -83,27 +72,29 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
         logger = new EventLogger(this);
 
-        openKeyboard.setOnClickListener(v -> openKeyboard());
+        binding.openKeyboardButton.setOnClickListener(v -> openKeyboard());
         scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.scanner_fragment);
 
-        productsListView.setLayoutManager(new ProductsListLinearLayoutManager(this));
+        binding.productsList.setLayoutManager(new ProductsListLinearLayoutManager(this));
 
         getFragmentManager().addOnBackStackChangedListener(() -> {
             final boolean isNotBackStackEmpty = getFragmentManager().getBackStackEntryCount() > 0;
             mainPresenter.onBackStackChange(isNotBackStackEmpty);
             if (isNotBackStackEmpty) {
-                openKeyboard.hide();
+                binding.openKeyboardButton.hide();
             } else {
-                openKeyboard.show();
+                binding.openKeyboardButton.show();
             }
         });
 
-        menu.setOnClickListener(view -> {
+        binding.menu.setOnClickListener(view -> {
             startActivity(new Intent(this, MenuActivity.class));
         });
+
+        binding.flashIcon.setOnClickListener(this::onFlashIconClicked);
+        binding.supportPolaApp.setOnClickListener(this::onSupportPolaButtonClick);
     }
 
-    @OnClick(R.id.flash_icon)
     public void onFlashIconClicked(View view) {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.scanner_fragment);
         if (fragment != null && fragment instanceof FlashActionListener) {
@@ -169,11 +160,10 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public void setAdapter(@NonNull final RecyclerView.Adapter adapter) {
-        productsListView.setAdapter(adapter);
+        binding.productsList.setAdapter(adapter);
     }
 
-    @OnClick(R.id.support_pola_app)
-    public void onSupportPolaButtonClick() {
+    public void onSupportPolaButtonClick(View view) {
         logger.logSupportPolaButtonClick(sessionId.get());
         mainPresenter.onSupportPolaButtonClick();
     }
@@ -188,11 +178,11 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
     @Override
     public void setSupportPolaAppButtonVisibility(boolean isVisible, SearchResult searchResult) {
         if (isVisible) {
-            supportPolaApp.setVisibility(View.VISIBLE);
-            supportPolaApp.setText(searchResult.donate.title);
+            binding.supportPolaApp.setVisibility(View.VISIBLE);
+            binding.supportPolaApp.setText(searchResult.donate.title);
             return;
         }
-        supportPolaApp.setVisibility(View.GONE);
+        binding.supportPolaApp.setVisibility(View.GONE);
     }
 
     @Override
@@ -249,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
