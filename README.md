@@ -9,7 +9,9 @@ Aplikacja jest dostępna w sklepie Google Play oraz na stronie [pola-app.pl](htt
 Pola will help you find polish products. Taking Pola on shopping will let you find products with soul and support Polish economy.  
 Currently available on Play store and [pola-app.pl](https://www.pola-app.pl/)
 
-<img src="https://user-images.githubusercontent.com/12548284/138152792-6608a695-5cc4-43b4-b878-f7459ec3e7ac.png" width="140">
+<a href="https://play.google.com/store/apps/details?id=pl.pola_app">
+    <img src="https://user-images.githubusercontent.com/12548284/138152792-6608a695-5cc4-43b4-b878-f7459ec3e7ac.png" width="140">
+</a>
 
 # Uruchomienie
 
