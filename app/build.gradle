@@ -1,13 +1,18 @@
 import java.util.logging.Level
 import java.util.logging.Logger
 
+
 buildscript {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.crashlytics'
+
+plugins {
+    id 'kotlin-android'
+    id 'com.android.application'
+    id 'com.google.firebase.crashlytics'
+}
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -123,7 +128,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-bom:28.4.2'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
 
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    // Kotlin
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     annotationProcessor 'com.google.dagger:dagger-compiler:2.39.1'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
