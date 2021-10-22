@@ -25,17 +25,19 @@ class MenuActivity : AppCompatActivity() {
         logger = EventLogger(this)
         sessionId = SessionId.create(this)
         setupView()
-        binding.menuBackIv.setOnClickListener { onMenuBackClick() }
-        binding.activityMenuAboutAppTv.setOnClickListener { onAboutAppClick() }
-        binding.activityMenuUserManualTv.setOnClickListener { onUserManualClick() }
-        binding.activityMenuAboutKjTv.setOnClickListener { onAboutKlubJagiellonskiClick() }
-        binding.activityMenuTeamTv.setOnClickListener { onTeamClick() }
-        binding.activityMenuPartnersTv.setOnClickListener { onPartnersClick() }
-        binding.activityMenuFriendsTv.setOnClickListener { onFriendsClick() }
-        binding.activityFoundBugTv.setOnClickListener { onFoundBugClick() }
-        binding.activityRateTv.setOnClickListener { onRateClick() }
-        binding.activityFacebookTv.setOnClickListener { onFacebookClick() }
-        binding.activityTwitterTv.setOnClickListener { onTwitterClick() }
+        with(binding) {
+            menuBackIv.setOnClickListener { onMenuBackClick() }
+            activityMenuAboutAppTv.setOnClickListener { onAboutAppClick() }
+            activityMenuUserManualTv.setOnClickListener { onUserManualClick() }
+            activityMenuAboutKjTv.setOnClickListener { onAboutKlubJagiellonskiClick() }
+            activityMenuTeamTv.setOnClickListener { onTeamClick() }
+            activityMenuPartnersTv.setOnClickListener { onPartnersClick() }
+            activityMenuFriendsTv.setOnClickListener { onFriendsClick() }
+            activityFoundBugTv.setOnClickListener { onFoundBugClick() }
+            activityRateTv.setOnClickListener { onRateClick() }
+            activityFacebookTv.setOnClickListener { onFacebookClick() }
+            activityTwitterTv.setOnClickListener { onTwitterClick() }
+        }
     }
 
     private fun setupView() {
