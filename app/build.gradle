@@ -73,6 +73,24 @@ android {
     }
 }
 
+def build_param = "${build}"
+
+if (build_param != "dev") {
+    //exclude dev builkd
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'dev') {
+            variant.setIgnore(true)
+        }
+    }
+} else {
+    //exclude all except dev
+    android.variantFilter { variant ->
+        if (variant.buildType.name != 'dev') {
+            variant.setIgnore(true)
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
