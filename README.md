@@ -28,3 +28,6 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 Odwiedź zakładkę [Issues](https://github.com/KlubJagiellonski/pola-android/issues) aby znaleźć pomysły na nowe funkcjonalności.
 
+# W razie pytań
+ 
+W razie jakichkolwiek pytań prośba o kontakt z [github.com/rafalgawlik](https://github.com/rafalgawlik)
