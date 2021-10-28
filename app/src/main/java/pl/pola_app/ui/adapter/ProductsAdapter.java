@@ -101,13 +101,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                 progress.setVisibility(View.VISIBLE);
                 companyName.setText("");
                 plScore.setProgress(0);
-                applyStyle(context.getString(R.string.type_white));
                 return;
             }
 
             progress.setVisibility(View.GONE);
 
-            applyStyle(searchResult.card_type);
             companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
             if (searchResult.companies != null && searchResult.companies.get(0).plScore != null) {
@@ -123,16 +121,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             }
         }
 
-        private void applyStyle(String style) {
-            final Resources resources = context.getResources();
-            if (style.equals(resources.getString(R.string.type_grey))) {
-                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
-                plScore.setBackgroundColor(resources.getColor(R.color.card_type_grey_score_bk));
-            } else {
-                productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
-                plScore.setBackgroundColor(resources.getColor(R.color.card_type_white_score_bk));
-            }
-        }
 
         @Override
         public void onClick(View view) {
