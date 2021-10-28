@@ -22,7 +22,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:layout_weight="90"
-        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardBackgroundColor="@color/pola_base_background"
         card_view:cardCornerRadius="4dp"
         tools:context="pl.pola_app.ui.fragment.ProductDetailsFragment">
 
@@ -47,7 +47,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/unknown_company"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/pola_base_font"
                     android:textSize="18sp" />
 
                 <RelativeLayout
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="16dp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/pola_base_font"
                         android:visibility="gone" />
                 </ScrollView>
 
@@ -113,7 +113,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginRight="10dp"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/pola_base_font"
                                 tools:text="Lidl Polska" />
 
                             <RelativeLayout
@@ -159,7 +159,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginRight="10dp"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/pola_base_font"
                                 tools:text="Producent marki własnej Lidl" />
 
                             <RelativeLayout
@@ -217,7 +217,8 @@
                                     android:layout_marginLeft="8dp"
                                     android:background="@android:color/transparent"
                                     android:scaleType="fitXY"
-                                    android:src="@drawable/ic_heart" />
+                                    android:src="@drawable/ic_heart"
+                                    card_view:tint="@color/pola_red" />
 
                                 <TextView
                                     android:id="@+id/isFriendText"
@@ -240,7 +241,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/pola_base_font"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </ScrollView>
@@ -271,7 +272,7 @@
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/button_border"
                     android:text="@string/see_pola_friends"
-                    android:textColor="#D8002F" />
+                    android:textColor="@color/pola_red" />
 
             </LinearLayout>
         </RelativeLayout>

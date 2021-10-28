@@ -4,5 +4,5 @@
     <corners
         android:radius="@dimen/dialog_corner_radius"/>
     <solid
-        android:color="@color/card_type_white_bk"/>
+        android:color="@color/pola_base_background"/>
 </shape>

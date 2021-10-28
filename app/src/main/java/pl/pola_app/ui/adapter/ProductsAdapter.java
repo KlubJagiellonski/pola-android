@@ -85,6 +85,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         void bind(SearchResult searchResult) {
             itemView.setOnClickListener(this);
             if (searchResult == null) {
+                progress.setVisibility(View.VISIBLE);
+                companyName.setText("");
+                plScore.setProgress(0);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.companyName.setText("");
                 binding.scoreBar.setProgress(0);
@@ -94,6 +97,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
             binding.progressBar.setVisibility(View.GONE);
 
+            companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
             applyStyle(searchResult.card_type);
             binding.companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
@@ -111,16 +115,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             }
         }
 
-        private void applyStyle(String style) {
-            final Resources resources = context.getResources();
-            if (style.equals(resources.getString(R.string.type_grey))) {
-                binding.productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_grey_bk));
-                binding.scoreBar.setBackgroundColor(resources.getColor(R.color.card_type_grey_score_bk));
-            } else {
-                binding.productCard.setCardBackgroundColor(resources.getColor(R.color.card_type_white_bk));
-                binding.scoreBar.setBackgroundColor(resources.getColor(R.color.card_type_white_score_bk));
-            }
-        }
 
         @Override
         public void onClick(View view) {
