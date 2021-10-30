@@ -1,45 +1,21 @@
 package pl.pola_app.ui.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.databinding.ActivityCreateReportBinding;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
-import pl.pola_app.helpers.Utils;
 import pl.pola_app.model.Report;
 import pl.pola_app.model.ReportResult;
 import pl.pola_app.network.Api;
 import pl.tajchert.nammu.Nammu;
-import pl.tajchert.nammu.PermissionCallback;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +29,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private Call<ReportResult> reportResultCall;
     private SessionId sessionId;
 
-    @BindView(R.id.descripton_editText)
+    ActivityCreateReportBinding binding;
     EditText descriptionEditText;
 
     private EventLogger logger = null;
@@ -61,8 +37,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_report);
-        ButterKnife.bind(this);
+        binding = ActivityCreateReportBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         sessionId = SessionId.create(this);
 
         if (getIntent() != null) {
@@ -75,6 +51,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
             logger = new EventLogger(this);
         }
         logger.logLevelStart("report", code, sessionId.get());
+        binding.sendButton.setOnClickListener(this::clickSendButton);
     }
 
     @Override
@@ -85,9 +62,7 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         super.onPause();
     }
 
-
-    @OnClick(R.id.send_button)
-    public void clickSendButton() {
+    public void clickSendButton(View view) {
         String description = descriptionEditText.getText().toString();
         sendReport(description, productId);
     }
@@ -107,7 +82,6 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
         progressDialog = ProgressDialog.show(CreateReportActivity.this, "", getString(R.string.sending_image_dialog), true);
         logger.logLevelEnd("report", code, sessionId.get());
     }
-
 
     @Override
     public void onResponse(Call<ReportResult> call, Response<ReportResult> response) {

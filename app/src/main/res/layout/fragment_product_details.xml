@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/main_company_name"
+                    android:id="@+id/company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content">
 
                     <ProgressBar
-                        android:id="@+id/main_plscore_details_progressbar"
+                        android:id="@+id/pl_score_bar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="26dp"
@@ -63,10 +63,10 @@
                         android:progressDrawable="@drawable/score_bar" />
 
                     <TextView
-                        android:id="@+id/main_plscore_details_text"
+                        android:id="@+id/pl_score_text"
                         android:layout_width="wrap_content"
                         android:layout_height="26dp"
-                        android:layout_alignBottom="@+id/main_plscore_details_progressbar"
+                        android:layout_alignBottom="@+id/pl_score_bar"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tv_altText"
+                        android:id="@+id/alt_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -115,7 +115,7 @@
                             android:layout_height="wrap_content">
 
                             <ProgressBar
-                                android:id="@+id/plcapital_details_progressbar"
+                                android:id="@+id/pl_capital_bar"
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="20dp"
@@ -126,10 +126,10 @@
                                 android:progressDrawable="@drawable/capital_bar" />
 
                             <TextView
-                                android:id="@+id/plcapital_details_text"
+                                android:id="@+id/pl_capital_score_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
-                                android:layout_alignBottom="@+id/plcapital_details_progressbar"
+                                android:layout_alignBottom="@+id/pl_capital_bar"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="16dp"
@@ -276,7 +276,7 @@
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_description"
+                            android:id="@+id/description"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"

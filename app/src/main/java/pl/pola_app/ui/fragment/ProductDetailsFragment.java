@@ -1,44 +1,21 @@
 package pl.pola_app.ui.fragment;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.parceler.Parcels;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.R;
+import pl.pola_app.databinding.FragmentProductDetailsBinding;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.ui.event.ProductDetailsFragmentDismissedEvent;
 
 public class ProductDetailsFragment extends DetailsFragment {
 
-    @BindView(R.id.buttonWorkers)
-    ImageButton buttonWorkers;
-
-    @BindView(R.id.buttonGlobent)
-    ImageButton buttonGlobent;
-
-    @BindView(R.id.buttonRegistered)
-    ImageButton buttonRegistered;
-
-    @BindView(R.id.buttonRnd)
-    ImageButton buttonRnd;
-
-    @BindView(R.id.plcapital_details_progressbar)
-    ProgressBar plCapitalBar;
-
-    @BindView(R.id.plcapital_details_text)
-    TextView plCapitalScoreText;
-
+    private FragmentProductDetailsBinding binding;
 
     public static ProductDetailsFragment newInstance(SearchResult searchResult) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -50,97 +27,101 @@ public class ProductDetailsFragment extends DetailsFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_product_details, container, false);
+        binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
         PolaApplication.component(getActivity()).inject(this);
-        ButterKnife.bind(this, view);
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        tv_companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
+        binding.companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
         if (searchResult.companies != null && searchResult.companies.get(0).plScore != null) {
-            plScoreBar.setProgress(searchResult.companies.get(0).plScore);
-            plScoreText.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
+            binding.plScoreBar.setProgress(searchResult.companies.get(0).plScore);
+            binding.plScoreText.setText(searchResult.companies.get(0).plScore + getString(R.string.pt));
         } else {
-            plScoreBar.setProgress(0);
-            plScoreText.setText("?");
+            binding.plScoreBar.setProgress(0);
+            binding.plScoreText.setText("?");
         }
 
         if (searchResult.companies != null && searchResult.companies.get(0).plCapital != null) {
-            plCapitalBar.setProgress(searchResult.companies.get(0).plCapital);
-            plCapitalScoreText.setText(searchResult.companies.get(0).plCapital + "%");
+            binding.plCapitalBar.setProgress(searchResult.companies.get(0).plCapital);
+            binding.plCapitalScoreText.setText(searchResult.companies.get(0).plCapital + "%");
         } else {
-            plCapitalBar.setProgress(0);
-            plCapitalScoreText.setText("?");
+            binding.plCapitalBar.setProgress(0);
+            binding.plCapitalScoreText.setText("?");
         }
 
         if (searchResult.altText != null) {
-            plDataLayout.setVisibility(View.GONE);
-            altText.setVisibility(View.VISIBLE);
-            altText.setText(searchResult.altText);
+            binding.plDataLayout.setVisibility(View.GONE);
+            binding.altText.setVisibility(View.VISIBLE);
+            binding.altText.setText(searchResult.altText);
         } else {
-            altText.setVisibility(View.GONE);
-            plDataLayout.setVisibility(View.VISIBLE);
+            binding.altText.setVisibility(View.GONE);
+            binding.plDataLayout.setVisibility(View.VISIBLE);
 
             if (searchResult.companies.get(0).plWorkers != null && searchResult.companies.get(0).plWorkers != 0) {
-                buttonWorkers.setSelected(true);
+                binding.buttonWorkers.setSelected(true);
             } else if (searchResult.companies.get(0).plWorkers == null) {
-                buttonWorkers.setEnabled(false);
+                binding.buttonWorkers.setEnabled(false);
             }
 
             if (searchResult.companies.get(0).plRnD != null && searchResult.companies.get(0).plRnD != 0) {
-                buttonRnd.setSelected(true);
+                binding.buttonRnd.setSelected(true);
             } else if (searchResult.companies.get(0).plRnD == null) {
-                buttonRnd.setEnabled(false);
+                binding.buttonRnd.setEnabled(false);
             }
 
             if (searchResult.companies.get(0).plRegistered != null && searchResult.companies.get(0).plRegistered != 0) {
-                buttonRegistered.setSelected(true);
+                binding.buttonRegistered.setSelected(true);
             } else if (searchResult.companies.get(0).plRegistered == null) {
-                buttonRegistered.setEnabled(false);
+                binding.buttonRegistered.setEnabled(false);
             }
 
             if (searchResult.companies.get(0).plNotGlobEnt != null && searchResult.companies.get(0).plNotGlobEnt != 0) {
-                buttonGlobent.setSelected(true);
+                binding.buttonGlobent.setSelected(true);
             } else if (searchResult.companies.get(0).plNotGlobEnt == null) {
-                buttonGlobent.setEnabled(false);
+                binding.buttonGlobent.setEnabled(false);
             }
 
             if (searchResult.companies.get(0).description != null) {
-                description.setVisibility(View.VISIBLE);
-                description.setText(searchResult.companies.get(0).description);
+                binding.description.setVisibility(View.VISIBLE);
+                binding.description.setText(searchResult.companies.get(0).description);
             } else {
-                description.setVisibility(View.GONE);
+                binding.description.setVisibility(View.GONE);
             }
         }
 
         if (searchResult.askForSupport()) {
-            seePolaFriendsButton.setVisibility(View.VISIBLE);
-            seePolaFriendsButton.setOnClickListener((view) -> {
-                if (delegate != null)
+            binding.seePolaFriends.setVisibility(View.VISIBLE);
+            binding.seePolaFriends.setOnClickListener((view) -> {
+                if (delegate != null) {
                     delegate.onsSeePolaFriendsAction();
+                }
             });
         } else {
-            seePolaFriendsButton.setVisibility(View.GONE);
+            binding.seePolaFriends.setVisibility(View.GONE);
         }
 
-        if (searchResult.companies != null && searchResult.companies.get(0).is_friend != null && searchResult.companies.get(0).is_friend && searchResult.friend_text != null) {
-            isFriendLayout.setVisibility(View.VISIBLE);
-            isFriendText.setText(searchResult.friend_text);
+        if (searchResult.companies != null &&
+                searchResult.companies.get(0).is_friend != null &&
+                searchResult.companies.get(0).is_friend &&
+                searchResult.friend_text != null) {
+            binding.isFriendLayout.setVisibility(View.VISIBLE);
+            binding.isFriendText.setText(searchResult.friend_text);
         }
 
-        productInfoCard.setOnClickListener(v -> eventBus.post(new ProductDetailsFragmentDismissedEvent()));
+        binding.productInfoCard.setOnClickListener(v -> eventBus.post(new ProductDetailsFragmentDismissedEvent()));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         delegate = null;
+        binding = null;
     }
 }
