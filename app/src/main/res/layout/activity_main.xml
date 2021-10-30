@@ -69,9 +69,7 @@
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_dialpad_white_36dp"
             app:backgroundTint="@color/pola_red"
-            app:elevation="4dp"
-            app:rippleColor="@android:color/white"
-            app:useCompatPadding="true" />
+            app:elevation="4dp" />
 
         <Button
             android:id="@+id/support_pola_app"
