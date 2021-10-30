@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/menu_background"
     android:orientation="vertical">
 
@@ -15,18 +17,19 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/informations"
-            android:textColor="@android:color/black"
+            android:textColor="@color/menu_font"
             android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/menu_back_iv"
-            android:src="@drawable/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/menu_margin"
-            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/menu_margin"
+            android:src="@drawable/back"
+            app:tint="@color/menu_font" />
 
         <View
             android:layout_width="match_parent"
@@ -126,6 +129,7 @@
             <TextView
                 android:id="@+id/app_build_tv"
                 style="@style/TextViewAppBuild"
+                tools:text="Aplikacja Pola\nWersja X.X.X\nKlub Jagielloński"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

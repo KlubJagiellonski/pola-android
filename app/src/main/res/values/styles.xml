@@ -13,7 +13,7 @@
     <style name="key_border">
         <item name="android:background">@drawable/key_border</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/menu_font</item>
         <item name="android:textSize">36sp</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:layout_width">@dimen/keyboard_button</item>
@@ -21,7 +21,6 @@
     </style>
 
     <style name="TextViewAppBuild">
-        <item name="android:textColor">@android:color/black</item>
         <item name="android:paddingRight">@dimen/menu_padding_horizontal</item>
         <item name="android:paddingLeft">@dimen/menu_padding_horizontal</item>
         <item name="android:paddingTop">@dimen/menu_padding_vertical</item>
@@ -34,8 +33,9 @@
     </style>
 
     <style name="MenuTextView" parent="TextViewAppBuild">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/menu_item_background</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/menu_font</item>
     </style>
 
     <style name="MenuTextViewSmall" parent="MenuTextView">

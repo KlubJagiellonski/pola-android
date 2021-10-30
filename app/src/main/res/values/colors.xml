@@ -3,6 +3,14 @@
     <color name="pola_red">#d8002f</color>
     <color name="pola_gray">#666666</color>
 
+    <color name="pola_base_background">#FFFFFF</color>
+    <color name="pola_base_font">#000000</color>
+    <color name="pola_button_font_color">@color/pola_gray</color>
+
+    <color name="pola_keyboard_background">@color/pola_gray</color>
+    <color name="pola_keyboard_font">@color/pola_base_background</color>
+    <color name="pola_keyboard_border">@color/pola_base_background</color>
+
     <color name="theme_web_primary">#fff</color>
     <color name="theme_web_primarydark">#e5e5e5</color>
     <color name="theme_web_accent">#000000</color>
@@ -12,7 +20,11 @@
 
     <color name="card_type_grey_bk">#e9e8e7</color>
     <color name="card_type_grey_score_bk">@color/pola_gray</color>
+
     <color name="menu_background">#eee</color>
+    <color name="menu_item_background">@android:color/white</color>
     <color name="menu_separator">#666</color>
+    <color name="menu_font">@android:color/black</color>
+
 
 </resources>

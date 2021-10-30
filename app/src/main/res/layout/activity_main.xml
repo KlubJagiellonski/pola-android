@@ -67,11 +67,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_dialpad_white_36dp"
+            android:src="@drawable/ic_dialpad_24"
+            android:tint="@color/pola_button_font_color"
             app:backgroundTint="@color/pola_red"
             app:elevation="4dp"
-            app:rippleColor="@android:color/white"
-            app:useCompatPadding="true" />
+            app:useCompatPadding="true"/>
 
         <Button
             android:id="@+id/support_pola_app"
@@ -83,7 +83,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="8dp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/pola_button_font_color"
             android:visibility="gone"
             app:backgroundTint="@color/pola_red" />
     </LinearLayout>

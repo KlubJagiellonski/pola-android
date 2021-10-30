@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/pola_gray"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:clickable="true"
-              android:focusable="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/pola_keyboard_background"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true">
 
     <EditText
         android:id="@+id/keyboard_input"
+        android:textColor="@color/pola_keyboard_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -102,9 +104,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/backspace_content_description"
-                android:src="@drawable/ic_backspace_white_36dp"/>
+                android:src="@drawable/ic_backspace_24"
+                app:backgroundTint="@color/pola_red" />
 
-            <pl.pola_app.ui.keyboard.KeyboardButton style="@style/key_border"/>
+            <pl.pola_app.ui.keyboard.KeyboardButton
+                style="@style/key_border"/>
         </FrameLayout>
 
         <pl.pola_app.ui.keyboard.KeyboardButton
@@ -122,9 +126,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/done_content_description"
-                android:src="@drawable/ic_done_white_36dp"/>
+                android:src="@drawable/ic_done_24"/>
 
-            <pl.pola_app.ui.keyboard.KeyboardButton style="@style/key_border"/>
+            <pl.pola_app.ui.keyboard.KeyboardButton
+                style="@style/key_border"/>
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

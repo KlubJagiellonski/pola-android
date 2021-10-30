@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pola_red">#7d1129</color>
+    <color name="pola_gray">#666666</color>
+
+    <color name="pola_base_background">#000000</color>
+    <color name="pola_base_font">#FFFFFF</color>
+    <color name="pola_button_font_color">#000000</color>
+
+    <color name="pola_keyboard_background">@color/pola_base_background</color>
+    <color name="pola_keyboard_font">#b3b3b3</color>
+    <color name="pola_keyboard_border">#666</color>
+
+    <color name="theme_web_primary">#fff</color>
+    <color name="theme_web_primarydark">#e5e5e5</color>
+    <color name="theme_web_accent">#000000</color>
+
+    <color name="card_type_white_bk">#fff</color>
+    <color name="card_type_white_score_bk">#cccccc</color>
+
+    <color name="card_type_grey_bk">#e9e8e7</color>
+    <color name="card_type_grey_score_bk">@color/pola_gray</color>
+
+    <color name="menu_background">#222222</color>
+    <color name="menu_item_background">#333333</color>
+    <color name="menu_separator">#666</color>
+    <color name="menu_font">#b3b3b3</color>
+
+
+</resources>
