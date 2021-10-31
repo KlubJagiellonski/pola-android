@@ -40,6 +40,7 @@ import pl.pola_app.ui.fragment.LidlDetailsFragment;
 import pl.pola_app.ui.fragment.ProductDetailsFragment;
 import pl.pola_app.ui.fragment.ScannerFragment;
 import pl.tajchert.nammu.Nammu;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity implements MainViewBinder, BarcodeListener, DetailsFragmentDelegate {
@@ -187,8 +188,12 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
 
     @Override
     public void openWww(SearchResult searchResult, String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } catch (Exception exception){
+            Timber.e(exception);
+        }
     }
 
     public void onBarcode(String barcode, boolean fromCamera) {
