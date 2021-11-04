@@ -1,7 +1,6 @@
 package pl.pola_app.ui.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import pl.pola_app.R;
 import pl.pola_app.databinding.ViewProductItemBinding;
 import pl.pola_app.model.SearchResult;
 import timber.log.Timber;
@@ -85,20 +83,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         void bind(SearchResult searchResult) {
             itemView.setOnClickListener(this);
             if (searchResult == null) {
-                progress.setVisibility(View.VISIBLE);
-                companyName.setText("");
-                plScore.setProgress(0);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.companyName.setText("");
                 binding.scoreBar.setProgress(0);
-                applyStyle(context.getString(R.string.type_white));
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.companyName.setText("");
+                binding.scoreBar.setProgress(0);
                 return;
             }
 
             binding.progressBar.setVisibility(View.GONE);
 
-            companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
-            applyStyle(searchResult.card_type);
+            binding.companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
             binding.companyName.setText(searchResult.name != null ? searchResult.name : searchResult.companies.get(0).name);
 
             if (searchResult.companies != null && searchResult.companies.get(0).plScore != null) {
