@@ -119,6 +119,7 @@ dependencies {
     implementation 'com.github.tajchert:nammu:1.2.1'
     implementation 'androidx.webkit:webkit:1.4.0'
 
+    implementation 'com.google.firebase:firebase-core:20.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.google.firebase:firebase-bom:29.0.0'
