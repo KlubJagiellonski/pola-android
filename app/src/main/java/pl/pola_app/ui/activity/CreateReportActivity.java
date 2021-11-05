@@ -63,8 +63,10 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     public void clickSendButton(View view) {
-        String description = descriptionEditText.getText().toString();
-        sendReport(description, productId);
+        CharSequence description = descriptionEditText.getText();
+        if(description != null){
+            sendReport(description.toString(), productId);
+        }
     }
 
     private void sendReport(String description, String productId) {
