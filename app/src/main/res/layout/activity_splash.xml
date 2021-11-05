@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/pola_base_background">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/card_type_white_bk"
+        android:background="@color/pola_base_background"
         android:padding="@dimen/splash_logo_padding"
         android:scaleType="fitCenter"
         android:src="@drawable/splash_logo"
@@ -21,7 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="false"
-        android:background="@color/card_type_white_bk"
+        android:background="@color/pola_base_background"
         android:scaleType="fitEnd"
         android:src="@drawable/splash_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
