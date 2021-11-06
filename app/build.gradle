@@ -6,8 +6,12 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.crashlytics'
+
+plugins {
+    id 'kotlin-android'
+    id 'com.android.application'
+    id 'com.google.firebase.crashlytics'
+}
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -124,6 +128,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.google.firebase:firebase-bom:29.0.0'
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
+    // Kotlin
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.40'
