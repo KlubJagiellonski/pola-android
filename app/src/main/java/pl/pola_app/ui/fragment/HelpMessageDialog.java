@@ -41,12 +41,6 @@ public class HelpMessageDialog extends DialogFragment {
         dismiss();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
-    }
-
     public void onNextTimeButtonClick(View view) {
         dismiss();
     }

@@ -131,11 +131,6 @@ public class ScannerFragment extends Fragment implements CompoundBarcodeView.Tor
         binding.barcodeScanner.pause();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     final PermissionCallback permissionCameraCallback = new PermissionCallback() {
         @Override
         public void permissionGranted() {

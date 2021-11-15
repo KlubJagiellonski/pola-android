@@ -122,6 +122,5 @@ public class ProductDetailsFragment extends DetailsFragment {
     public void onDestroy() {
         super.onDestroy();
         delegate = null;
-        binding = null;
     }
 }
