@@ -134,7 +134,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.40.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.40.2'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
