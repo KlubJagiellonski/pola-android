@@ -30,7 +30,6 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     private SessionId sessionId;
 
     ActivityCreateReportBinding binding;
-    EditText descriptionEditText;
 
     private EventLogger logger = null;
 
@@ -63,8 +62,8 @@ public class CreateReportActivity extends Activity implements Callback<ReportRes
     }
 
     public void clickSendButton(View view) {
-        CharSequence description = descriptionEditText.getText();
-        if(description != null){
+        CharSequence description = binding.descriptonEditText.getText();
+        if (description != null) {
             sendReport(description.toString(), productId);
         }
     }
