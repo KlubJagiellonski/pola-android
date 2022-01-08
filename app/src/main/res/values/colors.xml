@@ -5,7 +5,7 @@
 
     <color name="pola_base_background">#FFFFFF</color>
     <color name="pola_base_font">#000000</color>
-    <color name="pola_button_font_color">@color/pola_gray</color>
+    <color name="pola_button_font_color">#FFFFFF</color>
 
     <color name="pola_keyboard_background">@color/pola_gray</color>
     <color name="pola_keyboard_font">@color/pola_base_background</color>
