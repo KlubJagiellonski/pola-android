@@ -7,5 +7,5 @@ import java.util.List;
  */
 public class ReportResult {
     public Integer id;
-    public List<List<String>> signed_requests;
+    public List<String> signed_requests;
 }
