@@ -106,6 +106,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/action_rate" />
 
+            <TextView
+                android:id="@+id/activity_gh_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_gh" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
