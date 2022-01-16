@@ -35,6 +35,7 @@ class MenuActivity : AppCompatActivity() {
             activityMenuFriendsTv.setOnClickListener { onFriendsClick() }
             activityFoundBugTv.setOnClickListener { onFoundBugClick() }
             activityRateTv.setOnClickListener { onRateClick() }
+            activityGhTv.setOnClickListener { onGhClick() }
             activityFacebookTv.setOnClickListener { onFacebookClick() }
             activityTwitterTv.setOnClickListener { onTwitterClick() }
         }
@@ -116,6 +117,11 @@ class MenuActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    private fun onGhClick() {
+        logger.logMenuItemOpened("Github", sessionId.get())
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Utils.URL_POLA_GH)))
     }
 
     private fun onFacebookClick() {
