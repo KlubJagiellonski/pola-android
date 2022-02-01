@@ -36,6 +36,6 @@ doctor {
     javaHome {
         ensureJavaHomeIsSet = true
         ensureJavaHomeMatches = true
-        failOnError = false
+        failOnError = true
     }
 }
