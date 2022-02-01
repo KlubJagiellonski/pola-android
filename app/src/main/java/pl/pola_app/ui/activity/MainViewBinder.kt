@@ -13,5 +13,7 @@ internal interface MainViewBinder {
     fun dismissProductDetailsView()
     fun openWww(searchResult: SearchResult?, url: String?)
     fun setSupportPolaAppButtonVisibility(isVisible: Boolean, searchResult: SearchResult?)
+    fun showNewRatePrompt()
+
     val deviceYear: Int
 }
