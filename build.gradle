@@ -1,6 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply plugin: "com.osacky.doctor"
-
 buildscript {
     ext.kotlin_version = '1.6.10'
     repositories {
@@ -12,7 +10,6 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
-        classpath 'com.osacky.doctor:doctor-plugin:0.7.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -24,18 +21,5 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-    }
-}
-
-doctor {
-    allowBuildingAllAndroidAppsSimultaneously = false
-    disallowMultipleDaemons = false
-    failOnEmptyDirectories = true
-    warnWhenNotUsingParallelGC = true
-
-    javaHome {
-        ensureJavaHomeIsSet = true
-        ensureJavaHomeMatches = true
-        failOnError = true
     }
 }
