@@ -16,6 +16,7 @@ import org.robolectric.annotation.Config;
 import pl.pola_app.TestApplication;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
+import pl.pola_app.helpers.SettingsPreference;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.testutil.SearchUtil;
@@ -50,11 +51,13 @@ public class MainPresenterTest {
     @Mock
     private Call<SearchResult> mockCall;
     private MainPresenter presenter;
+    @Mock
+    private SettingsPreference settingsPreference;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        presenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
+        MockitoAnnotations.openMocks(this);
+        presenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus, settingsPreference);
         when(api.getByCode(anyString(), anyString())).thenReturn(mockCall);
         when(api.getByCode(anyString(), anyString(), anyBoolean())).thenReturn(mockCall);
     }
