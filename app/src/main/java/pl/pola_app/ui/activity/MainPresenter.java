@@ -13,6 +13,7 @@ import com.squareup.otto.Subscribe;
 import pl.pola_app.PolaApplication;
 import pl.pola_app.helpers.EventLogger;
 import pl.pola_app.helpers.SessionId;
+import pl.pola_app.helpers.SettingsPreference;
 import pl.pola_app.model.SearchResult;
 import pl.pola_app.network.Api;
 import pl.pola_app.ui.adapter.OnProductListChanged;
@@ -26,6 +27,9 @@ import retrofit2.Response;
 
 class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private static final int millisecondsBetweenExisting = 2000;//otherwise it will scan and vibrate few times a second
+    private static final int NUMBER_OF_TIMES_WHEN_SHOW_RATE_DIALOG = 3; //When user scan 3 barcodes show rate dialog
+
+    private boolean isRateDialogPrompted = false; //Don't try run dialog twice in one session
     private final MainViewBinder viewBinder;
     private final ProductList productList;
     private final Handler handlerScanner = new Handler();
@@ -41,13 +45,16 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
     private Api api;
     private SessionId sessionId;
     private Bus eventBus;
+    private SettingsPreference settingsPreference;
     SearchResult currentSearchResult;
 
     public static MainPresenter create(Context applicationContext, @NonNull final MainViewBinder viewBinder,
                                        @NonNull final ProductList productList,
                                        @NonNull final ProductsAdapter productsAdapter,
                                        @NonNull SessionId sessionId,
-                                       @NonNull final Bus eventBus) {
+                                       @NonNull final Bus eventBus,
+                                       @NonNull final SettingsPreference settingsPreference) {
+
 
         productList.setOnProductListChanged(new OnProductListChanged() {
             @Override
@@ -60,7 +67,7 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         final Api api = PolaApplication.retrofit.create(Api.class);
 
         final EventLogger logger = new EventLogger(applicationContext);
-        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus);
+        final MainPresenter mainPresenter = new MainPresenter(viewBinder, productList, api, logger, sessionId, eventBus, settingsPreference);
         productsAdapter.setOnProductClickListener(new ProductsAdapter.ProductClickListener() {
             @Override
             public void itemClicked(SearchResult searchResult) {
@@ -75,13 +82,15 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
                   @NonNull Api api,
                   @NonNull EventLogger logger,
                   @NonNull SessionId sessionId,
-                  @NonNull Bus eventBus) {
+                  @NonNull Bus eventBus,
+                  @NonNull SettingsPreference settingsPreference) {
         this.viewBinder = viewBinder;
         this.productList = productList;
         this.api = api;
         this.logger = logger;
         this.sessionId = sessionId;
         this.eventBus = eventBus;
+        this.settingsPreference = settingsPreference;
     }
 
     void register() {
@@ -127,6 +136,21 @@ class MainPresenter implements Callback<SearchResult>, BarcodeListener {
         productList.addProduct(searchResult);
         viewBinder.resumeScanning();
         viewBinder.setSupportPolaAppButtonVisibility(searchResult.askForSupport(), searchResult);
+        if (isShouldShowRatingDialog()) {
+            showNewRatePrompt();
+        }
+        settingsPreference.increaseSuccessCounter();
+    }
+
+    private void showNewRatePrompt() {
+        if (isRateDialogPrompted == false) {
+            isRateDialogPrompted = true;
+            viewBinder.showNewRatePrompt();
+        }
+    }
+
+    private boolean isShouldShowRatingDialog() {
+        return settingsPreference.getSuccessScanCounter() % NUMBER_OF_TIMES_WHEN_SHOW_RATE_DIALOG == 0;
     }
 
     @Override

@@ -18,6 +18,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.device.yearclass.YearClass;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
         ProductList productList = ProductList.create(savedInstanceState);
         final ProductsAdapter productsAdapter = new ProductsAdapter(this, productList);
         sessionId = SessionId.create(this);
-        mainPresenter = MainPresenter.create(getApplicationContext(), this, productList, productsAdapter, sessionId, eventBus);
+        mainPresenter = MainPresenter.create(getApplicationContext(), this, productList, productsAdapter, sessionId, eventBus, settingsPreference);
 
         logger = new EventLogger(this);
 
@@ -263,5 +265,15 @@ public class MainActivity extends AppCompatActivity implements MainViewBinder, B
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void showNewRatePrompt() {
+        ReviewManager reviewManager = ReviewManagerFactory.create(this);
+        reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                reviewManager.launchReviewFlow(MainActivity.this, task.getResult()).addOnCompleteListener(task1 -> Timber.d("Review dialog displayed correctly"));
+            }
+        });
     }
 }
