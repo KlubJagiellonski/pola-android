@@ -14,6 +14,7 @@ public class Utils {
     public static final String URL_POLA_PARTNERS = "https://www.pola-app.pl/m/partners";
     public static final String URL_POLA_FRIENDS = "https://www.pola-app.pl/m/friends";
     public static final String URL_POLA_GH = "https://github.com/KlubJagiellonski/pola-android";
+    public static final String POLA_TEXT_SEARCH = "https://www.pola-app.pl";
     public static final String POLA_MAIL = "pola@klubjagiellonski.pl";
     public static final String URL_POLA_GOOGLEPLAY = "https://play.google.com/store/apps/details?id=pl.pola_app";
     public static final String URL_POLA_FB = "https://www.facebook.com/app.pola";

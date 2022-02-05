@@ -58,6 +58,13 @@
                 android:text="@string/action_about" />
 
             <TextView
+                android:id="@+id/activity_menu_text_search_tv"
+                style="@style/MenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_text_search" />
+
+            <TextView
                 android:id="@+id/activity_menu_user_manual_tv"
                 style="@style/MenuTextView"
                 android:layout_width="match_parent"

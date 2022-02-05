@@ -65,4 +65,5 @@
     <string name="pt">pkt</string>
     <string name="zobacz_przyjaci_poli">see_pola_friends</string>
     <string name="action_gh">Github</string>
+    <string name="action_text_search">Wyszukiwarka tekstowa</string>
 </resources>

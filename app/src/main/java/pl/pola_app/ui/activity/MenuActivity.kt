@@ -28,6 +28,7 @@ class MenuActivity : AppCompatActivity() {
         with(binding) {
             menuBackIv.setOnClickListener { onMenuBackClick() }
             activityMenuAboutAppTv.setOnClickListener { onAboutAppClick() }
+            activityMenuTextSearchTv.setOnClickListener { onTextSearchClick() }
             activityMenuUserManualTv.setOnClickListener { onUserManualClick() }
             activityMenuAboutKjTv.setOnClickListener { onAboutKlubJagiellonskiClick() }
             activityMenuTeamTv.setOnClickListener { onTeamClick() }
@@ -54,6 +55,11 @@ class MenuActivity : AppCompatActivity() {
         val intent = Intent(this, ActivityWebView::class.java)
         intent.putExtra("url", Utils.URL_POLA_ABOUT)
         startActivity(intent)
+    }
+
+    private fun onTextSearchClick() {
+        logger.logMenuItemOpened("Wyszukiwarka tekstowa", sessionId.get())
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Utils.POLA_TEXT_SEARCH)))
     }
 
     private fun onUserManualClick() {
