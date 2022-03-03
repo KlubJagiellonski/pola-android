@@ -26,8 +26,8 @@ android {
         applicationId "pl.pola_app"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 38
-        versionName "1.9.7"
+        versionCode 39
+        versionName "1.9.8"
         multiDexEnabled true
     }
 
