@@ -30,7 +30,7 @@ interface Api {
         @Body report: Report?
     ): Call<ReportResult?>?
 
-    @Headers("x-amz-acl: public-read", "Content-Type: image/*")
+    @Headers("Content-Type: image/*")
     @PUT
     fun sendReportImage(@Url url: String?, @Body file: RequestBody?): Call<JsonObject?>?
 }
