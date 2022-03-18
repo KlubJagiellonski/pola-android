@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:20.1.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.firebase:firebase-bom:29.1.0'
+    implementation 'com.google.firebase:firebase-bom:29.2.1'
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
     implementation 'com.google.android.play:core:1.10.3'
     // Kotlin
