@@ -128,14 +128,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.google.firebase:firebase-bom:29.3.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation 'com.google.android.play:core:1.10.3'
     // Kotlin
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.41'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.42'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
