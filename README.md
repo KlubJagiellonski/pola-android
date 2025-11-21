@@ -1,5 +1,14 @@
 # Pola
 
+> [!IMPORTANT]
+> **To repozytorium nie jest już rozwijane.**
+> 
+> Wszystkie prace nad aplikacją Pola przeniesione zostały do nowej wersji opartej na Flutter:
+> 
+> 🔗 **https://github.com/KlubJagiellonski/pola-flutter**
+> 
+> Zachęcamy do korzystania z nowego repozytorium dla wszelkich zmian i ulepszeń aplikacji.
+
 [![Build Status](https://github.com/KlubJagiellonski/pola-android/workflows/Tests/badge.svg)](https://github.com/KlubJagiellonski/pola-android/actions)
 
 Pola pomoże Ci odnaleźć polskie wyroby. Zabierając Polę na zakupy odnajdujesz produkty “z duszą” i wspierasz polską gospodarkę.  
